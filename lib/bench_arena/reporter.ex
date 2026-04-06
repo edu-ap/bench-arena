@@ -37,6 +37,8 @@ defmodule BenchArena.Reporter do
     total_questions = summary |> Map.values() |> Enum.map(& &1[:count]) |> Enum.filter(&(&1)) |> Enum.sum()
     total_questions = div(max(total_questions, 0), max(map_size(summary), 1))
 
+    tier_section = generate_tier_breakdown()
+
     """
     # BenchArena Run Report
     Run ID: #{run_id}
@@ -60,6 +62,8 @@ defmodule BenchArena.Reporter do
     Formula: `accuracy_delta - 0.001 * latency_delta - 0.0001 * token_delta`
 
     #{pi_recommendation(tradeoff)}
+
+    #{tier_section}
 
     ## Recommendations
     #{generate_recommendations(summary, tradeoff)}
@@ -154,6 +158,42 @@ defmodule BenchArena.Reporter do
     </body>
     </html>
     """
+  end
+
+  @tier_names %{1 => "Factual", 2 => "Reasoning", 3 => "Legal", 4 => "Code", 5 => "Metacog"}
+
+  defp generate_tier_breakdown do
+    try do
+      adapters = [:baseline, :agent_loop, :stack]
+      tier_data =
+        Enum.map(adapters, fn adapter ->
+          {adapter, BenchArena.MetricCollector.summary_by_tier(adapter)}
+        end)
+
+      adapter_headers = Enum.map_join(adapters, " | ", &format_adapter/1)
+      adapter_sep = Enum.map_join(adapters, "|", fn _ -> "--------" end)
+
+      rows =
+        Enum.map_join(1..5, "\n", fn tier ->
+          tier_name = Map.get(@tier_names, tier, "Tier #{tier}")
+          values = Enum.map_join(tier_data, " | ", fn {_adapter, by_tier} ->
+            case Map.get(by_tier, tier) do
+              nil -> "-"
+              stats -> format_number(stats.mean_accuracy)
+            end
+          end)
+          "| #{tier_name} (Tier #{tier}) | #{values} |"
+        end)
+
+      """
+      ## Per-Tier Breakdown
+      | Tier | #{adapter_headers} |
+      |------|#{adapter_sep}|
+      #{rows}
+      """
+    rescue
+      _ -> ""
+    end
   end
 
   # Private: Markdown helpers

@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BenchArena Dashboard</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --bg2: #161b22;
+  --card: #1c2129;
+  --border: #30363d;
+  --fg: #c9d1d9;
+  --fg2: #8b949e;
+  --blue: #58a6ff;
+  --green: #3fb950;
+  --amber: #f0883e;
+  --red: #f85149;
+  --mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+}
+body.light {
+  --bg: #ffffff;
+  --bg2: #f6f8fa;
+  --card: #ffffff;
+  --border: #d0d7de;
+  --fg: #1f2328;
+  --fg2: #656d76;
+  --blue: #0969da;
+  --green: #1a7f37;
+  --amber: #bf8700;
+  --red: #cf222e;
+}
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  backdrop-filter: blur(8px);
+}
+.sticky-header .left { display: flex; align-items: center; gap: 16px; }
+.sticky-header h2 { font-family: var(--mono); font-size: 18px; color: var(--fg); }
+.sticky-header select, .sticky-header button {
+  background: var(--card);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.sticky-header button:hover { border-color: var(--blue); }
+.container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+
+/* Hero */
+.hero { text-align: center; padding: 48px 0 32px; }
+.hero h1 { font-family: var(--mono); font-size: 48px; letter-spacing: -2px; color: var(--fg); }
+.hero .subtitle { color: var(--fg2); font-size: 16px; margin-top: 8px; font-family: var(--mono); }
+.stat-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 32px;
+}
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+}
+.stat-card .value { font-family: var(--mono); font-size: 36px; font-weight: 700; color: var(--blue); }
+.stat-card .label { color: var(--fg2); font-size: 13px; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+/* Section */
+section { margin-top: 48px; }
+section h2 { font-size: 22px; margin-bottom: 20px; color: var(--fg); border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+
+/* Tradeoff Table */
+.tradeoff-grid {
+  display: grid;
+  grid-template-columns: 180px repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.tradeoff-grid .cell {
+  background: var(--card);
+  padding: 14px 16px;
+  font-family: var(--mono);
+  font-size: 14px;
+}
+.tradeoff-grid .header { background: var(--bg2); font-weight: 600; color: var(--fg2); text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
+.tradeoff-grid .row-label { font-weight: 600; color: var(--fg); font-family: system-ui; }
+.cell.best { color: var(--green); font-weight: 700; }
+.cell.mid { color: var(--amber); }
+.cell.worst { color: var(--red); }
+
+/* SVG Charts */
+.chart-container { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; overflow-x: auto; }
+.chart-container svg text { fill: var(--fg); }
+body.light .chart-container svg text { fill: var(--fg); }
+
+/* Latency chart */
+.latency-chart { margin-top: 20px; }
+
+/* Table */
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.data-table th {
+  background: var(--bg2);
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--fg2);
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+.data-table th:hover { color: var(--blue); }
+.data-table th.sorted-asc::after { content: ' \u25B2'; }
+.data-table th.sorted-desc::after { content: ' \u25BC'; }
+.data-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 12px; }
+.data-table tr:hover { background: var(--bg2); }
+.data-table .win-stack { background: rgba(63, 185, 80, 0.08); }
+.data-table .win-agent { background: rgba(88, 166, 255, 0.08); }
+.data-table .win-tie { background: rgba(240, 136, 62, 0.06); }
+.prompt-cell { font-family: system-ui; max-width: 350px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Methodology */
+.methodology { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; font-size: 14px; line-height: 1.8; }
+.methodology h3 { margin-bottom: 12px; }
+.methodology ul { padding-left: 20px; }
+.methodology li { margin-bottom: 6px; }
+.methodology code { font-family: var(--mono); background: var(--bg2); padding: 2px 6px; border-radius: 4px; font-size: 12px; }
+
+@media (max-width: 768px) {
+  .stat-cards { grid-template-columns: 1fr; }
+  .tradeoff-grid { grid-template-columns: 120px repeat(3, 1fr); }
+  .hero h1 { font-size: 32px; }
+}
+</style>
+</head>
+<body>
+
+<div class="sticky-header">
+  <div class="left">
+    <h2>BenchArena</h2>
+    <select id="runSelect">
+      <option value="simulated">Simulated Run (2026-04-06)</option>
+      <option value="baseline">Baseline Only (2026-04-06)</option>
+    </select>
+  </div>
+  <button onclick="document.body.classList.toggle('light')">Toggle Theme</button>
+</div>
+
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>BenchArena</h1>
+    <div class="subtitle">Agent Loop &#x2194; Stack &mdash; latency &middot; tokens &middot; accuracy</div>
+    <div class="stat-cards">
+      <div class="stat-card"><div class="value">35</div><div class="label">Total Questions</div></div>
+      <div class="stat-card"><div class="value">3</div><div class="label">Adapters</div></div>
+      <div class="stat-card"><div class="value">5</div><div class="label">Tiers</div></div>
+    </div>
+  </div>
+
+  <!-- Tradeoff Summary -->
+  <section>
+    <h2>Tradeoff Summary</h2>
+    <div class="tradeoff-grid" id="tradeoffGrid">
+      <div class="cell header"></div>
+      <div class="cell header" style="color:#f0883e">Baseline</div>
+      <div class="cell header" style="color:#58a6ff">Agent Loop</div>
+      <div class="cell header" style="color:#3fb950">Stack</div>
+      <!-- Rows filled by JS -->
+    </div>
+  </section>
+
+  <!-- Tier Breakdown -->
+  <section>
+    <h2>Tier Breakdown &mdash; Accuracy</h2>
+    <div class="chart-container">
+      <svg id="tierChart" viewBox="0 0 800 340"></svg>
+    </div>
+  </section>
+
+  <!-- Latency Distribution -->
+  <section>
+    <h2>Latency Distribution</h2>
+    <div class="chart-container latency-chart">
+      <svg id="latencyChart" viewBox="0 0 800 320"></svg>
+    </div>
+  </section>
+
+  <!-- Question-level table -->
+  <section>
+    <h2>Question-Level Results</h2>
+    <div style="overflow-x:auto">
+      <table class="data-table" id="questionTable">
+        <thead>
+          <tr>
+            <th data-col="id" onclick="sortTable('id')">ID</th>
+            <th data-col="tier" onclick="sortTable('tier')">Tier</th>
+            <th data-col="prompt" onclick="sortTable('prompt')">Prompt</th>
+            <th data-col="agent" onclick="sortTable('agent')">Agent Loop</th>
+            <th data-col="stack" onclick="sortTable('stack')">Stack Score</th>
+            <th data-col="winner" onclick="sortTable('winner')">Winner</th>
+            <th data-col="delta" onclick="sortTable('delta')">&Delta;</th>
+          </tr>
+        </thead>
+        <tbody id="questionBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Methodology -->
+  <section>
+    <h2>Methodology</h2>
+    <div class="methodology">
+      <h3>Scoring Methods by Tier</h3>
+      <ul>
+        <li><strong>Tier 1 (Factual):</strong> <code>exact_match</code> or <code>semantic</code> (Jaccard similarity on tokenized words)</li>
+        <li><strong>Tier 2 (Reasoning):</strong> <code>semantic</code> &mdash; token overlap between answer and reference</li>
+        <li><strong>Tier 3 (Legal):</strong> <code>semantic</code> &mdash; keyword coverage of legal concepts and references</li>
+        <li><strong>Tier 4 (Code):</strong> <code>rubric</code> &mdash; presence of key code elements (function names, patterns, keywords)</li>
+        <li><strong>Tier 5 (Metacog):</strong> <code>semantic</code> &mdash; self-referential accuracy about system capabilities</li>
+      </ul>
+      <h3 style="margin-top:16px">Live Services</h3>
+      <ul>
+        <li><code>localhost:4001</code> &mdash; Elan (Agent Loop HTTP API)</li>
+        <li><code>localhost:4002</code> &mdash; TokenGov (Governance policy checker)</li>
+        <li><code>localhost:4003</code> &mdash; CSC (Compile-stage coordinator)</li>
+      </ul>
+      <h3 style="margin-top:16px">Data Note</h3>
+      <p>This dashboard uses <strong>simulated data</strong> generated with seeded randomness for reproducibility. Live adapter results require running services at the URLs above. Run <code>mix bench_arena.run --adapter all</code> for real benchmarks.</p>
+      <h3 style="margin-top:16px">&pi;-Score Formula</h3>
+      <p><code>&pi; = accuracy_delta &minus; 0.001 &times; latency_delta &minus; 0.0001 &times; token_delta</code></p>
+      <p style="margin-top:4px;color:var(--fg2)">Positive &pi; favors stack; negative favors agent loop.</p>
+    </div>
+  </section>
+
+</div>
+
+<script>
+// === INLINE DATA ===
+const SIMULATED_DATA = [{"tier":1,"adapter":"baseline","question_id":"t1_001","latency_ms":2.559,"tokens_in":17,"tokens_out":1,"total_tokens":18,"score":0.0},{"tier":1,"adapter":"agent_loop","question_id":"t1_001","latency_ms":1420.15,"tokens_in":235,"tokens_out":332,"total_tokens":567,"score":0.7869},{"tier":1,"adapter":"stack","question_id":"t1_001","latency_ms":1537.76,"tokens_in":460,"tokens_out":335,"total_tokens":795,"score":0.7432},{"tier":1,"adapter":"baseline","question_id":"t1_002","latency_ms":2.125,"tokens_in":15,"tokens_out":28,"total_tokens":43,"score":0.8235},{"tier":1,"adapter":"agent_loop","question_id":"t1_002","latency_ms":1431.9,"tokens_in":325,"tokens_out":448,"total_tokens":773,"score":0.845},{"tier":1,"adapter":"stack","question_id":"t1_002","latency_ms":2887.35,"tokens_in":290,"tokens_out":446,"total_tokens":736,"score":0.7809},{"tier":1,"adapter":"baseline","question_id":"t1_003","latency_ms":1.747,"tokens_in":15,"tokens_out":12,"total_tokens":27,"score":1.0},{"tier":1,"adapter":"agent_loop","question_id":"t1_003","latency_ms":1627.92,"tokens_in":305,"tokens_out":361,"total_tokens":666,"score":0.8723},{"tier":1,"adapter":"stack","question_id":"t1_003","latency_ms":2046.21,"tokens_in":348,"tokens_out":510,"total_tokens":858,"score":0.8657},{"tier":1,"adapter":"baseline","question_id":"t1_004","latency_ms":1.92,"tokens_in":15,"tokens_out":18,"total_tokens":33,"score":0.6364},{"tier":1,"adapter":"agent_loop","question_id":"t1_004","latency_ms":1776.48,"tokens_in":272,"tokens_out":270,"total_tokens":542,"score":0.7755},{"tier":1,"adapter":"stack","question_id":"t1_004","latency_ms":2257.7,"tokens_in":265,"tokens_out":327,"total_tokens":592,"score":1.0},{"tier":1,"adapter":"baseline","question_id":"t1_005","latency_ms":1.872,"tokens_in":18,"tokens_out":1,"total_tokens":19,"score":0.0},{"tier":1,"adapter":"agent_loop","question_id":"t1_005","latency_ms":1585.45,"tokens_in":323,"tokens_out":294,"total_tokens":617,"score":0.9373},{"tier":1,"adapter":"stack","question_id":"t1_005","latency_ms":2384.91,"tokens_in":335,"tokens_out":463,"total_tokens":798,"score":0.8718},{"tier":1,"adapter":"baseline","question_id":"t1_006","latency_ms":1.921,"tokens_in":15,"tokens_out":16,"total_tokens":31,"score":0.5},{"tier":1,"adapter":"agent_loop","question_id":"t1_006","latency_ms":1681.02,"tokens_in":334,"tokens_out":278,"total_tokens":612,"score":0.9126},{"tier":1,"adapter":"stack","question_id":"t1_006","latency_ms":2439.22,"tokens_in":373,"tokens_out":524,"total_tokens":897,"score":0.837},{"tier":1,"adapter":"baseline","question_id":"t1_007","latency_ms":1.879,"tokens_in":16,"tokens_out":1,"total_tokens":17,"score":1.0},{"tier":1,"adapter":"agent_loop","question_id":"t1_007","latency_ms":1589.67,"tokens_in":309,"tokens_out":377,"total_tokens":686,"score":1.0},{"tier":1,"adapter":"stack","question_id":"t1_007","latency_ms":3121.4,"tokens_in":367,"tokens_out":524,"total_tokens":891,"score":0.7841},{"tier":1,"adapter":"baseline","question_id":"t1_008","latency_ms":1.893,"tokens_in":17,"tokens_out":1,"total_tokens":18,"score":0.0},{"tier":1,"adapter":"agent_loop","question_id":"t1_008","latency_ms":1667.91,"tokens_in":349,"tokens_out":378,"total_tokens":727,"score":0.9958},{"tier":1,"adapter":"stack","question_id":"t1_008","latency_ms":2316.97,"tokens_in":440,"tokens_out":421,"total_tokens":861,"score":0.9723},{"tier":1,"adapter":"baseline","question_id":"t1_009","latency_ms":1.911,"tokens_in":12,"tokens_out":9,"total_tokens":21,"score":1.0},{"tier":1,"adapter":"agent_loop","question_id":"t1_009","latency_ms":1470.31,"tokens_in":251,"tokens_out":315,"total_tokens":566,"score":0.8867},{"tier":1,"adapter":"stack","question_id":"t1_009","latency_ms":2312.01,"tokens_in":360,"tokens_out":434,"total_tokens":794,"score":0.9039},{"tier":1,"adapter":"baseline","question_id":"t1_010","latency_ms":1.841,"tokens_in":14,"tokens_out":26,"total_tokens":40,"score":0.8125},{"tier":1,"adapter":"agent_loop","question_id":"t1_010","latency_ms":1842.7,"tokens_in":272,"tokens_out":287,"total_tokens":559,"score":0.8377},{"tier":1,"adapter":"stack","question_id":"t1_010","latency_ms":1860.73,"tokens_in":313,"tokens_out":518,"total_tokens":831,"score":0.7823},{"tier":2,"adapter":"baseline","question_id":"t2_001","latency_ms":1.828,"tokens_in":25,"tokens_out":18,"total_tokens":43,"score":0.6667},{"tier":2,"adapter":"agent_loop","question_id":"t2_001","latency_ms":1644.33,"tokens_in":334,"tokens_out":409,"total_tokens":743,"score":0.7392},{"tier":2,"adapter":"stack","question_id":"t2_001","latency_ms":2724.19,"tokens_in":362,"tokens_out":307,"total_tokens":669,"score":0.7695},{"tier":2,"adapter":"baseline","question_id":"t2_002","latency_ms":1.879,"tokens_in":16,"tokens_out":24,"total_tokens":40,"score":0.7895},{"tier":2,"adapter":"agent_loop","question_id":"t2_002","latency_ms":1366.55,"tokens_in":289,"tokens_out":405,"total_tokens":694,"score":0.8852},{"tier":2,"adapter":"stack","question_id":"t2_002","latency_ms":1941.03,"tokens_in":241,"tokens_out":497,"total_tokens":738,"score":0.754},{"tier":2,"adapter":"baseline","question_id":"t2_003","latency_ms":1.839,"tokens_in":25,"tokens_out":21,"total_tokens":46,"score":0.7},{"tier":2,"adapter":"agent_loop","question_id":"t2_003","latency_ms":846.93,"tokens_in":325,"tokens_out":265,"total_tokens":590,"score":0.8326},{"tier":2,"adapter":"stack","question_id":"t2_003","latency_ms":2194.59,"tokens_in":355,"tokens_out":576,"total_tokens":931,"score":0.7223},{"tier":2,"adapter":"baseline","question_id":"t2_004","latency_ms":1.873,"tokens_in":22,"tokens_out":22,"total_tokens":44,"score":0.7222},{"tier":2,"adapter":"agent_loop","question_id":"t2_004","latency_ms":1432.19,"tokens_in":291,"tokens_out":452,"total_tokens":743,"score":0.8086},{"tier":2,"adapter":"stack","question_id":"t2_004","latency_ms":2102.19,"tokens_in":369,"tokens_out":493,"total_tokens":862,"score":0.7156},{"tier":2,"adapter":"baseline","question_id":"t2_005","latency_ms":1.848,"tokens_in":22,"tokens_out":33,"total_tokens":55,"score":0.7778},{"tier":2,"adapter":"agent_loop","question_id":"t2_005","latency_ms":1667.76,"tokens_in":260,"tokens_out":375,"total_tokens":635,"score":0.6338},{"tier":2,"adapter":"stack","question_id":"t2_005","latency_ms":2220.09,"tokens_in":207,"tokens_out":374,"total_tokens":581,"score":0.6794},{"tier":2,"adapter":"baseline","question_id":"t2_006","latency_ms":1.852,"tokens_in":26,"tokens_out":26,"total_tokens":52,"score":0.8667},{"tier":2,"adapter":"agent_loop","question_id":"t2_006","latency_ms":1842.24,"tokens_in":392,"tokens_out":330,"total_tokens":722,"score":0.7029},{"tier":2,"adapter":"stack","question_id":"t2_006","latency_ms":1200.0,"tokens_in":309,"tokens_out":346,"total_tokens":655,"score":0.8937},{"tier":2,"adapter":"baseline","question_id":"t2_007","latency_ms":1.872,"tokens_in":23,"tokens_out":22,"total_tokens":45,"score":0.7333},{"tier":2,"adapter":"agent_loop","question_id":"t2_007","latency_ms":1632.02,"tokens_in":238,"tokens_out":377,"total_tokens":615,"score":0.771},{"tier":2,"adapter":"stack","question_id":"t2_007","latency_ms":1710.65,"tokens_in":388,"tokens_out":418,"total_tokens":806,"score":0.7928},{"tier":2,"adapter":"baseline","question_id":"t2_008","latency_ms":1.842,"tokens_in":24,"tokens_out":16,"total_tokens":40,"score":0.9},{"tier":2,"adapter":"agent_loop","question_id":"t2_008","latency_ms":1808.47,"tokens_in":192,"tokens_out":387,"total_tokens":579,"score":0.7126},{"tier":2,"adapter":"stack","question_id":"t2_008","latency_ms":1794.56,"tokens_in":237,"tokens_out":590,"total_tokens":827,"score":0.6415},{"tier":3,"adapter":"baseline","question_id":"t3_001","latency_ms":1.839,"tokens_in":22,"tokens_out":21,"total_tokens":43,"score":0.6429},{"tier":3,"adapter":"agent_loop","question_id":"t3_001","latency_ms":1010.55,"tokens_in":274,"tokens_out":396,"total_tokens":670,"score":0.6207},{"tier":3,"adapter":"stack","question_id":"t3_001","latency_ms":1200.0,"tokens_in":401,"tokens_out":480,"total_tokens":881,"score":0.8887},{"tier":3,"adapter":"baseline","question_id":"t3_002","latency_ms":1.87,"tokens_in":20,"tokens_out":55,"total_tokens":75,"score":0.8214},{"tier":3,"adapter":"agent_loop","question_id":"t3_002","latency_ms":1546.27,"tokens_in":271,"tokens_out":311,"total_tokens":582,"score":0.6811},{"tier":3,"adapter":"stack","question_id":"t3_002","latency_ms":1824.15,"tokens_in":337,"tokens_out":532,"total_tokens":869,"score":0.8474},{"tier":3,"adapter":"baseline","question_id":"t3_003","latency_ms":1.827,"tokens_in":22,"tokens_out":60,"total_tokens":82,"score":0.7647},{"tier":3,"adapter":"agent_loop","question_id":"t3_003","latency_ms":1246.86,"tokens_in":245,"tokens_out":444,"total_tokens":689,"score":0.633},{"tier":3,"adapter":"stack","question_id":"t3_003","latency_ms":1408.01,"tokens_in":278,"tokens_out":440,"total_tokens":718,"score":0.7504},{"tier":3,"adapter":"baseline","question_id":"t3_004","latency_ms":1.813,"tokens_in":23,"tokens_out":43,"total_tokens":66,"score":0.913},{"tier":3,"adapter":"agent_loop","question_id":"t3_004","latency_ms":1089.77,"tokens_in":370,"tokens_out":402,"total_tokens":772,"score":0.5472},{"tier":3,"adapter":"stack","question_id":"t3_004","latency_ms":2730.38,"tokens_in":373,"tokens_out":355,"total_tokens":728,"score":0.7592},{"tier":3,"adapter":"baseline","question_id":"t3_005","latency_ms":1.83,"tokens_in":23,"tokens_out":67,"total_tokens":90,"score":0.75},{"tier":3,"adapter":"agent_loop","question_id":"t3_005","latency_ms":1290.26,"tokens_in":287,"tokens_out":198,"total_tokens":485,"score":0.6598},{"tier":3,"adapter":"stack","question_id":"t3_005","latency_ms":2057.52,"tokens_in":131,"tokens_out":378,"total_tokens":509,"score":0.7438},{"tier":3,"adapter":"baseline","question_id":"t3_006","latency_ms":1.79,"tokens_in":21,"tokens_out":54,"total_tokens":75,"score":0.8519},{"tier":3,"adapter":"agent_loop","question_id":"t3_006","latency_ms":1937.12,"tokens_in":317,"tokens_out":348,"total_tokens":665,"score":0.4875},{"tier":3,"adapter":"stack","question_id":"t3_006","latency_ms":2323.82,"tokens_in":429,"tokens_out":329,"total_tokens":758,"score":0.7156},{"tier":4,"adapter":"baseline","question_id":"t4_001","latency_ms":1.836,"tokens_in":42,"tokens_out":37,"total_tokens":79,"score":0.6},{"tier":4,"adapter":"agent_loop","question_id":"t4_001","latency_ms":1437.41,"tokens_in":303,"tokens_out":400,"total_tokens":703,"score":0.6561},{"tier":4,"adapter":"stack","question_id":"t4_001","latency_ms":1465.75,"tokens_in":314,"tokens_out":566,"total_tokens":880,"score":0.7548},{"tier":4,"adapter":"baseline","question_id":"t4_002","latency_ms":1.887,"tokens_in":29,"tokens_out":28,"total_tokens":57,"score":0.8},{"tier":4,"adapter":"agent_loop","question_id":"t4_002","latency_ms":1263.99,"tokens_in":295,"tokens_out":326,"total_tokens":621,"score":0.7086},{"tier":4,"adapter":"stack","question_id":"t4_002","latency_ms":2034.95,"tokens_in":304,"tokens_out":561,"total_tokens":865,"score":0.7402},{"tier":4,"adapter":"baseline","question_id":"t4_003","latency_ms":1.932,"tokens_in":30,"tokens_out":31,"total_tokens":61,"score":1.0},{"tier":4,"adapter":"agent_loop","question_id":"t4_003","latency_ms":1434.89,"tokens_in":208,"tokens_out":395,"total_tokens":603,"score":0.8602},{"tier":4,"adapter":"stack","question_id":"t4_003","latency_ms":2244.39,"tokens_in":265,"tokens_out":447,"total_tokens":712,"score":0.8777},{"tier":4,"adapter":"baseline","question_id":"t4_004","latency_ms":1.856,"tokens_in":45,"tokens_out":33,"total_tokens":78,"score":0.6},{"tier":4,"adapter":"agent_loop","question_id":"t4_004","latency_ms":800.0,"tokens_in":334,"tokens_out":346,"total_tokens":680,"score":0.7573},{"tier":4,"adapter":"stack","question_id":"t4_004","latency_ms":2539.04,"tokens_in":402,"tokens_out":371,"total_tokens":773,"score":0.8052},{"tier":4,"adapter":"baseline","question_id":"t4_005","latency_ms":1.87,"tokens_in":22,"tokens_out":33,"total_tokens":55,"score":0.8},{"tier":4,"adapter":"agent_loop","question_id":"t4_005","latency_ms":1541.13,"tokens_in":302,"tokens_out":350,"total_tokens":652,"score":0.8395},{"tier":4,"adapter":"stack","question_id":"t4_005","latency_ms":1801.12,"tokens_in":244,"tokens_out":389,"total_tokens":633,"score":0.8461},{"tier":4,"adapter":"baseline","question_id":"t4_006","latency_ms":1.891,"tokens_in":18,"tokens_out":73,"total_tokens":91,"score":0.8},{"tier":4,"adapter":"agent_loop","question_id":"t4_006","latency_ms":1107.32,"tokens_in":393,"tokens_out":250,"total_tokens":643,"score":0.7226},{"tier":4,"adapter":"stack","question_id":"t4_006","latency_ms":2222.6,"tokens_in":288,"tokens_out":290,"total_tokens":578,"score":0.794},{"tier":5,"adapter":"baseline","question_id":"t5_001","latency_ms":1.886,"tokens_in":20,"tokens_out":40,"total_tokens":60,"score":0.84},{"tier":5,"adapter":"agent_loop","question_id":"t5_001","latency_ms":1225.02,"tokens_in":358,"tokens_out":256,"total_tokens":614,"score":0.5963},{"tier":5,"adapter":"stack","question_id":"t5_001","latency_ms":2752.58,"tokens_in":267,"tokens_out":489,"total_tokens":756,"score":0.7295},{"tier":5,"adapter":"baseline","question_id":"t5_002","latency_ms":1.803,"tokens_in":21,"tokens_out":37,"total_tokens":58,"score":0.75},{"tier":5,"adapter":"agent_loop","question_id":"t5_002","latency_ms":1080.39,"tokens_in":331,"tokens_out":340,"total_tokens":671,"score":0.3995},{"tier":5,"adapter":"stack","question_id":"t5_002","latency_ms":1631.23,"tokens_in":406,"tokens_out":541,"total_tokens":947,"score":0.9298},{"tier":5,"adapter":"baseline","question_id":"t5_003","latency_ms":1.829,"tokens_in":18,"tokens_out":18,"total_tokens":36,"score":0.625},{"tier":5,"adapter":"agent_loop","question_id":"t5_003","latency_ms":1255.75,"tokens_in":231,"tokens_out":457,"total_tokens":688,"score":0.4177},{"tier":5,"adapter":"stack","question_id":"t5_003","latency_ms":2064.5,"tokens_in":334,"tokens_out":532,"total_tokens":866,"score":0.6221},{"tier":5,"adapter":"baseline","question_id":"t5_004","latency_ms":1.86,"tokens_in":23,"tokens_out":42,"total_tokens":65,"score":0.7917},{"tier":5,"adapter":"agent_loop","question_id":"t5_004","latency_ms":1892.73,"tokens_in":336,"tokens_out":266,"total_tokens":602,"score":0.7409},{"tier":5,"adapter":"stack","question_id":"t5_004","latency_ms":2228.37,"tokens_in":265,"tokens_out":459,"total_tokens":724,"score":0.936},{"tier":5,"adapter":"baseline","question_id":"t5_005","latency_ms":1.797,"tokens_in":18,"tokens_out":44,"total_tokens":62,"score":0.7917},{"tier":5,"adapter":"agent_loop","question_id":"t5_005","latency_ms":1795.63,"tokens_in":212,"tokens_out":288,"total_tokens":500,"score":0.6371},{"tier":5,"adapter":"stack","question_id":"t5_005","latency_ms":2246.12,"tokens_in":496,"tokens_out":492,"total_tokens":988,"score":0.7174}];
+
+const QUESTIONS = [{"id":"t1_001","prompt":"What is the Shannon entropy of a uniform distribution over 8 symbols?","tier":1,"tier_name":"factual"},{"id":"t1_002","prompt":"What is the UCB1 formula for multi-armed bandit arm selection?","tier":1,"tier_name":"factual"},{"id":"t1_003","prompt":"What does IRAP stand for in the Australian security context?","tier":1,"tier_name":"factual"},{"id":"t1_004","prompt":"In Elixir, what does System.unique_integer([:positive]) return?","tier":1,"tier_name":"factual"},{"id":"t1_005","prompt":"What is the KL divergence between two identical probability distributions?","tier":1,"tier_name":"factual"},{"id":"t1_006","prompt":"Name the 5 CoverageOracle scenario classes built into Recursa.","tier":1,"tier_name":"factual"},{"id":"t1_007","prompt":"What HTTP method does Elan.Router use for the /run_skill endpoint?","tier":1,"tier_name":"factual"},{"id":"t1_008","prompt":"What is the default SLO laxity threshold for IRAP_PROTECTED contexts?","tier":1,"tier_name":"factual"},{"id":"t1_009","prompt":"What does FTAP stand for in mathematical finance?","tier":1,"tier_name":"factual"},{"id":"t1_010","prompt":"In the Schnorr protocol, what is the verification equation?","tier":1,"tier_name":"factual"},{"id":"t2_001","prompt":"If laxity_score = 0.23 and context = :irap_protected (max 0.20), what severity does LaxityProbe return?","tier":2,"tier_name":"reasoning"},{"id":"t2_002","prompt":"Given UCB1 scores [0.8, 0.6, 0.9], which skill is selected next?","tier":2,"tier_name":"reasoning"},{"id":"t2_003","prompt":"A coalition of agents [A, B, C] changes to [A, B] \u2014 does SpeculumFreshness return :stale or :changed?","tier":2,"tier_name":"reasoning"},{"id":"t2_004","prompt":"Stack has 21 open sorrys. sorry_depth = ceil(21/10) = ? Does it pass the SLO limit of 2?","tier":2,"tier_name":"reasoning"},{"id":"t2_005","prompt":"A TokenGov matter has conflicting obligations X and Y. What does ConflictDetector return?","tier":2,"tier_name":"reasoning"},{"id":"t2_006","prompt":"If Elan DriftSensor detects KL-divergence 0.15 against threshold 0.10, what event type does MetaBus emit?","tier":2,"tier_name":"reasoning"},{"id":"t2_007","prompt":"A skill DAG has 3 nodes, 2 with sorry_depth 1 and 1 clean. What is the overall laxity_score?","tier":2,"tier_name":"reasoning"},{"id":"t2_008","prompt":"CSC.RegretState: after 5 plays with rewards [0.9, 0.8, 0.7, 0.85, 0.75], what is the mean reward?","tier":2,"tier_name":"reasoning"},{"id":"t3_001","prompt":"Under IRAP ISM-0839, what is the maximum classification level for AI-processed documents?","tier":3,"tier_name":"legal"},{"id":"t3_002","prompt":"EU AI Act Article 13: what transparency requirements apply to high-risk AI systems?","tier":3,"tier_name":"legal"},{"id":"t3_003","prompt":"SRA Principle 6 \u2014 what duty does it impose on UK solicitors regarding client information?","tier":3,"tier_name":"legal"},{"id":"t3_004","prompt":"Under CCPA, what right allows California residents to opt out of sale of personal information?","tier":3,"tier_name":"legal"},{"id":"t3_005","prompt":"GDPR Article 44 \u2014 under what conditions may personal data be transferred to a third country?","tier":3,"tier_name":"legal"},{"id":"t3_006","prompt":"What is the regulatory sandbox provision in the EU AI Act and which article covers it?","tier":3,"tier_name":"legal"},{"id":"t4_001","prompt":"Write an Elixir function that computes KL divergence between two probability maps.","tier":4,"tier_name":"code"},{"id":"t4_002","prompt":"Write a Lean 4 theorem stub for 'no-arbitrage implies risk-neutral measure exists' (FTAP).","tier":4,"tier_name":"code"},{"id":"t4_003","prompt":"Write the UCB1 score formula as an Elixir function.","tier":4,"tier_name":"code"},{"id":"t4_004","prompt":"Fix the broken Schnorr verification: g^r == c * h^e mod p when p=q (Wave 4 bug).","tier":4,"tier_name":"code"},{"id":"t4_005","prompt":"Write a GenServer init/1 that registers under a unique name using System.unique_integer.","tier":4,"tier_name":"code"},{"id":"t4_006","prompt":"Write an Elixir test that verifies a MetaBus event is emitted within 100ms.","tier":4,"tier_name":"code"},{"id":"t5_001","prompt":"What is the current sorry_depth SLO status of the stack after Wave 4 remediation?","tier":5,"tier_name":"metacog"},{"id":"t5_002","prompt":"Which metacognitive module would surface a distributional shift in Elan agent outputs?","tier":5,"tier_name":"metacog"},{"id":"t5_003","prompt":"What is the pi-score tradeoff formula used in BenchArena.MetricCollector?","tier":5,"tier_name":"metacog"},{"id":"t5_004","prompt":"If CoverageOracle.coverage_score/0 returns 0.72, which scenario classes are likely uncovered?","tier":5,"tier_name":"metacog"},{"id":"t5_005","prompt":"What did the Wave 4 self-assessment identify as the #1 critical finding?","tier":5,"tier_name":"metacog"}];
+
+const TIER_NAMES = {1:'Factual',2:'Reasoning',3:'Legal',4:'Code',5:'Metacog'};
+const ADAPTER_COLORS = {baseline:'#f0883e',agent_loop:'#58a6ff',stack:'#3fb950'};
+
+// === HELPERS ===
+function mean(arr) { return arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0; }
+function round(n,d) { const f=Math.pow(10,d); return Math.round(n*f)/f; }
+
+function computeStats(data) {
+  const byAdapter = {};
+  ['baseline','agent_loop','stack'].forEach(a => {
+    const entries = data.filter(d => d.adapter === a);
+    if (!entries.length) return;
+    const lats = entries.map(e=>e.latency_ms);
+    const toks = entries.map(e=>e.total_tokens);
+    const scores = entries.map(e=>e.score);
+    byAdapter[a] = {
+      meanLatency: round(mean(lats),1),
+      minLatency: round(Math.min(...lats),1),
+      maxLatency: round(Math.max(...lats),1),
+      meanTokens: round(mean(toks),0),
+      meanAccuracy: round(mean(scores),4),
+      piScore: 0
+    };
+  });
+  // pi-score: stack vs agent_loop
+  if (byAdapter.agent_loop && byAdapter.stack) {
+    const ld = byAdapter.stack.meanLatency - byAdapter.agent_loop.meanLatency;
+    const td = byAdapter.stack.meanTokens - byAdapter.agent_loop.meanTokens;
+    const ad = byAdapter.stack.meanAccuracy - byAdapter.agent_loop.meanAccuracy;
+    const pi = ad - 0.001*ld - 0.0001*td;
+    byAdapter.stack.piScore = round(pi,4);
+    byAdapter.agent_loop.piScore = round(-pi,4);
+  }
+  return byAdapter;
+}
+
+function computeTierStats(data) {
+  const result = {};
+  for (let t=1;t<=5;t++) {
+    result[t] = {};
+    ['baseline','agent_loop','stack'].forEach(a => {
+      const entries = data.filter(d => d.tier===t && d.adapter===a);
+      if (entries.length) result[t][a] = round(mean(entries.map(e=>e.score)),4);
+    });
+  }
+  return result;
+}
+
+// === TRADEOFF GRID ===
+function renderTradeoff(stats) {
+  const grid = document.getElementById('tradeoffGrid');
+  // Clear non-header cells
+  while (grid.children.length > 4) grid.removeChild(grid.lastChild);
+
+  const rows = [
+    {label:'Mean Latency',key:'meanLatency',fmt:v=>v+'ms',lower:true},
+    {label:'Mean Tokens',key:'meanTokens',fmt:v=>v,lower:true},
+    {label:'Mean Accuracy',key:'meanAccuracy',fmt:v=>v,lower:false},
+    {label:'\u03C0-Score',key:'piScore',fmt:v=>(v>0?'+':'')+v,lower:false}
+  ];
+
+  rows.forEach(row => {
+    const vals = ['baseline','agent_loop','stack'].map(a => stats[a] ? stats[a][row.key] : null);
+    const validVals = vals.filter(v=>v!==null);
+    const best = row.lower ? Math.min(...validVals) : Math.max(...validVals);
+    const worst = row.lower ? Math.max(...validVals) : Math.min(...validVals);
+
+    const label = document.createElement('div');
+    label.className = 'cell row-label';
+    label.textContent = row.label;
+    grid.appendChild(label);
+
+    vals.forEach(v => {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      if (v === null) { cell.textContent = '-'; }
+      else {
+        cell.textContent = row.fmt(v);
+        if (v === best) cell.classList.add('best');
+        else if (v === worst) cell.classList.add('worst');
+        else cell.classList.add('mid');
+      }
+      grid.appendChild(cell);
+    });
+  });
+}
+
+// === TIER CHART ===
+function renderTierChart(tierStats) {
+  const svg = document.getElementById('tierChart');
+  svg.innerHTML = '';
+  const W=800, H=340, pad={t:30,b:60,l:60,r:20};
+  const chartW = W-pad.l-pad.r;
+  const chartH = H-pad.t-pad.b;
+  const groupW = chartW/5;
+  const barW = groupW*0.22;
+  const adapters = ['baseline','agent_loop','stack'];
+
+  // Y axis
+  for (let i=0;i<=5;i++) {
+    const y = pad.t + chartH - (i/5)*chartH;
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',pad.l); line.setAttribute('x2',W-pad.r);
+    line.setAttribute('y1',y); line.setAttribute('y2',y);
+    line.setAttribute('stroke','var(--border)'); line.setAttribute('stroke-width','1');
+    svg.appendChild(line);
+    const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
+    txt.setAttribute('x',pad.l-8); txt.setAttribute('y',y+4);
+    txt.setAttribute('text-anchor','end'); txt.setAttribute('font-size','11');
+    txt.textContent = round(i/5,1);
+    svg.appendChild(txt);
+  }
+
+  for (let t=1;t<=5;t++) {
+    const gx = pad.l + (t-1)*groupW + groupW/2;
+    // Tier label
+    const lbl = document.createElementNS('http://www.w3.org/2000/svg','text');
+    lbl.setAttribute('x',gx); lbl.setAttribute('y',H-20);
+    lbl.setAttribute('text-anchor','middle'); lbl.setAttribute('font-size','12'); lbl.setAttribute('font-weight','600');
+    lbl.textContent = TIER_NAMES[t];
+    svg.appendChild(lbl);
+    const lbl2 = document.createElementNS('http://www.w3.org/2000/svg','text');
+    lbl2.setAttribute('x',gx); lbl2.setAttribute('y',H-6);
+    lbl2.setAttribute('text-anchor','middle'); lbl2.setAttribute('font-size','10');
+    lbl2.setAttribute('fill','var(--fg2)');
+    lbl2.textContent = 'Tier '+t;
+    svg.appendChild(lbl2);
+
+    adapters.forEach((a,i) => {
+      const val = tierStats[t][a] || 0;
+      const bh = val * chartH;
+      const bx = gx - 1.5*barW + i*(barW+4);
+      const by = pad.t + chartH - bh;
+      const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
+      rect.setAttribute('x',bx); rect.setAttribute('y',by);
+      rect.setAttribute('width',barW); rect.setAttribute('height',bh);
+      rect.setAttribute('fill',ADAPTER_COLORS[a]);
+      rect.setAttribute('rx','3');
+      rect.setAttribute('opacity','0.85');
+      svg.appendChild(rect);
+      // Value label
+      const vt = document.createElementNS('http://www.w3.org/2000/svg','text');
+      vt.setAttribute('x',bx+barW/2); vt.setAttribute('y',by-4);
+      vt.setAttribute('text-anchor','middle'); vt.setAttribute('font-size','9'); vt.setAttribute('font-family','var(--mono)');
+      vt.textContent = round(val,2);
+      svg.appendChild(vt);
+    });
+  }
+
+  // Legend
+  const lx = W - 200;
+  adapters.forEach((a,i) => {
+    const r = document.createElementNS('http://www.w3.org/2000/svg','rect');
+    r.setAttribute('x',lx+i*70); r.setAttribute('y',8); r.setAttribute('width',10); r.setAttribute('height',10);
+    r.setAttribute('fill',ADAPTER_COLORS[a]); r.setAttribute('rx','2');
+    svg.appendChild(r);
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',lx+i*70+14); t.setAttribute('y',17); t.setAttribute('font-size','10');
+    t.textContent = a==='agent_loop'?'Agent Loop':a==='stack'?'Stack':'Baseline';
+    svg.appendChild(t);
+  });
+}
+
+// === LATENCY CHART ===
+function renderLatencyChart(stats) {
+  const svg = document.getElementById('latencyChart');
+  svg.innerHTML = '';
+  const W=800, H=320, pad={t:30,b:50,l:70,r:30};
+  const chartW = W-pad.l-pad.r;
+  const chartH = H-pad.t-pad.b;
+  const adapters = ['baseline','agent_loop','stack'];
+  const logMin = 0; // 10^0 = 1ms
+  const logMax = 4; // 10^4 = 10000ms
+
+  // Y axis (log scale)
+  for (let p=0;p<=4;p++) {
+    const y = pad.t + chartH - (p/4)*chartH;
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',pad.l); line.setAttribute('x2',W-pad.r);
+    line.setAttribute('y1',y); line.setAttribute('y2',y);
+    line.setAttribute('stroke','var(--border)');
+    svg.appendChild(line);
+    const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
+    txt.setAttribute('x',pad.l-8); txt.setAttribute('y',y+4);
+    txt.setAttribute('text-anchor','end'); txt.setAttribute('font-size','11');
+    txt.textContent = Math.pow(10,p)+'ms';
+    svg.appendChild(txt);
+  }
+
+  function logY(ms) {
+    const lv = Math.log10(Math.max(ms,1));
+    return pad.t + chartH - ((lv-logMin)/(logMax-logMin))*chartH;
+  }
+
+  const barW = chartW / (adapters.length * 2);
+  adapters.forEach((a,i) => {
+    const s = stats[a];
+    if (!s) return;
+    const cx = pad.l + (i+0.5)*(chartW/3);
+    const yMean = logY(s.meanLatency);
+    const yMin = logY(s.minLatency);
+    const yMax = logY(s.maxLatency);
+
+    // Error bar line
+    const errLine = document.createElementNS('http://www.w3.org/2000/svg','line');
+    errLine.setAttribute('x1',cx); errLine.setAttribute('x2',cx);
+    errLine.setAttribute('y1',yMin); errLine.setAttribute('y2',yMax);
+    errLine.setAttribute('stroke',ADAPTER_COLORS[a]); errLine.setAttribute('stroke-width','2');
+    svg.appendChild(errLine);
+
+    // Min cap
+    [yMin,yMax].forEach(y => {
+      const cap = document.createElementNS('http://www.w3.org/2000/svg','line');
+      cap.setAttribute('x1',cx-10); cap.setAttribute('x2',cx+10);
+      cap.setAttribute('y1',y); cap.setAttribute('y2',y);
+      cap.setAttribute('stroke',ADAPTER_COLORS[a]); cap.setAttribute('stroke-width','2');
+      svg.appendChild(cap);
+    });
+
+    // Mean dot
+    const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    dot.setAttribute('cx',cx); dot.setAttribute('cy',yMean); dot.setAttribute('r',6);
+    dot.setAttribute('fill',ADAPTER_COLORS[a]);
+    svg.appendChild(dot);
+
+    // Label
+    const lbl = document.createElementNS('http://www.w3.org/2000/svg','text');
+    lbl.setAttribute('x',cx); lbl.setAttribute('y',yMean-12);
+    lbl.setAttribute('text-anchor','middle'); lbl.setAttribute('font-size','11'); lbl.setAttribute('font-family','var(--mono)');
+    lbl.textContent = s.meanLatency+'ms';
+    svg.appendChild(lbl);
+
+    // Name
+    const nm = document.createElementNS('http://www.w3.org/2000/svg','text');
+    nm.setAttribute('x',cx); nm.setAttribute('y',H-20);
+    nm.setAttribute('text-anchor','middle'); nm.setAttribute('font-size','12'); nm.setAttribute('font-weight','600');
+    nm.textContent = a==='agent_loop'?'Agent Loop':a==='stack'?'Stack':'Baseline';
+    svg.appendChild(nm);
+
+    // Min/Max labels
+    const minTxt = document.createElementNS('http://www.w3.org/2000/svg','text');
+    minTxt.setAttribute('x',cx+16); minTxt.setAttribute('y',yMin+4);
+    minTxt.setAttribute('font-size','9'); minTxt.setAttribute('fill','var(--fg2)'); minTxt.setAttribute('font-family','var(--mono)');
+    minTxt.textContent = s.minLatency+'ms';
+    svg.appendChild(minTxt);
+    const maxTxt = document.createElementNS('http://www.w3.org/2000/svg','text');
+    maxTxt.setAttribute('x',cx+16); maxTxt.setAttribute('y',yMax+4);
+    maxTxt.setAttribute('font-size','9'); maxTxt.setAttribute('fill','var(--fg2)'); maxTxt.setAttribute('font-family','var(--mono)');
+    maxTxt.textContent = s.maxLatency+'ms';
+    svg.appendChild(maxTxt);
+  });
+
+  // Y axis label
+  const yLbl = document.createElementNS('http://www.w3.org/2000/svg','text');
+  yLbl.setAttribute('x',16); yLbl.setAttribute('y',H/2);
+  yLbl.setAttribute('text-anchor','middle'); yLbl.setAttribute('font-size','11');
+  yLbl.setAttribute('transform','rotate(-90,16,'+H/2+')');
+  yLbl.textContent = 'Latency (log scale)';
+  svg.appendChild(yLbl);
+}
+
+// === QUESTION TABLE ===
+let currentSort = {col:'id', asc:true};
+
+function renderQuestionTable(data) {
+  const tbody = document.getElementById('questionBody');
+  tbody.innerHTML = '';
+
+  const questionIds = [...new Set(data.map(d=>d.question_id))];
+  let rows = questionIds.map(qid => {
+    const q = QUESTIONS.find(q=>q.id===qid) || {prompt:'',tier:0,tier_name:''};
+    const agentEntry = data.find(d=>d.question_id===qid && d.adapter==='agent_loop');
+    const stackEntry = data.find(d=>d.question_id===qid && d.adapter==='stack');
+    const agentScore = agentEntry ? round(agentEntry.score,4) : '-';
+    const stackScore = stackEntry ? round(stackEntry.score,4) : '-';
+    let winner='Tie', delta=0;
+    if (agentEntry && stackEntry) {
+      delta = round(stackEntry.score - agentEntry.score, 4);
+      if (delta > 0.02) winner = 'Stack';
+      else if (delta < -0.02) winner = 'Agent Loop';
+    }
+    return {id:qid, tier:q.tier, tierName:q.tier_name, prompt:q.prompt, agent:agentScore, stack:stackScore, winner, delta};
+  });
+
+  // Sort
+  rows.sort((a,b) => {
+    let va=a[currentSort.col], vb=b[currentSort.col];
+    if (typeof va==='number' && typeof vb==='number') return currentSort.asc ? va-vb : vb-va;
+    va=String(va); vb=String(vb);
+    return currentSort.asc ? va.localeCompare(vb) : vb.localeCompare(va);
+  });
+
+  rows.forEach(r => {
+    const tr = document.createElement('tr');
+    const cls = r.winner==='Stack'?'win-stack':r.winner==='Agent Loop'?'win-agent':'win-tie';
+    tr.className = cls;
+    const promptTrunc = r.prompt.length>60 ? r.prompt.slice(0,57)+'...' : r.prompt;
+    tr.innerHTML = '<td>'+r.id+'</td>'
+      +'<td>'+r.tier+' ('+r.tierName+')</td>'
+      +'<td class="prompt-cell" title="'+r.prompt.replace(/"/g,'&quot;')+'">'+promptTrunc+'</td>'
+      +'<td>'+r.agent+'</td>'
+      +'<td>'+r.stack+'</td>'
+      +'<td>'+r.winner+'</td>'
+      +'<td>'+(r.delta>0?'+':'')+r.delta+'</td>';
+    tbody.appendChild(tr);
+  });
+
+  // Update header classes
+  document.querySelectorAll('#questionTable th').forEach(th => {
+    th.classList.remove('sorted-asc','sorted-desc');
+    if (th.dataset.col === currentSort.col) {
+      th.classList.add(currentSort.asc?'sorted-asc':'sorted-desc');
+    }
+  });
+}
+
+function sortTable(col) {
+  if (currentSort.col === col) currentSort.asc = !currentSort.asc;
+  else { currentSort.col = col; currentSort.asc = true; }
+  renderQuestionTable(currentData);
+}
+
+// === INIT ===
+let currentData = SIMULATED_DATA;
+
+function render() {
+  const stats = computeStats(currentData);
+  const tierStats = computeTierStats(currentData);
+  renderTradeoff(stats);
+  renderTierChart(tierStats);
+  renderLatencyChart(stats);
+  renderQuestionTable(currentData);
+}
+
+document.getElementById('runSelect').addEventListener('change', function() {
+  if (this.value === 'baseline') {
+    currentData = SIMULATED_DATA.filter(d => d.adapter === 'baseline');
+  } else {
+    currentData = SIMULATED_DATA;
+  }
+  render();
+});
+
+render();
+</script>
+</body>
+</html>

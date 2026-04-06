@@ -28,13 +28,21 @@ defmodule BenchArena.Adapters.StackAdapter do
     end
   end
 
+  defp req_opts(extra) do
+    if Application.get_env(:bench_arena, :adapter_retry, true) do
+      extra
+    else
+      Keyword.put(extra, :retry, false)
+    end
+  end
+
   defp csc_compile(csc_url, question, timeout) do
     body = %{
       input: question.prompt,
       context: %{tier: question.tier, question_id: question.id}
     }
 
-    case Req.post("#{csc_url}/compile", json: body, receive_timeout: timeout) do
+    case Req.post("#{csc_url}/compile", req_opts(json: body, receive_timeout: timeout)) do
       {:ok, %{status: status, body: body}} when status in 200..299 ->
         {:ok, body}
 
@@ -55,7 +63,7 @@ defmodule BenchArena.Adapters.StackAdapter do
       context: %{tier: question.tier, question_id: question.id, prompt_length: String.length(question.prompt)}
     }
 
-    case Req.post("#{token_gov_url}/governance/proposals", json: body, receive_timeout: timeout) do
+    case Req.post("#{token_gov_url}/governance/proposals", req_opts(json: body, receive_timeout: timeout)) do
       {:ok, %{status: status, body: body}} when status in 200..299 ->
         {:ok, body}
 

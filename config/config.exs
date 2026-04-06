@@ -10,3 +10,7 @@ config :bench_arena,
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:run_id, :tier, :adapter]
+
+if config_env() == :test do
+  config :bench_arena, adapter_retry: false
+end

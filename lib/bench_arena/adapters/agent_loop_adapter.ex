@@ -25,8 +25,16 @@ defmodule BenchArena.Adapters.AgentLoopAdapter do
     end
   end
 
+  defp req_opts(extra) do
+    if Application.get_env(:bench_arena, :adapter_retry, true) do
+      extra
+    else
+      Keyword.put(extra, :retry, false)
+    end
+  end
+
   defp health_check(base_url, timeout) do
-    case Req.get("#{base_url}/health", receive_timeout: timeout) do
+    case Req.get("#{base_url}/health", req_opts(receive_timeout: timeout)) do
       {:ok, %{status: status}} when status in 200..299 ->
         :ok
 
@@ -48,8 +56,7 @@ defmodule BenchArena.Adapters.AgentLoopAdapter do
     }
 
     case Req.post("#{base_url}/run_skill",
-           json: body,
-           receive_timeout: timeout
+           req_opts(json: body, receive_timeout: timeout)
          ) do
       {:ok, %{status: status, body: body}} when status in 200..299 ->
         {:ok,

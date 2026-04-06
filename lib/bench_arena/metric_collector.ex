@@ -50,6 +50,15 @@ defmodule BenchArena.MetricCollector do
   end
 
   @doc """
+  Get summary statistics broken down by tier.
+  Returns a map keyed by tier number with per-tier stats for each adapter.
+  """
+  @spec summary_by_tier(atom()) :: map()
+  def summary_by_tier(adapter) do
+    GenServer.call(__MODULE__, {:summary_by_tier, adapter})
+  end
+
+  @doc """
   Get all recorded results.
   """
   @spec all_results() :: [map()]
@@ -149,6 +158,39 @@ defmodule BenchArena.MetricCollector do
         pi_score: Float.round(pi_score, 4)
       }, state}
     end
+  end
+
+  @impl true
+  def handle_call({:summary_by_tier, adapter}, _from, state) do
+    results = fetch_all()
+
+    filtered =
+      if adapter do
+        Enum.filter(results, &(&1.adapter == normalize_adapter(adapter)))
+      else
+        results
+      end
+
+    grouped = Enum.group_by(filtered, & &1.tier)
+
+    by_tier =
+      Map.new(grouped, fn {tier, entries} ->
+        latencies = Enum.map(entries, & &1.latency_ms)
+        tokens = Enum.map(entries, & &1.total_tokens)
+        accuracies = Enum.map(entries, & &1.accuracy)
+
+        stats = %{
+          count: length(entries),
+          mean_latency_ms: safe_mean(latencies),
+          mean_tokens: safe_mean(tokens),
+          mean_accuracy: safe_mean(accuracies),
+          pass_rate: pass_rate(accuracies)
+        }
+
+        {tier, stats}
+      end)
+
+    {:reply, by_tier, state}
   end
 
   @impl true
