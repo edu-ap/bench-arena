@@ -116,4 +116,115 @@ defmodule BenchArena.CorpusTest do
       assert count > 0
     end
   end
+
+  describe "load_standard/0" do
+    test "returns 25 standard questions" do
+      questions = Corpus.load_standard()
+      assert length(questions) == 25
+    end
+
+    test "all standard questions have benchmark_ref set" do
+      questions = Corpus.load_standard()
+      assert Enum.all?(questions, &(not is_nil(&1.benchmark_ref)))
+    end
+
+    test "returns Question structs" do
+      [q | _] = Corpus.load_standard()
+      assert %Question{} = q
+      assert is_binary(q.id)
+      assert is_binary(q.prompt)
+      assert is_binary(q.reference_answer)
+    end
+
+    test "all standard questions are tier 6" do
+      questions = Corpus.load_standard()
+      assert Enum.all?(questions, &(&1.tier == 6))
+    end
+
+    test "all standard questions have tier_name 'standard_benchmark'" do
+      questions = Corpus.load_standard()
+      assert Enum.all?(questions, &(&1.tier_name == "standard_benchmark"))
+    end
+
+    test "has 5 MMLU-Pro style questions" do
+      questions = Corpus.load_standard()
+      mmlu = Enum.filter(questions, &(&1.benchmark_ref == "mmlu_pro"))
+      assert length(mmlu) == 5
+    end
+
+    test "has 5 GPQA Diamond style questions" do
+      questions = Corpus.load_standard()
+      gpqa = Enum.filter(questions, &(&1.benchmark_ref == "gpqa_diamond"))
+      assert length(gpqa) == 5
+    end
+
+    test "has 5 HumanEval style questions" do
+      questions = Corpus.load_standard()
+      he = Enum.filter(questions, &(&1.benchmark_ref == "humaneval"))
+      assert length(he) == 5
+    end
+
+    test "has 5 IFEval style questions" do
+      questions = Corpus.load_standard()
+      ife = Enum.filter(questions, &(&1.benchmark_ref == "ifeval"))
+      assert length(ife) == 5
+    end
+
+    test "has 5 AIME style questions" do
+      questions = Corpus.load_standard()
+      aime = Enum.filter(questions, &(&1.benchmark_ref == "aime"))
+      assert length(aime) == 5
+    end
+
+    test "all IDs follow std_ prefix pattern" do
+      questions = Corpus.load_standard()
+      assert Enum.all?(questions, &String.starts_with?(&1.id, "std_"))
+    end
+
+    test "all questions have valid scoring methods" do
+      questions = Corpus.load_standard()
+      assert Enum.all?(questions, &(&1.scoring_method in [:exact_match, :semantic, :rubric]))
+    end
+
+    test "all questions have tags including 'standard'" do
+      questions = Corpus.load_standard()
+      assert Enum.all?(questions, &(:standard in &1.tags))
+    end
+
+    test "MMLU-Pro questions use exact_match scoring" do
+      questions = Corpus.load_standard()
+      mmlu = Enum.filter(questions, &(&1.benchmark_ref == "mmlu_pro"))
+      assert Enum.all?(mmlu, &(&1.scoring_method == :exact_match))
+    end
+
+    test "GPQA Diamond questions use exact_match scoring" do
+      questions = Corpus.load_standard()
+      gpqa = Enum.filter(questions, &(&1.benchmark_ref == "gpqa_diamond"))
+      assert Enum.all?(gpqa, &(&1.scoring_method == :exact_match))
+    end
+
+    test "HumanEval questions use rubric scoring" do
+      questions = Corpus.load_standard()
+      he = Enum.filter(questions, &(&1.benchmark_ref == "humaneval"))
+      assert Enum.all?(he, &(&1.scoring_method == :rubric))
+    end
+
+    test "AIME questions use exact_match scoring" do
+      questions = Corpus.load_standard()
+      aime = Enum.filter(questions, &(&1.benchmark_ref == "aime"))
+      assert Enum.all?(aime, &(&1.scoring_method == :exact_match))
+    end
+
+    test "all questions have expected_tokens_budget" do
+      questions = Corpus.load_standard()
+      assert Enum.all?(questions, &(is_integer(&1.expected_tokens_budget) and &1.expected_tokens_budget > 0))
+    end
+  end
+
+  describe "benchmark_ref field" do
+    test "existing tier questions have nil benchmark_ref" do
+      questions = Corpus.load_tier(1)
+      assert Enum.all?(questions, &is_nil(&1.benchmark_ref))
+    end
+  end
 end

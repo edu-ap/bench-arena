@@ -9,16 +9,18 @@ defmodule BenchArena.Reporter do
   Options:
     - `:format` - :markdown or :html (default: :markdown)
     - `:output` - file path to write to (optional)
+    - `:results` - list of result maps (optional, for 3-state display)
   """
   @spec generate(String.t(), map(), map(), keyword()) :: {:ok, String.t()}
   def generate(run_id, summary, tradeoff, opts \\ []) do
     format = Keyword.get(opts, :format, :markdown)
     output = Keyword.get(opts, :output)
+    results = Keyword.get(opts, :results, [])
 
     content =
       case format do
-        :markdown -> generate_markdown(run_id, summary, tradeoff)
-        :html -> generate_html(run_id, summary, tradeoff)
+        :markdown -> generate_markdown(run_id, summary, tradeoff, results)
+        :html -> generate_html(run_id, summary, tradeoff, results)
       end
 
     if output do
@@ -31,13 +33,14 @@ defmodule BenchArena.Reporter do
   @doc """
   Generate a Markdown report.
   """
-  @spec generate_markdown(String.t(), map(), map()) :: String.t()
-  def generate_markdown(run_id, summary, tradeoff) do
+  @spec generate_markdown(String.t(), map(), map(), list()) :: String.t()
+  def generate_markdown(run_id, summary, tradeoff, results \\ []) do
     date = Date.utc_today() |> Date.to_iso8601()
     total_questions = summary |> Map.values() |> Enum.map(& &1[:count]) |> Enum.filter(&(&1)) |> Enum.sum()
     total_questions = div(max(total_questions, 0), max(map_size(summary), 1))
 
     tier_section = generate_tier_breakdown()
+    result_states_section = generate_result_states_markdown(results)
 
     """
     # BenchArena Run Report
@@ -64,6 +67,7 @@ defmodule BenchArena.Reporter do
     #{pi_recommendation(tradeoff)}
 
     #{tier_section}
+    #{result_states_section}
 
     ## Recommendations
     #{generate_recommendations(summary, tradeoff)}
@@ -73,8 +77,8 @@ defmodule BenchArena.Reporter do
   @doc """
   Generate an HTML report with inline CSS and SVG charts.
   """
-  @spec generate_html(String.t(), map(), map()) :: String.t()
-  def generate_html(run_id, summary, tradeoff) do
+  @spec generate_html(String.t(), map(), map(), list()) :: String.t()
+  def generate_html(run_id, summary, tradeoff, _results \\ []) do
     date = Date.utc_today() |> Date.to_iso8601()
 
     """
@@ -193,6 +197,54 @@ defmodule BenchArena.Reporter do
       """
     rescue
       _ -> ""
+    end
+  end
+
+  defp generate_result_states_markdown([]), do: ""
+
+  defp generate_result_states_markdown(results) do
+    rows =
+      results
+      |> Enum.group_by(& &1[:adapter])
+      |> Enum.map_join("\n", fn {adapter, entries} ->
+        state = result_state(entries)
+        public_scores = Enum.find_value(entries, %{}, & &1[:public_scores])
+
+        ref_info =
+          if state == :reference and map_size(public_scores) > 0 do
+            public_scores
+            |> Enum.map_join(", ", fn {bench, data} ->
+              score = data["score"]
+              url = data["source_url"]
+              "#{bench}: #{score}% ([source](#{url}))"
+            end)
+          else
+            ""
+          end
+
+        badge =
+          case state do
+            :live -> "✅ Live"
+            :reference -> "📊 Reference"
+            :not_run -> "⬜ Not run"
+          end
+
+        "| #{format_adapter(adapter)} | #{badge} | #{ref_info} |"
+      end)
+
+    """
+    ## Result States
+    | Adapter | Status | Reference Scores |
+    |---------|--------|-----------------|
+    #{rows}
+    """
+  end
+
+  defp result_state(entries) do
+    cond do
+      Enum.any?(entries, &(is_nil(&1[:error]) and not is_nil(&1[:accuracy]))) -> :live
+      Enum.any?(entries, &(map_size(&1[:public_scores] || %{}) > 0)) -> :reference
+      true -> :not_run
     end
   end
 

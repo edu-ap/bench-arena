@@ -15,7 +15,8 @@ defmodule BenchArena.Corpus do
       :scoring_method,
       :rubric,
       :tags,
-      :expected_tokens_budget
+      :expected_tokens_budget,
+      :benchmark_ref
     ]
 
     @type t :: %__MODULE__{
@@ -27,7 +28,8 @@ defmodule BenchArena.Corpus do
             scoring_method: :exact_match | :semantic | :rubric,
             rubric: map() | nil,
             tags: [atom()],
-            expected_tokens_budget: integer()
+            expected_tokens_budget: integer(),
+            benchmark_ref: String.t() | nil
           }
   end
 
@@ -81,6 +83,26 @@ defmodule BenchArena.Corpus do
   end
 
   @doc """
+  Load the standard benchmark-aligned question set from priv/corpus/standard_questions.json.
+  Returns 25 questions aligned with MMLU-Pro, GPQA Diamond, HumanEval, IFEval, and AIME.
+  """
+  @spec load_standard() :: [Question.t()]
+  def load_standard do
+    path = corpus_path("standard_questions.json")
+
+    case File.read(path) do
+      {:ok, content} ->
+        content
+        |> Jason.decode!()
+        |> Map.get("questions", [])
+        |> Enum.map(&parse_question/1)
+
+      {:error, _} ->
+        []
+    end
+  end
+
+  @doc """
   List available tiers and question counts.
   """
   @spec tier_info() :: [{integer(), String.t(), integer()}]
@@ -112,7 +134,8 @@ defmodule BenchArena.Corpus do
       scoring_method: parse_scoring_method(map["scoring_method"]),
       rubric: map["rubric"],
       tags: parse_tags(map["tags"]),
-      expected_tokens_budget: map["expected_tokens_budget"] || 200
+      expected_tokens_budget: map["expected_tokens_budget"] || 200,
+      benchmark_ref: map["benchmark_ref"]
     }
   end
 

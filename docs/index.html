@@ -217,6 +217,7 @@ footer{border-top:1px solid var(--border);padding:var(--s8) 0;margin-top:var(--s
       <li><a href="#dashboard">Dashboard</a></li>
       <li><a href="#questions">Questions</a></li>
       <li><a href="#methodology">Methodology</a></li>
+      <li><a href="#public-leaderboard">Leaderboard</a></li>
     </ul>
     <button class="theme-btn" data-theme-toggle aria-label="Toggle theme">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -230,12 +231,12 @@ footer{border-top:1px solid var(--border);padding:var(--s8) 0;margin-top:var(--s
 <section class="hero">
   <p class="eyebrow">edu-ap / bench-arena</p>
   <h1>BenchArena</h1>
-  <p class="tagline">A profiler that compares <strong>9 execution paths</strong> — a single LLM call, an agentic loop, the full orchestration stack, three Perplexity query modes, Claude Code with Opus 4.6, Codex with o4-mini, and Gemini CLI with Gemini 2.5 Pro — across latency, token usage, and answer accuracy on a 35-question corpus.</p>
+  <p class="tagline">A profiler that compares <strong>9 execution paths</strong> — a single LLM call, an agentic loop, the full orchestration stack, three Perplexity query modes, Claude Code with Opus 4.6, Codex with o4-mini, and Gemini CLI with Gemini 2.5 Pro — across latency, token usage, and answer accuracy on a 60-question corpus (35 internal + 25 standard benchmark-aligned).</p>
   <div class="stat-row">
-    <div class="pill"><span class="n">35</span><span class="l">questions</span></div>
-    <div class="pill"><span class="n">5</span><span class="l">tiers</span></div>
+    <div class="pill"><span class="n">60</span><span class="l">questions</span></div>
+    <div class="pill"><span class="n">6</span><span class="l">tiers</span></div>
     <div class="pill"><span class="n">9</span><span class="l">adapters</span></div>
-    <div class="pill"><span class="n">165</span><span class="l">tests · 0 failures</span></div>
+    <div class="pill"><span class="n">185+</span><span class="l">tests · 0 failures</span></div>
     <div class="pill"><span class="n">Elixir</span><span class="l">+ Benchee</span></div>
   </div>
 </section>
@@ -468,6 +469,60 @@ footer{border-top:1px solid var(--border);padding:var(--s8) 0;margin-top:var(--s
       <span><strong>tok_δ</strong> = adapter mean tokens − baseline tokens</span>
     </div>
     <p style="margin-top:var(--s4);font-size:var(--tx-xs);color:var(--faint);font-family:var(--font-mono)">π &gt; 0 → adapter outperforms baseline overall · weights tunable in <code>MetricCollector.tradeoff_report/0</code></p>
+  </div>
+
+  <!-- Benchmark Alignment Table -->
+  <h3 style="margin-top:var(--s8);margin-bottom:var(--s4)">Benchmark Alignment</h3>
+  <div class="qt-wrap" style="margin-bottom:var(--s6)">
+    <table class="qt">
+      <thead><tr><th>Our Tier</th><th>Industry Benchmark</th><th>Canonical Metric</th></tr></thead>
+      <tbody>
+        <tr><td>Tier 1: Factual</td><td>MMLU-Pro</td><td>% accuracy</td></tr>
+        <tr><td>Tier 2: Reasoning</td><td>GPQA Diamond</td><td>% accuracy</td></tr>
+        <tr><td>Tier 3: Legal</td><td>— (no direct equiv.)</td><td>Internal rubric</td></tr>
+        <tr><td>Tier 4: Code</td><td>HumanEval / SWE-bench</td><td>pass@1 / % resolved</td></tr>
+        <tr><td>Tier 5: Metacognition</td><td>IFEval</td><td>instruction following %</td></tr>
+        <tr><td>Tier 6: Standard</td><td>MMLU-Pro, GPQA, HumanEval, IFEval, AIME</td><td>mixed</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- What is Baseline? -->
+  <div class="mc" style="margin-bottom:var(--s6)">
+    <h4>What is Baseline?</h4>
+    <p style="font-size:var(--tx-xs);color:var(--muted);line-height:1.7">
+      Baseline = a single synchronous LLM query to the Perplexity sonar model. No tools, no retrieval augmentation, no multi-turn orchestration.
+      It represents the minimum latency/token floor. MMLU/GPQA scores reflect the underlying model capability on those benchmarks independently.
+    </p>
+  </div>
+
+  <!-- No-fabrication contract -->
+  <div class="callout" style="border-left-color:var(--warn);background:color-mix(in oklab,var(--warn) 7%,var(--surface));border-color:color-mix(in oklab,var(--warn) 20%,var(--border))">
+    <strong>No-fabrication contract.</strong> BenchArena never synthesizes performance data. Adapters without API credentials return N/A for live scores.
+    Where public benchmark scores are shown, they are sourced from published evaluations — not BenchArena runs.
+  </div>
+</section>
+
+<!-- ── PUBLIC LEADERBOARD REFERENCE ────────────────────── -->
+<section class="section" id="public-leaderboard">
+  <p class="sec-label">Reference Data</p>
+  <h2>Public Leaderboard Reference</h2>
+  <div class="callout" style="margin-bottom:var(--s6)">
+    <strong>These scores are NOT from BenchArena runs</strong> — they are published results from external evaluations included for reference.
+    Each score links to its source. Adapters with live BenchArena results show ✅; reference-only adapters show 📊; adapters with no data show ⬜.
+  </div>
+  <div class="qt-wrap">
+    <table class="qt" id="leaderboardTable">
+      <thead><tr>
+        <th>Adapter</th>
+        <th>GPQA Diamond</th>
+        <th>MMLU-Pro</th>
+        <th>SWE-bench Verified</th>
+        <th>LiveCodeBench</th>
+        <th>Status</th>
+      </tr></thead>
+      <tbody id="leaderboardBody"></tbody>
+    </table>
   </div>
 </section>
 </div>
@@ -876,6 +931,64 @@ document.getElementById('filterTabs').addEventListener('click',function(e){
   renderAll();
 });
 
+/* ── PUBLIC LEADERBOARD DATA ───────────────── */
+const PUBLIC_SCORES = {
+  claude_code: {
+    gpqa_diamond: {score:91.3, url:'https://iternal.ai/llm-selection-guide'},
+    swe_bench_verified: {score:80.8, url:'https://www.nxcode.io/resources/news/claude-sonnet-4-6-complete-guide-benchmarks-pricing-2026'}
+  },
+  gemini_cli: {
+    gpqa_diamond: {score:94.3, url:'https://deepmind.google/models/gemini/pro/'},
+    swe_bench_verified: {score:80.6, url:'https://deepmind.google/models/gemini/pro/'},
+    mmlu_pro: {score:92.6, url:'https://deepmind.google/models/gemini/pro/'}
+  },
+  codex: {
+    swe_bench_verified: {score:80.0, url:'https://www.nxcode.io/resources/news/claude-sonnet-4-6-complete-guide-benchmarks-pricing-2026'}
+  },
+  perplexity_standard: {
+    gpqa_diamond: {score:47.1, url:'https://designforonline.com/ai-models/perplexity-sonar/'},
+    mmlu_pro: {score:68.9, url:'https://designforonline.com/ai-models/perplexity-sonar/'},
+    live_code_bench: {score:29.5, url:'https://designforonline.com/ai-models/perplexity-sonar/'}
+  },
+  perplexity_model_council: {
+    gpqa_diamond: {score:57.8, url:'https://designforonline.com/ai-models/perplexity-sonar-pro/'},
+    mmlu_pro: {score:75.5, url:'https://designforonline.com/ai-models/perplexity-sonar-pro/'},
+    live_code_bench: {score:27.5, url:'https://designforonline.com/ai-models/perplexity-sonar-pro/'}
+  },
+  claude_code_opus46_reference: {
+    mmlu_pro: {score:91.1, url:'https://iternal.ai/llm-selection-guide'}
+  }
+};
+
+function renderLeaderboard(){
+  const tbody=document.getElementById('leaderboardBody');
+  if(!tbody)return;
+  tbody.innerHTML='';
+  const benchmarks=['gpqa_diamond','mmlu_pro','swe_bench_verified','live_code_bench'];
+  const rows=[
+    {id:'claude_code',label:'Claude Code (Opus 4.6)',color:'var(--c-claude)'},
+    {id:'gemini_cli',label:'Gemini CLI (2.5 Pro)',color:'var(--c-gemini)'},
+    {id:'codex',label:'Codex (o4-mini)',color:'var(--c-codex)'},
+    {id:'perplexity_standard',label:'Pplx Standard (sonar)',color:'var(--c-pplx-std)'},
+    {id:'perplexity_model_council',label:'Pplx Model Council',color:'var(--c-pplx-council)'},
+    {id:'claude_code_opus46_reference',label:'Opus 4.6 (reference)',color:'var(--c-claude)'}
+  ];
+  rows.forEach(r=>{
+    const tr=document.createElement('tr');
+    const scores=PUBLIC_SCORES[r.id]||{};
+    const hasAny=Object.keys(scores).length>0;
+    const cells=benchmarks.map(b=>{
+      const s=scores[b];
+      if(!s)return '<td style="color:var(--faint)">—</td>';
+      return `<td><a href="${s.url}" target="_blank" rel="noopener" style="color:var(--primary)">${s.score}%</a></td>`;
+    }).join('');
+    const status=hasAny?'<span style="color:var(--primary)">📊 Reference</span>':'<span style="color:var(--faint)">⬜ N/A</span>';
+    tr.innerHTML=`<td style="color:${r.color};font-weight:600">${r.label}</td>${cells}<td>${status}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+renderLeaderboard();
 renderAll();
 </script>
 </body>

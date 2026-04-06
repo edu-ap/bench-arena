@@ -88,18 +88,43 @@ defmodule BenchArena.MetricCollector do
 
   @impl true
   def handle_call({:record, result}, _from, state) do
+    adapter_id = normalize_adapter(Map.get(result, :adapter))
+    error = Map.get(result, :error)
+
+    public_scores =
+      if error in [:credentials_not_configured, :not_run] do
+        BenchArena.Leaderboard.scores_for(to_string(adapter_id))
+      else
+        Map.get(result, :public_scores, %{})
+      end
+
+    {latency, tokens_in, tokens_out, total_tokens, accuracy, answer} =
+      if error in [:credentials_not_configured, :not_run] do
+        {nil, nil, nil, nil, nil, nil}
+      else
+        {
+          Map.get(result, :latency_ms, 0.0),
+          Map.get(result, :tokens_in, 0),
+          Map.get(result, :tokens_out, 0),
+          Map.get(result, :total_tokens, 0),
+          Map.get(result, :accuracy, 0.0),
+          Map.get(result, :answer)
+        }
+      end
+
     entry = %{
       question_id: Map.get(result, :question_id),
-      adapter: normalize_adapter(Map.get(result, :adapter)),
+      adapter: adapter_id,
       tier: Map.get(result, :tier),
-      latency_ms: Map.get(result, :latency_ms, 0.0),
-      tokens_in: Map.get(result, :tokens_in, 0),
-      tokens_out: Map.get(result, :tokens_out, 0),
-      total_tokens: Map.get(result, :total_tokens, 0),
-      accuracy: Map.get(result, :accuracy, 0.0),
-      answer: Map.get(result, :answer),
-      error: Map.get(result, :error),
-      timestamp: Map.get(result, :timestamp)
+      latency_ms: latency,
+      tokens_in: tokens_in,
+      tokens_out: tokens_out,
+      total_tokens: total_tokens,
+      accuracy: accuracy,
+      answer: answer,
+      error: error,
+      timestamp: Map.get(result, :timestamp),
+      public_scores: public_scores
     }
 
     :ets.insert(@table, {entry.adapter, entry})
@@ -114,9 +139,9 @@ defmodule BenchArena.MetricCollector do
 
     summary =
       Map.new(grouped, fn {adapter, entries} ->
-        latencies = Enum.map(entries, & &1.latency_ms)
-        tokens = Enum.map(entries, & &1.total_tokens)
-        accuracies = Enum.map(entries, & &1.accuracy)
+        latencies = entries |> Enum.map(& &1.latency_ms) |> Enum.filter(&(not is_nil(&1)))
+        tokens = entries |> Enum.map(& &1.total_tokens) |> Enum.filter(&(not is_nil(&1)))
+        accuracies = entries |> Enum.map(& &1.accuracy) |> Enum.filter(&(not is_nil(&1)))
 
         stats = %{
           count: length(entries),
@@ -150,12 +175,12 @@ defmodule BenchArena.MetricCollector do
         pi_score: 0.0
       }, state}
     else
-      agent_latency = safe_mean(Enum.map(agent_entries, & &1.latency_ms))
-      stack_latency = safe_mean(Enum.map(stack_entries, & &1.latency_ms))
-      agent_tokens = safe_mean(Enum.map(agent_entries, & &1.total_tokens))
-      stack_tokens = safe_mean(Enum.map(stack_entries, & &1.total_tokens))
-      agent_accuracy = safe_mean(Enum.map(agent_entries, & &1.accuracy))
-      stack_accuracy = safe_mean(Enum.map(stack_entries, & &1.accuracy))
+      agent_latency = agent_entries |> Enum.map(& &1.latency_ms) |> Enum.filter(&(not is_nil(&1))) |> safe_mean()
+      stack_latency = stack_entries |> Enum.map(& &1.latency_ms) |> Enum.filter(&(not is_nil(&1))) |> safe_mean()
+      agent_tokens = agent_entries |> Enum.map(& &1.total_tokens) |> Enum.filter(&(not is_nil(&1))) |> safe_mean()
+      stack_tokens = stack_entries |> Enum.map(& &1.total_tokens) |> Enum.filter(&(not is_nil(&1))) |> safe_mean()
+      agent_accuracy = agent_entries |> Enum.map(& &1.accuracy) |> Enum.filter(&(not is_nil(&1))) |> safe_mean()
+      stack_accuracy = stack_entries |> Enum.map(& &1.accuracy) |> Enum.filter(&(not is_nil(&1))) |> safe_mean()
 
       latency_delta = stack_latency - agent_latency
       token_delta = stack_tokens - agent_tokens
@@ -187,9 +212,9 @@ defmodule BenchArena.MetricCollector do
 
     by_tier =
       Map.new(grouped, fn {tier, entries} ->
-        latencies = Enum.map(entries, & &1.latency_ms)
-        tokens = Enum.map(entries, & &1.total_tokens)
-        accuracies = Enum.map(entries, & &1.accuracy)
+        latencies = entries |> Enum.map(& &1.latency_ms) |> Enum.filter(&(not is_nil(&1)))
+        tokens = entries |> Enum.map(& &1.total_tokens) |> Enum.filter(&(not is_nil(&1)))
+        accuracies = entries |> Enum.map(& &1.accuracy) |> Enum.filter(&(not is_nil(&1)))
 
         stats = %{
           count: length(entries),
