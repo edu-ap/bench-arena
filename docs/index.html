@@ -1,228 +1,576 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BenchArena Dashboard</title>
+<title>BenchArena — Agent Loop vs Stack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #0d1117;
-  --bg2: #161b22;
-  --card: #1c2129;
-  --border: #30363d;
-  --fg: #c9d1d9;
-  --fg2: #8b949e;
-  --blue: #58a6ff;
-  --green: #3fb950;
-  --amber: #f0883e;
-  --red: #f85149;
-  --mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-  background: var(--bg);
-  color: var(--fg);
-  line-height: 1.6;
-}
-body.light {
-  --bg: #ffffff;
-  --bg2: #f6f8fa;
-  --card: #ffffff;
-  --border: #d0d7de;
-  --fg: #1f2328;
-  --fg2: #656d76;
-  --blue: #0969da;
-  --green: #1a7f37;
-  --amber: #bf8700;
-  --red: #cf222e;
-}
-.sticky-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: var(--bg2);
-  border-bottom: 1px solid var(--border);
-  padding: 12px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  backdrop-filter: blur(8px);
-}
-.sticky-header .left { display: flex; align-items: center; gap: 16px; }
-.sticky-header h2 { font-family: var(--mono); font-size: 18px; color: var(--fg); }
-.sticky-header select, .sticky-header button {
-  background: var(--card);
-  color: var(--fg);
-  border: 1px solid var(--border);
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 13px;
-}
-.sticky-header button:hover { border-color: var(--blue); }
-.container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+/* ─── DESIGN TOKENS ──────────────────────────────────── */
+:root, [data-theme="light"] {
+  --color-bg:             #f7f6f2;
+  --color-surface:        #f9f8f5;
+  --color-surface-2:      #fbfbf9;
+  --color-surface-offset: #f0ede8;
+  --color-border:         #d4d1ca;
+  --color-divider:        #dcd9d5;
+  --color-text:           #28251d;
+  --color-text-muted:     #7a7974;
+  --color-text-faint:     #bab9b4;
+  --color-primary:        #01696f;
+  --color-primary-hover:  #0c4e54;
+  --color-success:        #437a22;
+  --color-warning:        #964219;
+  --color-blue:           #006494;
+  --color-shadow:         oklch(0.2 0.01 80 / 0.07);
 
-/* Hero */
-.hero { text-align: center; padding: 48px 0 32px; }
-.hero h1 { font-family: var(--mono); font-size: 48px; letter-spacing: -2px; color: var(--fg); }
-.hero .subtitle { color: var(--fg2); font-size: 16px; margin-top: 8px; font-family: var(--mono); }
-.stat-cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-top: 32px;
+  /* adapter accent colours */
+  --col-baseline:   #964219;
+  --col-agent:      #006494;
+  --col-stack:      #437a22;
+
+  --font-body:    'Inter', system-ui, sans-serif;
+  --font-mono:    'IBM Plex Mono', 'Cascadia Code', monospace;
+
+  --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
+  --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
+  --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
+  --text-lg:   clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);
+  --text-xl:   clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);
+  --text-2xl:  clamp(2rem,     1.2rem  + 2.5vw,  3.5rem);
+
+  --space-1:  0.25rem; --space-2: 0.5rem;  --space-3: 0.75rem;
+  --space-4:  1rem;    --space-5: 1.25rem; --space-6: 1.5rem;
+  --space-8:  2rem;    --space-10:2.5rem;  --space-12:3rem;
+  --space-16: 4rem;    --space-20:5rem;    --space-24:6rem;
+
+  --radius-sm: 0.375rem; --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;  --radius-xl: 1rem;
+  --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-.stat-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
-  text-align: center;
+
+[data-theme="dark"] {
+  --color-bg:             #141312;
+  --color-surface:        #1a1917;
+  --color-surface-2:      #1f1e1c;
+  --color-surface-offset: #232220;
+  --color-border:         #363432;
+  --color-divider:        #2a2927;
+  --color-text:           #cdccca;
+  --color-text-muted:     #797876;
+  --color-text-faint:     #5a5957;
+  --color-primary:        #4f98a3;
+  --color-primary-hover:  #227f8b;
+  --color-success:        #6daa45;
+  --color-warning:        #bb653b;
+  --color-blue:           #5591c7;
+  --color-shadow:         oklch(0 0 0 / 0.3);
+
+  --col-baseline:   #bb653b;
+  --col-agent:      #5591c7;
+  --col-stack:      #6daa45;
 }
-.stat-card .value { font-family: var(--mono); font-size: 36px; font-weight: 700; color: var(--blue); }
-.stat-card .label { color: var(--fg2); font-size: 13px; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
 
-/* Section */
-section { margin-top: 48px; }
-section h2 { font-size: 22px; margin-bottom: 20px; color: var(--fg); border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-
-/* Tradeoff Table */
-.tradeoff-grid {
-  display: grid;
-  grid-template-columns: 180px repeat(3, 1fr);
-  gap: 1px;
-  background: var(--border);
-  border-radius: 12px;
-  overflow: hidden;
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --color-bg:#141312;--color-surface:#1a1917;--color-surface-2:#1f1e1c;
+    --color-surface-offset:#232220;--color-border:#363432;--color-divider:#2a2927;
+    --color-text:#cdccca;--color-text-muted:#797876;--color-text-faint:#5a5957;
+    --color-primary:#4f98a3;--color-primary-hover:#227f8b;--color-success:#6daa45;
+    --color-warning:#bb653b;--color-blue:#5591c7;--color-shadow:oklch(0 0 0 / 0.3);
+    --col-baseline:#bb653b;--col-agent:#5591c7;--col-stack:#6daa45;
+  }
 }
-.tradeoff-grid .cell {
-  background: var(--card);
-  padding: 14px 16px;
-  font-family: var(--mono);
-  font-size: 14px;
+
+/* ─── RESET ──────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;scroll-padding-top:5rem}
+body{font-family:var(--font-body);font-size:var(--text-base);color:var(--color-text);
+     background:var(--color-bg);line-height:1.6;min-height:100dvh}
+img,svg{display:block;max-width:100%;height:auto}
+button{cursor:pointer;background:none;border:none;font:inherit;color:inherit}
+h1,h2,h3,h4{text-wrap:balance;line-height:1.15}
+p,li{text-wrap:pretty}
+table{border-collapse:collapse;width:100%}
+a{color:var(--color-primary);text-decoration:none}
+a:hover{text-decoration:underline}
+::selection{background:color-mix(in oklab,var(--color-primary) 25%,transparent);color:var(--color-text)}
+:focus-visible{outline:2px solid var(--color-primary);outline-offset:3px;border-radius:var(--radius-sm)}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* ─── LAYOUT ─────────────────────────────────────────── */
+.container{max-width:1160px;margin:0 auto;padding-inline:var(--space-6)}
+
+/* ─── NAV ────────────────────────────────────────────── */
+nav {
+  position:sticky;top:0;z-index:50;
+  background:color-mix(in oklab,var(--color-surface) 90%,transparent);
+  border-bottom:1px solid var(--color-border);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
 }
-.tradeoff-grid .header { background: var(--bg2); font-weight: 600; color: var(--fg2); text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
-.tradeoff-grid .row-label { font-weight: 600; color: var(--fg); font-family: system-ui; }
-.cell.best { color: var(--green); font-weight: 700; }
-.cell.mid { color: var(--amber); }
-.cell.worst { color: var(--red); }
-
-/* SVG Charts */
-.chart-container { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; overflow-x: auto; }
-.chart-container svg text { fill: var(--fg); }
-body.light .chart-container svg text { fill: var(--fg); }
-
-/* Latency chart */
-.latency-chart { margin-top: 20px; }
-
-/* Table */
-.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.data-table th {
-  background: var(--bg2);
-  padding: 10px 12px;
-  text-align: left;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--fg2);
-  cursor: pointer;
-  user-select: none;
-  border-bottom: 2px solid var(--border);
-  white-space: nowrap;
+.nav-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  max-width:1160px;margin:0 auto;padding:var(--space-3) var(--space-6);
+  gap:var(--space-4);
 }
-.data-table th:hover { color: var(--blue); }
-.data-table th.sorted-asc::after { content: ' \u25B2'; }
-.data-table th.sorted-desc::after { content: ' \u25BC'; }
-.data-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 12px; }
-.data-table tr:hover { background: var(--bg2); }
-.data-table .win-stack { background: rgba(63, 185, 80, 0.08); }
-.data-table .win-agent { background: rgba(88, 166, 255, 0.08); }
-.data-table .win-tie { background: rgba(240, 136, 62, 0.06); }
-.prompt-cell { font-family: system-ui; max-width: 350px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nav-brand{
+  display:flex;align-items:center;gap:var(--space-3);
+  font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600;
+  color:var(--color-text);
+}
+.nav-links{
+  display:flex;align-items:center;gap:var(--space-1);list-style:none;
+}
+.nav-links a{
+  font-size:var(--text-sm);color:var(--color-text-muted);
+  padding:var(--space-2) var(--space-3);border-radius:var(--radius-md);
+  transition:color var(--transition),background var(--transition);
+}
+.nav-links a:hover{color:var(--color-text);background:var(--color-surface-offset);text-decoration:none}
+.theme-btn{
+  display:flex;align-items:center;justify-content:center;
+  width:2rem;height:2rem;border-radius:var(--radius-md);
+  color:var(--color-text-muted);border:1px solid var(--color-border);
+  transition:color var(--transition),border-color var(--transition);
+}
+.theme-btn:hover{color:var(--color-text);border-color:var(--color-primary)}
 
-/* Methodology */
-.methodology { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; font-size: 14px; line-height: 1.8; }
-.methodology h3 { margin-bottom: 12px; }
-.methodology ul { padding-left: 20px; }
-.methodology li { margin-bottom: 6px; }
-.methodology code { font-family: var(--mono); background: var(--bg2); padding: 2px 6px; border-radius: 4px; font-size: 12px; }
+/* ─── HERO ───────────────────────────────────────────── */
+.hero{
+  padding:clamp(var(--space-16),8vw,var(--space-24)) 0 clamp(var(--space-12),5vw,var(--space-20));
+  border-bottom:1px solid var(--color-border);
+}
+.hero-eyebrow{
+  font-family:var(--font-mono);font-size:var(--text-xs);font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--color-primary);
+  margin-bottom:var(--space-4);
+}
+.hero h1{
+  font-size:var(--text-2xl);font-weight:700;letter-spacing:-.03em;
+  font-family:var(--font-mono);color:var(--color-text);
+  margin-bottom:var(--space-4);
+}
+.hero-tagline{
+  font-size:var(--text-base);color:var(--color-text-muted);
+  max-width:56ch;margin-bottom:var(--space-10);line-height:1.7;
+}
+.hero-tagline strong{color:var(--color-text)}
+.stat-row{
+  display:flex;flex-wrap:wrap;gap:var(--space-3);
+}
+.stat-pill{
+  display:flex;align-items:center;gap:var(--space-2);
+  background:var(--color-surface);border:1px solid var(--color-border);
+  border-radius:var(--radius-full,9999px);
+  padding:var(--space-2) var(--space-4);
+  font-family:var(--font-mono);font-size:var(--text-xs);
+}
+.stat-pill .num{font-weight:600;color:var(--color-text)}
+.stat-pill .lbl{color:var(--color-text-muted)}
 
-@media (max-width: 768px) {
-  .stat-cards { grid-template-columns: 1fr; }
-  .tradeoff-grid { grid-template-columns: 120px repeat(3, 1fr); }
-  .hero h1 { font-size: 32px; }
+/* ─── ADAPTERS EXPLAINER ──────────────────────────────── */
+.section{padding:clamp(var(--space-12),5vw,var(--space-20)) 0;border-bottom:1px solid var(--color-divider)}
+.section-label{
+  font-family:var(--font-mono);font-size:var(--text-xs);font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--color-text-faint);
+  margin-bottom:var(--space-3);
+}
+.section h2{font-size:var(--text-xl);font-weight:700;margin-bottom:var(--space-8)}
+.adapter-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4);
+}
+.adapter-card{
+  background:var(--color-surface);border:1px solid var(--color-border);
+  border-radius:var(--radius-xl);padding:var(--space-6);
+  border-top:3px solid var(--c);
+}
+.adapter-card.baseline{--c:var(--col-baseline)}
+.adapter-card.agent  {--c:var(--col-agent)}
+.adapter-card.stack  {--c:var(--col-stack)}
+.adapter-badge{
+  display:inline-flex;align-items:center;gap:var(--space-2);
+  font-family:var(--font-mono);font-size:var(--text-xs);font-weight:600;
+  color:var(--c);letter-spacing:.04em;text-transform:uppercase;
+  margin-bottom:var(--space-3);
+}
+.adapter-badge::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--c)}
+.adapter-card h3{font-size:var(--text-base);font-weight:700;margin-bottom:var(--space-3)}
+.adapter-card p{font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.7;margin-bottom:var(--space-4)}
+.adapter-meta{
+  display:flex;flex-direction:column;gap:var(--space-2);
+  padding-top:var(--space-4);border-top:1px solid var(--color-divider);
+}
+.meta-row{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:var(--text-xs);
+}
+.meta-row .key{color:var(--color-text-muted);font-family:var(--font-mono)}
+.meta-row .val{font-family:var(--font-mono);font-weight:600;color:var(--color-text)}
+
+/* callout box */
+.callout{
+  background:color-mix(in oklab,var(--color-primary) 8%,var(--color-surface));
+  border:1px solid color-mix(in oklab,var(--color-primary) 25%,var(--color-border));
+  border-left:3px solid var(--color-primary);
+  border-radius:var(--radius-lg);
+  padding:var(--space-4) var(--space-5);
+  font-size:var(--text-sm);color:var(--color-text-muted);
+  line-height:1.7;margin-top:var(--space-6);
+}
+.callout strong{color:var(--color-text)}
+
+/* ─── DASHBOARD ───────────────────────────────────────── */
+.run-controls{
+  display:flex;align-items:center;gap:var(--space-4);
+  margin-bottom:var(--space-8);flex-wrap:wrap;
+}
+.run-select{
+  background:var(--color-surface);color:var(--color-text);
+  border:1px solid var(--color-border);padding:var(--space-2) var(--space-4);
+  border-radius:var(--radius-md);font-size:var(--text-sm);
+  font-family:var(--font-mono);cursor:pointer;
+  transition:border-color var(--transition);
+}
+.run-select:hover{border-color:var(--color-primary)}
+.run-label{font-size:var(--text-sm);color:var(--color-text-muted)}
+.data-note{
+  font-size:var(--text-xs);font-family:var(--font-mono);
+  color:var(--color-text-faint);
+  padding:var(--space-2) var(--space-3);
+  background:var(--color-surface-offset);
+  border-radius:var(--radius-md);
+  border:1px solid var(--color-border);
+}
+
+/* ─── TRADEOFF GRID ───────────────────────────────────── */
+.tradeoff-table{
+  background:var(--color-surface);border:1px solid var(--color-border);
+  border-radius:var(--radius-xl);overflow:hidden;
+  margin-bottom:var(--space-10);
+}
+.tt-row{
+  display:grid;grid-template-columns:200px repeat(3,1fr);
+  border-bottom:1px solid var(--color-border);
+}
+.tt-row:last-child{border-bottom:none}
+.tt-row.header .tt-cell{
+  font-family:var(--font-mono);font-size:var(--text-xs);font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;
+  background:var(--color-surface-offset);color:var(--color-text-muted);
+  padding:var(--space-3) var(--space-4);
+}
+.tt-row.header .tt-cell.baseline-h{color:var(--col-baseline)}
+.tt-row.header .tt-cell.agent-h   {color:var(--col-agent)}
+.tt-row.header .tt-cell.stack-h   {color:var(--col-stack)}
+.tt-cell{
+  padding:var(--space-4);font-family:var(--font-mono);font-size:var(--text-sm);
+  display:flex;align-items:center;
+}
+.tt-cell.row-label{font-family:var(--font-body);font-weight:600;font-size:var(--text-sm);color:var(--color-text)}
+.tt-cell.best {color:var(--color-success);font-weight:700}
+.tt-cell.worst{color:var(--color-warning)}
+.tt-cell.mid  {color:var(--color-text-muted)}
+
+/* ─── CHARTS ─────────────────────────────────────────── */
+.chart-card{
+  background:var(--color-surface);border:1px solid var(--color-border);
+  border-radius:var(--radius-xl);padding:var(--space-6);
+  margin-bottom:var(--space-6);overflow-x:auto;
+}
+.chart-title{
+  font-size:var(--text-sm);font-weight:600;
+  margin-bottom:var(--space-4);color:var(--color-text);
+}
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6);margin-bottom:var(--space-6)}
+.chart-card svg text{fill:var(--color-text-muted)}
+
+/* ─── QUESTION TABLE ──────────────────────────────────── */
+.qtable-wrap{
+  background:var(--color-surface);border:1px solid var(--color-border);
+  border-radius:var(--radius-xl);overflow:hidden;
+}
+.qtable{width:100%;font-size:var(--text-xs)}
+.qtable th{
+  background:var(--color-surface-offset);padding:var(--space-3) var(--space-4);
+  text-align:left;font-family:var(--font-mono);font-size:10px;
+  text-transform:uppercase;letter-spacing:.05em;
+  color:var(--color-text-muted);border-bottom:1px solid var(--color-border);
+  cursor:pointer;user-select:none;white-space:nowrap;
+  transition:color var(--transition);
+}
+.qtable th:hover{color:var(--color-primary)}
+.qtable th.sorted-asc::after{content:' ▲'}
+.qtable th.sorted-desc::after{content:' ▼'}
+.qtable td{
+  padding:var(--space-3) var(--space-4);
+  border-bottom:1px solid var(--color-divider);
+  font-family:var(--font-mono);
+}
+.qtable tr:last-child td{border-bottom:none}
+.qtable tr:hover td{background:var(--color-surface-offset)}
+.qtable .win-stack{background:color-mix(in oklab,var(--col-stack) 6%,transparent)}
+.qtable .win-agent{background:color-mix(in oklab,var(--col-agent) 6%,transparent)}
+.qtable .win-tie  {background:transparent}
+.prompt-cell{
+  font-family:var(--font-body);font-size:var(--text-xs);
+  max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  color:var(--color-text);
+}
+.badge{
+  display:inline-flex;align-items:center;padding:2px var(--space-2);
+  border-radius:var(--radius-sm);font-size:10px;font-weight:600;
+  font-family:var(--font-mono);letter-spacing:.04em;
+}
+.badge.stack   {background:color-mix(in oklab,var(--col-stack)   15%,transparent);color:var(--col-stack)}
+.badge.agent   {background:color-mix(in oklab,var(--col-agent)   15%,transparent);color:var(--col-agent)}
+.badge.tie     {background:var(--color-surface-offset);color:var(--color-text-muted)}
+.badge.baseline{background:color-mix(in oklab,var(--col-baseline)15%,transparent);color:var(--col-baseline)}
+
+/* ─── METHODOLOGY ─────────────────────────────────────── */
+.method-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4)}
+.method-card{
+  background:var(--color-surface);border:1px solid var(--color-border);
+  border-radius:var(--radius-lg);padding:var(--space-5);
+}
+.method-card h4{font-size:var(--text-sm);font-weight:700;margin-bottom:var(--space-3)}
+.method-card ul{padding-left:var(--space-4);color:var(--color-text-muted);font-size:var(--text-sm)}
+.method-card li{margin-bottom:var(--space-2);line-height:1.6}
+.method-card li strong{color:var(--color-text)}
+code{
+  font-family:var(--font-mono);font-size:.85em;
+  background:var(--color-surface-offset);padding:1px var(--space-2);
+  border-radius:var(--radius-sm);color:var(--color-text);
+}
+
+/* ─── PI FORMULA ─────────────────────────────────────── */
+.formula-card{
+  background:var(--color-surface-offset);border:1px solid var(--color-border);
+  border-radius:var(--radius-xl);padding:var(--space-8);text-align:center;
+  margin-top:var(--space-6);
+}
+.formula-card .formula-text{
+  font-family:var(--font-mono);font-size:var(--text-lg);font-weight:600;
+  color:var(--color-text);letter-spacing:-.01em;
+  margin-bottom:var(--space-4);
+}
+.formula-terms{
+  display:flex;justify-content:center;flex-wrap:wrap;gap:var(--space-6);
+  font-size:var(--text-xs);color:var(--color-text-muted);font-family:var(--font-mono);
+}
+.formula-terms span strong{color:var(--color-text)}
+
+/* ─── FOOTER ─────────────────────────────────────────── */
+footer{
+  border-top:1px solid var(--color-border);
+  padding:var(--space-8) 0;
+  margin-top:var(--space-20);
+  font-size:var(--text-xs);color:var(--color-text-faint);
+  font-family:var(--font-mono);
+}
+.footer-inner{
+  max-width:1160px;margin:0 auto;padding-inline:var(--space-6);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--space-4);
+}
+.footer-links{display:flex;gap:var(--space-6)}
+.footer-links a{color:var(--color-text-faint)}
+.footer-links a:hover{color:var(--color-text-muted)}
+
+/* ─── RESPONSIVE ─────────────────────────────────────── */
+@media(max-width:900px){
+  .adapter-grid{grid-template-columns:1fr}
+  .charts-row{grid-template-columns:1fr}
+  .method-grid{grid-template-columns:1fr}
+  .tt-row{grid-template-columns:140px repeat(3,1fr)}
+}
+@media(max-width:640px){
+  .nav-links{display:none}
+  .tt-row{grid-template-columns:120px repeat(3,1fr)}
+  .hero h1{font-size:var(--text-xl)}
 }
 </style>
 </head>
 <body>
 
-<div class="sticky-header">
-  <div class="left">
-    <h2>BenchArena</h2>
-    <select id="runSelect">
-      <option value="simulated">Simulated Run (2026-04-06)</option>
-      <option value="baseline">Baseline Only (2026-04-06)</option>
-    </select>
+<!-- ── NAV ─────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-label="BenchArena" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="7" height="7" rx="1.5" fill="var(--col-agent)" opacity=".85"/>
+        <rect x="11" y="2" width="7" height="7" rx="1.5" fill="var(--col-stack)" opacity=".85"/>
+        <rect x="2" y="11" width="7" height="7" rx="1.5" fill="var(--col-baseline)" opacity=".6"/>
+        <rect x="11" y="11" width="7" height="7" rx="1.5" fill="var(--color-border)"/>
+        <line x1="10" y1="2" x2="10" y2="18" stroke="var(--color-border)" stroke-width="1"/>
+        <line x1="2" y1="10" x2="18" y2="10" stroke="var(--color-border)" stroke-width="1"/>
+      </svg>
+      BenchArena
+    </div>
+    <ul class="nav-links" role="list">
+      <li><a href="#adapters">Adapters</a></li>
+      <li><a href="#dashboard">Dashboard</a></li>
+      <li><a href="#questions">Questions</a></li>
+      <li><a href="#methodology">Methodology</a></li>
+    </ul>
+    <button class="theme-btn" data-theme-toggle aria-label="Toggle theme">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
   </div>
-  <button onclick="document.body.classList.toggle('light')">Toggle Theme</button>
-</div>
+</nav>
 
+<!-- ── HERO ─────────────────────────────────────────── -->
 <div class="container">
-
-  <!-- Hero -->
-  <div class="hero">
+  <section class="hero">
+    <p class="hero-eyebrow">edu-ap / bench-arena</p>
     <h1>BenchArena</h1>
-    <div class="subtitle">Agent Loop &#x2194; Stack &mdash; latency &middot; tokens &middot; accuracy</div>
-    <div class="stat-cards">
-      <div class="stat-card"><div class="value">35</div><div class="label">Total Questions</div></div>
-      <div class="stat-card"><div class="value">3</div><div class="label">Adapters</div></div>
-      <div class="stat-card"><div class="value">5</div><div class="label">Tiers</div></div>
-    </div>
-  </div>
-
-  <!-- Tradeoff Summary -->
-  <section>
-    <h2>Tradeoff Summary</h2>
-    <div class="tradeoff-grid" id="tradeoffGrid">
-      <div class="cell header"></div>
-      <div class="cell header" style="color:#f0883e">Baseline</div>
-      <div class="cell header" style="color:#58a6ff">Agent Loop</div>
-      <div class="cell header" style="color:#3fb950">Stack</div>
-      <!-- Rows filled by JS -->
+    <p class="hero-tagline">
+      A profiler that compares <strong>three execution paths</strong> — a bare single-LLM call, an agentic loop, and the full orchestration stack — across latency, token usage, and answer accuracy on a curated 35-question corpus.
+    </p>
+    <div class="stat-row">
+      <div class="stat-pill"><span class="num">35</span><span class="lbl">questions</span></div>
+      <div class="stat-pill"><span class="num">5</span><span class="lbl">tiers</span></div>
+      <div class="stat-pill"><span class="num">3</span><span class="lbl">adapters</span></div>
+      <div class="stat-pill"><span class="num">145</span><span class="lbl">tests · 0 failures</span></div>
+      <div class="stat-pill"><span class="num">Elixir</span><span class="lbl">+ Benchee</span></div>
     </div>
   </section>
 
-  <!-- Tier Breakdown -->
-  <section>
-    <h2>Tier Breakdown &mdash; Accuracy</h2>
-    <div class="chart-container">
-      <svg id="tierChart" viewBox="0 0 800 340"></svg>
+  <!-- ── ADAPTERS ─────────────────────────────────── -->
+  <section class="section" id="adapters">
+    <p class="section-label">What we're comparing</p>
+    <h2>Three execution paths</h2>
+
+    <div class="adapter-grid">
+
+      <!-- BASELINE -->
+      <div class="adapter-card baseline">
+        <div class="adapter-badge">Baseline</div>
+        <h3>Single LLM call</h3>
+        <p>
+          Yes — baseline is exactly one direct LLM query: prompt in, answer out, no routing, no memory, no tool calls, no orchestration. It represents the floor: what you get for free with no infrastructure.
+        </p>
+        <p>
+          In the live adapter this means a single <code>POST /v1/chat/completions</code> to whichever model is configured, with the question as the user message and nothing else. No system prompt beyond a minimal role statement.
+        </p>
+        <div class="adapter-meta">
+          <div class="meta-row"><span class="key">latency</span><span class="val">~200–800ms</span></div>
+          <div class="meta-row"><span class="key">tokens</span><span class="val">~100–400</span></div>
+          <div class="meta-row"><span class="key">routing overhead</span><span class="val">none</span></div>
+          <div class="meta-row"><span class="key">compliance check</span><span class="val">none</span></div>
+          <div class="meta-row"><span class="key">endpoint</span><span class="val">POST /v1/chat/completions</span></div>
+        </div>
+      </div>
+
+      <!-- AGENT LOOP -->
+      <div class="adapter-card agent">
+        <div class="adapter-badge">Agent Loop</div>
+        <h3>Elan orchestrator</h3>
+        <p>
+          The agent loop adds Elan's orchestration layer on top of the same LLM. The question is routed through <code>AgentRouter.dispatch/2</code>, which selects a skill, manages tool-call iterations, handles retries, and wraps the response in a structured <code>RunResult</code>.
+        </p>
+        <p>
+          Unlike the baseline, the agent loop can invoke multiple tool calls in a single answer (e.g. searching, reading context, reflecting). The additional latency and tokens come from those round-trips, not from a heavier model.
+        </p>
+        <div class="adapter-meta">
+          <div class="meta-row"><span class="key">latency</span><span class="val">~800–2500ms</span></div>
+          <div class="meta-row"><span class="key">tokens</span><span class="val">~400–900</span></div>
+          <div class="meta-row"><span class="key">routing overhead</span><span class="val">skill selection</span></div>
+          <div class="meta-row"><span class="key">compliance check</span><span class="val">none</span></div>
+          <div class="meta-row"><span class="key">endpoint</span><span class="val">POST localhost:4001/run_skill</span></div>
+        </div>
+      </div>
+
+      <!-- STACK -->
+      <div class="adapter-card stack">
+        <div class="adapter-badge">Stack</div>
+        <h3>Full orchestration stack</h3>
+        <p>
+          The stack runs the question through CSC (compile + laxity check), TokenGov (policy + conflict detection), and Spectral (SLO monitoring) before the Elan agent executes. MetaBus events are emitted at each layer.
+        </p>
+        <p>
+          This is the most expensive path — but it's also the one with formal governance, IRAP compliance enforcement, confabulum rate tracking, and CoverageOracle monitoring. The extra latency and tokens buy you verifiability and metacognitive feedback.
+        </p>
+        <div class="adapter-meta">
+          <div class="meta-row"><span class="key">latency</span><span class="val">~1200–4000ms</span></div>
+          <div class="meta-row"><span class="key">tokens</span><span class="val">~500–1100</span></div>
+          <div class="meta-row"><span class="key">routing overhead</span><span class="val">CSC → TokenGov → Spectral → Elan</span></div>
+          <div class="meta-row"><span class="key">compliance check</span><span class="val">IRAP · EU AI Act · SRA</span></div>
+          <div class="meta-row"><span class="key">endpoint</span><span class="val">POST localhost:4003/compile → 4002 → 4001</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="callout">
+      <strong>When does the overhead pay off?</strong>
+      The stack adds ~600–1500ms and ~20–30% more tokens over the agent loop. Based on simulated data, that overhead earns back accuracy gains primarily on <strong>Tier 3 (Legal)</strong> — where compliance checking catches wrong citations and stale regulations — and <strong>Tier 5 (Metacog)</strong>, where CoverageOracle and LaxityProbe enable genuine self-awareness. On <strong>Tier 1 (Factual)</strong> lookups, the stack adds latency with no accuracy benefit; the bare baseline is often competitive.
     </div>
   </section>
 
-  <!-- Latency Distribution -->
-  <section>
-    <h2>Latency Distribution</h2>
-    <div class="chart-container latency-chart">
-      <svg id="latencyChart" viewBox="0 0 800 320"></svg>
+  <!-- ── DASHBOARD ─────────────────────────────────── -->
+  <section class="section" id="dashboard">
+    <p class="section-label">Results</p>
+    <h2>Tradeoff dashboard</h2>
+
+    <div class="run-controls">
+      <span class="run-label">Run:</span>
+      <select class="run-select" id="runSelect">
+        <option value="simulated">Simulated run · 2026-04-06 · 35 questions × 3 adapters</option>
+        <option value="baseline_only">Baseline only · 2026-04-06</option>
+      </select>
+      <span class="data-note" id="dataBadge">SIMULATED DATA — run <code>mix bench_arena.run --adapter all</code> for live results</span>
+    </div>
+
+    <!-- Tradeoff summary -->
+    <div class="tradeoff-table" id="tradeoffTable">
+      <div class="tt-row header">
+        <div class="tt-cell row-label"></div>
+        <div class="tt-cell baseline-h">Baseline</div>
+        <div class="tt-cell agent-h">Agent Loop</div>
+        <div class="tt-cell stack-h">Stack</div>
+      </div>
+      <!-- rows injected by JS -->
+    </div>
+
+    <!-- Charts row -->
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">Accuracy by tier</div>
+        <svg id="tierChart" viewBox="0 0 480 300" style="width:100%;height:auto"></svg>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Latency distribution (log scale)</div>
+        <svg id="latencyChart" viewBox="0 0 480 300" style="width:100%;height:auto"></svg>
+      </div>
+    </div>
+
+    <!-- Token usage chart -->
+    <div class="chart-card">
+      <div class="chart-title">Token usage by tier</div>
+      <svg id="tokenChart" viewBox="0 0 960 260" style="width:100%;height:auto"></svg>
     </div>
   </section>
 
-  <!-- Question-level table -->
-  <section>
-    <h2>Question-Level Results</h2>
-    <div style="overflow-x:auto">
-      <table class="data-table" id="questionTable">
+  <!-- ── QUESTIONS TABLE ───────────────────────────── -->
+  <section class="section" id="questions">
+    <p class="section-label">Per-question results</p>
+    <h2>Question-level breakdown</h2>
+    <p style="font-size:var(--text-sm);color:var(--color-text-muted);margin-bottom:var(--space-6)">
+      Click any column header to sort. Green rows = stack wins; blue = agent loop wins. Δ is stack score minus agent loop score.
+    </p>
+    <div class="qtable-wrap" style="overflow-x:auto">
+      <table class="qtable" id="questionTable">
         <thead>
           <tr>
-            <th data-col="id" onclick="sortTable('id')">ID</th>
-            <th data-col="tier" onclick="sortTable('tier')">Tier</th>
-            <th data-col="prompt" onclick="sortTable('prompt')">Prompt</th>
-            <th data-col="agent" onclick="sortTable('agent')">Agent Loop</th>
-            <th data-col="stack" onclick="sortTable('stack')">Stack Score</th>
-            <th data-col="winner" onclick="sortTable('winner')">Winner</th>
-            <th data-col="delta" onclick="sortTable('delta')">&Delta;</th>
+            <th onclick="sortTable('id')" data-col="id">ID</th>
+            <th onclick="sortTable('tier')" data-col="tier">Tier</th>
+            <th onclick="sortTable('prompt')" data-col="prompt">Question</th>
+            <th onclick="sortTable('baseline')" data-col="baseline">Baseline</th>
+            <th onclick="sortTable('agent')" data-col="agent">Agent Loop</th>
+            <th onclick="sortTable('stack')" data-col="stack">Stack</th>
+            <th onclick="sortTable('winner')" data-col="winner">Winner</th>
+            <th onclick="sortTable('delta')" data-col="delta">Δ</th>
           </tr>
         </thead>
         <tbody id="questionBody"></tbody>
@@ -230,383 +578,410 @@ body.light .chart-container svg text { fill: var(--fg); }
     </div>
   </section>
 
-  <!-- Methodology -->
-  <section>
+  <!-- ── METHODOLOGY ───────────────────────────────── -->
+  <section class="section" id="methodology">
+    <p class="section-label">How it works</p>
     <h2>Methodology</h2>
-    <div class="methodology">
-      <h3>Scoring Methods by Tier</h3>
-      <ul>
-        <li><strong>Tier 1 (Factual):</strong> <code>exact_match</code> or <code>semantic</code> (Jaccard similarity on tokenized words)</li>
-        <li><strong>Tier 2 (Reasoning):</strong> <code>semantic</code> &mdash; token overlap between answer and reference</li>
-        <li><strong>Tier 3 (Legal):</strong> <code>semantic</code> &mdash; keyword coverage of legal concepts and references</li>
-        <li><strong>Tier 4 (Code):</strong> <code>rubric</code> &mdash; presence of key code elements (function names, patterns, keywords)</li>
-        <li><strong>Tier 5 (Metacog):</strong> <code>semantic</code> &mdash; self-referential accuracy about system capabilities</li>
-      </ul>
-      <h3 style="margin-top:16px">Live Services</h3>
-      <ul>
-        <li><code>localhost:4001</code> &mdash; Elan (Agent Loop HTTP API)</li>
-        <li><code>localhost:4002</code> &mdash; TokenGov (Governance policy checker)</li>
-        <li><code>localhost:4003</code> &mdash; CSC (Compile-stage coordinator)</li>
-      </ul>
-      <h3 style="margin-top:16px">Data Note</h3>
-      <p>This dashboard uses <strong>simulated data</strong> generated with seeded randomness for reproducibility. Live adapter results require running services at the URLs above. Run <code>mix bench_arena.run --adapter all</code> for real benchmarks.</p>
-      <h3 style="margin-top:16px">&pi;-Score Formula</h3>
-      <p><code>&pi; = accuracy_delta &minus; 0.001 &times; latency_delta &minus; 0.0001 &times; token_delta</code></p>
-      <p style="margin-top:4px;color:var(--fg2)">Positive &pi; favors stack; negative favors agent loop.</p>
+
+    <div class="method-grid">
+      <div class="method-card">
+        <h4>Question tiers</h4>
+        <ul>
+          <li><strong>Tier 1 — Factual (10 q):</strong> Short-answer lookups. Shannon entropy, IRAP acronym, Elixir APIs, Schnorr verification. Scored by exact match or Jaccard similarity.</li>
+          <li><strong>Tier 2 — Reasoning (8 q):</strong> Multi-step calculation. Laxity severity from threshold breach, UCB1 arm selection, SpeculumFreshness staleness. Scored by semantic overlap.</li>
+          <li><strong>Tier 3 — Legal (6 q):</strong> Compliance reasoning. IRAP ISM-0839, EU AI Act Art.13, SRA Principle 6, GDPR Art.44. Scored by legal concept coverage.</li>
+          <li><strong>Tier 4 — Code (6 q):</strong> Code generation and review. KL-divergence in Elixir, UCB1 formula, GenServer unique names. Scored by rubric (function names, patterns, correctness indicators).</li>
+          <li><strong>Tier 5 — Metacog (5 q):</strong> Self-referential questions about the stack itself — sorry depth SLO status, which module detects drift, Wave 4 audit findings. Scored by semantic similarity to ground truth.</li>
+        </ul>
+      </div>
+      <div class="method-card">
+        <h4>Scoring methods</h4>
+        <ul>
+          <li><strong>exact_match:</strong> Normalise both strings (lowercase, strip punctuation, collapse whitespace), return 1.0 if equal, 0.0 otherwise.</li>
+          <li><strong>semantic (Jaccard):</strong> Tokenise both strings into word sets, return |intersection| / |union|. Correlates well with factual recall without requiring embedding calls.</li>
+          <li><strong>rubric:</strong> Structured criteria list (e.g. "contains 'sqrt'", "mentions 'UCB'", "defines a function"). Each criterion is a substring or regex check. Score = fraction of criteria met.</li>
+        </ul>
+        <h4 style="margin-top:var(--space-5)">Live adapter endpoints</h4>
+        <ul>
+          <li><code>localhost:4001</code> — Elan HTTP (AgentLoop adapter)</li>
+          <li><code>localhost:4002</code> — TokenGov (governance check)</li>
+          <li><code>localhost:4003</code> — CSC (compile + laxity)</li>
+          <li><code>localhost:4004</code> — Recursa (SLO + CoverageOracle)</li>
+        </ul>
+        <p style="margin-top:var(--space-3);font-size:var(--text-xs);color:var(--color-text-faint)">
+          If services are not running, adapters return <code>{:error, :service_unavailable}</code> and the run records the error without crashing.
+        </p>
+      </div>
+    </div>
+
+    <div class="formula-card">
+      <div class="formula-text">π = acc_δ − 0.001 × lat_δ − 0.0001 × tok_δ</div>
+      <div class="formula-terms">
+        <span><strong>acc_δ</strong> = stack accuracy − agent loop accuracy</span>
+        <span><strong>lat_δ</strong> = stack mean latency − agent loop mean latency (ms)</span>
+        <span><strong>tok_δ</strong> = stack mean tokens − agent loop mean tokens</span>
+      </div>
+      <p style="margin-top:var(--space-4);font-size:var(--text-xs);color:var(--color-text-faint);font-family:var(--font-mono)">
+        π &gt; 0 → stack wins overall · π &lt; 0 → agent loop wins · weights are tunable in <code>MetricCollector.tradeoff_report/0</code>
+      </p>
     </div>
   </section>
 
-</div>
+</div><!-- /container -->
+
+<footer>
+  <div class="footer-inner">
+    <span>edu-ap/bench-arena · Elixir + Benchee · April 2026</span>
+    <div class="footer-links">
+      <a href="https://github.com/edu-ap/bench-arena">GitHub</a>
+      <a href="https://github.com/edu-ap/elan">Elan</a>
+      <a href="https://github.com/edu-ap/tokengov">TokenGov</a>
+    </div>
+  </div>
+</footer>
 
 <script>
-// === INLINE DATA ===
-const SIMULATED_DATA = [{"tier":1,"adapter":"baseline","question_id":"t1_001","latency_ms":2.559,"tokens_in":17,"tokens_out":1,"total_tokens":18,"score":0.0},{"tier":1,"adapter":"agent_loop","question_id":"t1_001","latency_ms":1420.15,"tokens_in":235,"tokens_out":332,"total_tokens":567,"score":0.7869},{"tier":1,"adapter":"stack","question_id":"t1_001","latency_ms":1537.76,"tokens_in":460,"tokens_out":335,"total_tokens":795,"score":0.7432},{"tier":1,"adapter":"baseline","question_id":"t1_002","latency_ms":2.125,"tokens_in":15,"tokens_out":28,"total_tokens":43,"score":0.8235},{"tier":1,"adapter":"agent_loop","question_id":"t1_002","latency_ms":1431.9,"tokens_in":325,"tokens_out":448,"total_tokens":773,"score":0.845},{"tier":1,"adapter":"stack","question_id":"t1_002","latency_ms":2887.35,"tokens_in":290,"tokens_out":446,"total_tokens":736,"score":0.7809},{"tier":1,"adapter":"baseline","question_id":"t1_003","latency_ms":1.747,"tokens_in":15,"tokens_out":12,"total_tokens":27,"score":1.0},{"tier":1,"adapter":"agent_loop","question_id":"t1_003","latency_ms":1627.92,"tokens_in":305,"tokens_out":361,"total_tokens":666,"score":0.8723},{"tier":1,"adapter":"stack","question_id":"t1_003","latency_ms":2046.21,"tokens_in":348,"tokens_out":510,"total_tokens":858,"score":0.8657},{"tier":1,"adapter":"baseline","question_id":"t1_004","latency_ms":1.92,"tokens_in":15,"tokens_out":18,"total_tokens":33,"score":0.6364},{"tier":1,"adapter":"agent_loop","question_id":"t1_004","latency_ms":1776.48,"tokens_in":272,"tokens_out":270,"total_tokens":542,"score":0.7755},{"tier":1,"adapter":"stack","question_id":"t1_004","latency_ms":2257.7,"tokens_in":265,"tokens_out":327,"total_tokens":592,"score":1.0},{"tier":1,"adapter":"baseline","question_id":"t1_005","latency_ms":1.872,"tokens_in":18,"tokens_out":1,"total_tokens":19,"score":0.0},{"tier":1,"adapter":"agent_loop","question_id":"t1_005","latency_ms":1585.45,"tokens_in":323,"tokens_out":294,"total_tokens":617,"score":0.9373},{"tier":1,"adapter":"stack","question_id":"t1_005","latency_ms":2384.91,"tokens_in":335,"tokens_out":463,"total_tokens":798,"score":0.8718},{"tier":1,"adapter":"baseline","question_id":"t1_006","latency_ms":1.921,"tokens_in":15,"tokens_out":16,"total_tokens":31,"score":0.5},{"tier":1,"adapter":"agent_loop","question_id":"t1_006","latency_ms":1681.02,"tokens_in":334,"tokens_out":278,"total_tokens":612,"score":0.9126},{"tier":1,"adapter":"stack","question_id":"t1_006","latency_ms":2439.22,"tokens_in":373,"tokens_out":524,"total_tokens":897,"score":0.837},{"tier":1,"adapter":"baseline","question_id":"t1_007","latency_ms":1.879,"tokens_in":16,"tokens_out":1,"total_tokens":17,"score":1.0},{"tier":1,"adapter":"agent_loop","question_id":"t1_007","latency_ms":1589.67,"tokens_in":309,"tokens_out":377,"total_tokens":686,"score":1.0},{"tier":1,"adapter":"stack","question_id":"t1_007","latency_ms":3121.4,"tokens_in":367,"tokens_out":524,"total_tokens":891,"score":0.7841},{"tier":1,"adapter":"baseline","question_id":"t1_008","latency_ms":1.893,"tokens_in":17,"tokens_out":1,"total_tokens":18,"score":0.0},{"tier":1,"adapter":"agent_loop","question_id":"t1_008","latency_ms":1667.91,"tokens_in":349,"tokens_out":378,"total_tokens":727,"score":0.9958},{"tier":1,"adapter":"stack","question_id":"t1_008","latency_ms":2316.97,"tokens_in":440,"tokens_out":421,"total_tokens":861,"score":0.9723},{"tier":1,"adapter":"baseline","question_id":"t1_009","latency_ms":1.911,"tokens_in":12,"tokens_out":9,"total_tokens":21,"score":1.0},{"tier":1,"adapter":"agent_loop","question_id":"t1_009","latency_ms":1470.31,"tokens_in":251,"tokens_out":315,"total_tokens":566,"score":0.8867},{"tier":1,"adapter":"stack","question_id":"t1_009","latency_ms":2312.01,"tokens_in":360,"tokens_out":434,"total_tokens":794,"score":0.9039},{"tier":1,"adapter":"baseline","question_id":"t1_010","latency_ms":1.841,"tokens_in":14,"tokens_out":26,"total_tokens":40,"score":0.8125},{"tier":1,"adapter":"agent_loop","question_id":"t1_010","latency_ms":1842.7,"tokens_in":272,"tokens_out":287,"total_tokens":559,"score":0.8377},{"tier":1,"adapter":"stack","question_id":"t1_010","latency_ms":1860.73,"tokens_in":313,"tokens_out":518,"total_tokens":831,"score":0.7823},{"tier":2,"adapter":"baseline","question_id":"t2_001","latency_ms":1.828,"tokens_in":25,"tokens_out":18,"total_tokens":43,"score":0.6667},{"tier":2,"adapter":"agent_loop","question_id":"t2_001","latency_ms":1644.33,"tokens_in":334,"tokens_out":409,"total_tokens":743,"score":0.7392},{"tier":2,"adapter":"stack","question_id":"t2_001","latency_ms":2724.19,"tokens_in":362,"tokens_out":307,"total_tokens":669,"score":0.7695},{"tier":2,"adapter":"baseline","question_id":"t2_002","latency_ms":1.879,"tokens_in":16,"tokens_out":24,"total_tokens":40,"score":0.7895},{"tier":2,"adapter":"agent_loop","question_id":"t2_002","latency_ms":1366.55,"tokens_in":289,"tokens_out":405,"total_tokens":694,"score":0.8852},{"tier":2,"adapter":"stack","question_id":"t2_002","latency_ms":1941.03,"tokens_in":241,"tokens_out":497,"total_tokens":738,"score":0.754},{"tier":2,"adapter":"baseline","question_id":"t2_003","latency_ms":1.839,"tokens_in":25,"tokens_out":21,"total_tokens":46,"score":0.7},{"tier":2,"adapter":"agent_loop","question_id":"t2_003","latency_ms":846.93,"tokens_in":325,"tokens_out":265,"total_tokens":590,"score":0.8326},{"tier":2,"adapter":"stack","question_id":"t2_003","latency_ms":2194.59,"tokens_in":355,"tokens_out":576,"total_tokens":931,"score":0.7223},{"tier":2,"adapter":"baseline","question_id":"t2_004","latency_ms":1.873,"tokens_in":22,"tokens_out":22,"total_tokens":44,"score":0.7222},{"tier":2,"adapter":"agent_loop","question_id":"t2_004","latency_ms":1432.19,"tokens_in":291,"tokens_out":452,"total_tokens":743,"score":0.8086},{"tier":2,"adapter":"stack","question_id":"t2_004","latency_ms":2102.19,"tokens_in":369,"tokens_out":493,"total_tokens":862,"score":0.7156},{"tier":2,"adapter":"baseline","question_id":"t2_005","latency_ms":1.848,"tokens_in":22,"tokens_out":33,"total_tokens":55,"score":0.7778},{"tier":2,"adapter":"agent_loop","question_id":"t2_005","latency_ms":1667.76,"tokens_in":260,"tokens_out":375,"total_tokens":635,"score":0.6338},{"tier":2,"adapter":"stack","question_id":"t2_005","latency_ms":2220.09,"tokens_in":207,"tokens_out":374,"total_tokens":581,"score":0.6794},{"tier":2,"adapter":"baseline","question_id":"t2_006","latency_ms":1.852,"tokens_in":26,"tokens_out":26,"total_tokens":52,"score":0.8667},{"tier":2,"adapter":"agent_loop","question_id":"t2_006","latency_ms":1842.24,"tokens_in":392,"tokens_out":330,"total_tokens":722,"score":0.7029},{"tier":2,"adapter":"stack","question_id":"t2_006","latency_ms":1200.0,"tokens_in":309,"tokens_out":346,"total_tokens":655,"score":0.8937},{"tier":2,"adapter":"baseline","question_id":"t2_007","latency_ms":1.872,"tokens_in":23,"tokens_out":22,"total_tokens":45,"score":0.7333},{"tier":2,"adapter":"agent_loop","question_id":"t2_007","latency_ms":1632.02,"tokens_in":238,"tokens_out":377,"total_tokens":615,"score":0.771},{"tier":2,"adapter":"stack","question_id":"t2_007","latency_ms":1710.65,"tokens_in":388,"tokens_out":418,"total_tokens":806,"score":0.7928},{"tier":2,"adapter":"baseline","question_id":"t2_008","latency_ms":1.842,"tokens_in":24,"tokens_out":16,"total_tokens":40,"score":0.9},{"tier":2,"adapter":"agent_loop","question_id":"t2_008","latency_ms":1808.47,"tokens_in":192,"tokens_out":387,"total_tokens":579,"score":0.7126},{"tier":2,"adapter":"stack","question_id":"t2_008","latency_ms":1794.56,"tokens_in":237,"tokens_out":590,"total_tokens":827,"score":0.6415},{"tier":3,"adapter":"baseline","question_id":"t3_001","latency_ms":1.839,"tokens_in":22,"tokens_out":21,"total_tokens":43,"score":0.6429},{"tier":3,"adapter":"agent_loop","question_id":"t3_001","latency_ms":1010.55,"tokens_in":274,"tokens_out":396,"total_tokens":670,"score":0.6207},{"tier":3,"adapter":"stack","question_id":"t3_001","latency_ms":1200.0,"tokens_in":401,"tokens_out":480,"total_tokens":881,"score":0.8887},{"tier":3,"adapter":"baseline","question_id":"t3_002","latency_ms":1.87,"tokens_in":20,"tokens_out":55,"total_tokens":75,"score":0.8214},{"tier":3,"adapter":"agent_loop","question_id":"t3_002","latency_ms":1546.27,"tokens_in":271,"tokens_out":311,"total_tokens":582,"score":0.6811},{"tier":3,"adapter":"stack","question_id":"t3_002","latency_ms":1824.15,"tokens_in":337,"tokens_out":532,"total_tokens":869,"score":0.8474},{"tier":3,"adapter":"baseline","question_id":"t3_003","latency_ms":1.827,"tokens_in":22,"tokens_out":60,"total_tokens":82,"score":0.7647},{"tier":3,"adapter":"agent_loop","question_id":"t3_003","latency_ms":1246.86,"tokens_in":245,"tokens_out":444,"total_tokens":689,"score":0.633},{"tier":3,"adapter":"stack","question_id":"t3_003","latency_ms":1408.01,"tokens_in":278,"tokens_out":440,"total_tokens":718,"score":0.7504},{"tier":3,"adapter":"baseline","question_id":"t3_004","latency_ms":1.813,"tokens_in":23,"tokens_out":43,"total_tokens":66,"score":0.913},{"tier":3,"adapter":"agent_loop","question_id":"t3_004","latency_ms":1089.77,"tokens_in":370,"tokens_out":402,"total_tokens":772,"score":0.5472},{"tier":3,"adapter":"stack","question_id":"t3_004","latency_ms":2730.38,"tokens_in":373,"tokens_out":355,"total_tokens":728,"score":0.7592},{"tier":3,"adapter":"baseline","question_id":"t3_005","latency_ms":1.83,"tokens_in":23,"tokens_out":67,"total_tokens":90,"score":0.75},{"tier":3,"adapter":"agent_loop","question_id":"t3_005","latency_ms":1290.26,"tokens_in":287,"tokens_out":198,"total_tokens":485,"score":0.6598},{"tier":3,"adapter":"stack","question_id":"t3_005","latency_ms":2057.52,"tokens_in":131,"tokens_out":378,"total_tokens":509,"score":0.7438},{"tier":3,"adapter":"baseline","question_id":"t3_006","latency_ms":1.79,"tokens_in":21,"tokens_out":54,"total_tokens":75,"score":0.8519},{"tier":3,"adapter":"agent_loop","question_id":"t3_006","latency_ms":1937.12,"tokens_in":317,"tokens_out":348,"total_tokens":665,"score":0.4875},{"tier":3,"adapter":"stack","question_id":"t3_006","latency_ms":2323.82,"tokens_in":429,"tokens_out":329,"total_tokens":758,"score":0.7156},{"tier":4,"adapter":"baseline","question_id":"t4_001","latency_ms":1.836,"tokens_in":42,"tokens_out":37,"total_tokens":79,"score":0.6},{"tier":4,"adapter":"agent_loop","question_id":"t4_001","latency_ms":1437.41,"tokens_in":303,"tokens_out":400,"total_tokens":703,"score":0.6561},{"tier":4,"adapter":"stack","question_id":"t4_001","latency_ms":1465.75,"tokens_in":314,"tokens_out":566,"total_tokens":880,"score":0.7548},{"tier":4,"adapter":"baseline","question_id":"t4_002","latency_ms":1.887,"tokens_in":29,"tokens_out":28,"total_tokens":57,"score":0.8},{"tier":4,"adapter":"agent_loop","question_id":"t4_002","latency_ms":1263.99,"tokens_in":295,"tokens_out":326,"total_tokens":621,"score":0.7086},{"tier":4,"adapter":"stack","question_id":"t4_002","latency_ms":2034.95,"tokens_in":304,"tokens_out":561,"total_tokens":865,"score":0.7402},{"tier":4,"adapter":"baseline","question_id":"t4_003","latency_ms":1.932,"tokens_in":30,"tokens_out":31,"total_tokens":61,"score":1.0},{"tier":4,"adapter":"agent_loop","question_id":"t4_003","latency_ms":1434.89,"tokens_in":208,"tokens_out":395,"total_tokens":603,"score":0.8602},{"tier":4,"adapter":"stack","question_id":"t4_003","latency_ms":2244.39,"tokens_in":265,"tokens_out":447,"total_tokens":712,"score":0.8777},{"tier":4,"adapter":"baseline","question_id":"t4_004","latency_ms":1.856,"tokens_in":45,"tokens_out":33,"total_tokens":78,"score":0.6},{"tier":4,"adapter":"agent_loop","question_id":"t4_004","latency_ms":800.0,"tokens_in":334,"tokens_out":346,"total_tokens":680,"score":0.7573},{"tier":4,"adapter":"stack","question_id":"t4_004","latency_ms":2539.04,"tokens_in":402,"tokens_out":371,"total_tokens":773,"score":0.8052},{"tier":4,"adapter":"baseline","question_id":"t4_005","latency_ms":1.87,"tokens_in":22,"tokens_out":33,"total_tokens":55,"score":0.8},{"tier":4,"adapter":"agent_loop","question_id":"t4_005","latency_ms":1541.13,"tokens_in":302,"tokens_out":350,"total_tokens":652,"score":0.8395},{"tier":4,"adapter":"stack","question_id":"t4_005","latency_ms":1801.12,"tokens_in":244,"tokens_out":389,"total_tokens":633,"score":0.8461},{"tier":4,"adapter":"baseline","question_id":"t4_006","latency_ms":1.891,"tokens_in":18,"tokens_out":73,"total_tokens":91,"score":0.8},{"tier":4,"adapter":"agent_loop","question_id":"t4_006","latency_ms":1107.32,"tokens_in":393,"tokens_out":250,"total_tokens":643,"score":0.7226},{"tier":4,"adapter":"stack","question_id":"t4_006","latency_ms":2222.6,"tokens_in":288,"tokens_out":290,"total_tokens":578,"score":0.794},{"tier":5,"adapter":"baseline","question_id":"t5_001","latency_ms":1.886,"tokens_in":20,"tokens_out":40,"total_tokens":60,"score":0.84},{"tier":5,"adapter":"agent_loop","question_id":"t5_001","latency_ms":1225.02,"tokens_in":358,"tokens_out":256,"total_tokens":614,"score":0.5963},{"tier":5,"adapter":"stack","question_id":"t5_001","latency_ms":2752.58,"tokens_in":267,"tokens_out":489,"total_tokens":756,"score":0.7295},{"tier":5,"adapter":"baseline","question_id":"t5_002","latency_ms":1.803,"tokens_in":21,"tokens_out":37,"total_tokens":58,"score":0.75},{"tier":5,"adapter":"agent_loop","question_id":"t5_002","latency_ms":1080.39,"tokens_in":331,"tokens_out":340,"total_tokens":671,"score":0.3995},{"tier":5,"adapter":"stack","question_id":"t5_002","latency_ms":1631.23,"tokens_in":406,"tokens_out":541,"total_tokens":947,"score":0.9298},{"tier":5,"adapter":"baseline","question_id":"t5_003","latency_ms":1.829,"tokens_in":18,"tokens_out":18,"total_tokens":36,"score":0.625},{"tier":5,"adapter":"agent_loop","question_id":"t5_003","latency_ms":1255.75,"tokens_in":231,"tokens_out":457,"total_tokens":688,"score":0.4177},{"tier":5,"adapter":"stack","question_id":"t5_003","latency_ms":2064.5,"tokens_in":334,"tokens_out":532,"total_tokens":866,"score":0.6221},{"tier":5,"adapter":"baseline","question_id":"t5_004","latency_ms":1.86,"tokens_in":23,"tokens_out":42,"total_tokens":65,"score":0.7917},{"tier":5,"adapter":"agent_loop","question_id":"t5_004","latency_ms":1892.73,"tokens_in":336,"tokens_out":266,"total_tokens":602,"score":0.7409},{"tier":5,"adapter":"stack","question_id":"t5_004","latency_ms":2228.37,"tokens_in":265,"tokens_out":459,"total_tokens":724,"score":0.936},{"tier":5,"adapter":"baseline","question_id":"t5_005","latency_ms":1.797,"tokens_in":18,"tokens_out":44,"total_tokens":62,"score":0.7917},{"tier":5,"adapter":"agent_loop","question_id":"t5_005","latency_ms":1795.63,"tokens_in":212,"tokens_out":288,"total_tokens":500,"score":0.6371},{"tier":5,"adapter":"stack","question_id":"t5_005","latency_ms":2246.12,"tokens_in":496,"tokens_out":492,"total_tokens":988,"score":0.7174}];
+/* ── THEME TOGGLE ─────────────────────────────────── */
+(function(){
+  const btn=document.querySelector('[data-theme-toggle]'),r=document.documentElement;
+  let d=r.getAttribute('data-theme')||
+      (matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  r.setAttribute('data-theme',d);
+  const SUN='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+  const MOON='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  if(btn){
+    btn.innerHTML=d==='dark'?SUN:MOON;
+    btn.addEventListener('click',()=>{
+      d=d==='dark'?'light':'dark';
+      r.setAttribute('data-theme',d);
+      btn.innerHTML=d==='dark'?SUN:MOON;
+    });
+  }
+})();
 
-const QUESTIONS = [{"id":"t1_001","prompt":"What is the Shannon entropy of a uniform distribution over 8 symbols?","tier":1,"tier_name":"factual"},{"id":"t1_002","prompt":"What is the UCB1 formula for multi-armed bandit arm selection?","tier":1,"tier_name":"factual"},{"id":"t1_003","prompt":"What does IRAP stand for in the Australian security context?","tier":1,"tier_name":"factual"},{"id":"t1_004","prompt":"In Elixir, what does System.unique_integer([:positive]) return?","tier":1,"tier_name":"factual"},{"id":"t1_005","prompt":"What is the KL divergence between two identical probability distributions?","tier":1,"tier_name":"factual"},{"id":"t1_006","prompt":"Name the 5 CoverageOracle scenario classes built into Recursa.","tier":1,"tier_name":"factual"},{"id":"t1_007","prompt":"What HTTP method does Elan.Router use for the /run_skill endpoint?","tier":1,"tier_name":"factual"},{"id":"t1_008","prompt":"What is the default SLO laxity threshold for IRAP_PROTECTED contexts?","tier":1,"tier_name":"factual"},{"id":"t1_009","prompt":"What does FTAP stand for in mathematical finance?","tier":1,"tier_name":"factual"},{"id":"t1_010","prompt":"In the Schnorr protocol, what is the verification equation?","tier":1,"tier_name":"factual"},{"id":"t2_001","prompt":"If laxity_score = 0.23 and context = :irap_protected (max 0.20), what severity does LaxityProbe return?","tier":2,"tier_name":"reasoning"},{"id":"t2_002","prompt":"Given UCB1 scores [0.8, 0.6, 0.9], which skill is selected next?","tier":2,"tier_name":"reasoning"},{"id":"t2_003","prompt":"A coalition of agents [A, B, C] changes to [A, B] \u2014 does SpeculumFreshness return :stale or :changed?","tier":2,"tier_name":"reasoning"},{"id":"t2_004","prompt":"Stack has 21 open sorrys. sorry_depth = ceil(21/10) = ? Does it pass the SLO limit of 2?","tier":2,"tier_name":"reasoning"},{"id":"t2_005","prompt":"A TokenGov matter has conflicting obligations X and Y. What does ConflictDetector return?","tier":2,"tier_name":"reasoning"},{"id":"t2_006","prompt":"If Elan DriftSensor detects KL-divergence 0.15 against threshold 0.10, what event type does MetaBus emit?","tier":2,"tier_name":"reasoning"},{"id":"t2_007","prompt":"A skill DAG has 3 nodes, 2 with sorry_depth 1 and 1 clean. What is the overall laxity_score?","tier":2,"tier_name":"reasoning"},{"id":"t2_008","prompt":"CSC.RegretState: after 5 plays with rewards [0.9, 0.8, 0.7, 0.85, 0.75], what is the mean reward?","tier":2,"tier_name":"reasoning"},{"id":"t3_001","prompt":"Under IRAP ISM-0839, what is the maximum classification level for AI-processed documents?","tier":3,"tier_name":"legal"},{"id":"t3_002","prompt":"EU AI Act Article 13: what transparency requirements apply to high-risk AI systems?","tier":3,"tier_name":"legal"},{"id":"t3_003","prompt":"SRA Principle 6 \u2014 what duty does it impose on UK solicitors regarding client information?","tier":3,"tier_name":"legal"},{"id":"t3_004","prompt":"Under CCPA, what right allows California residents to opt out of sale of personal information?","tier":3,"tier_name":"legal"},{"id":"t3_005","prompt":"GDPR Article 44 \u2014 under what conditions may personal data be transferred to a third country?","tier":3,"tier_name":"legal"},{"id":"t3_006","prompt":"What is the regulatory sandbox provision in the EU AI Act and which article covers it?","tier":3,"tier_name":"legal"},{"id":"t4_001","prompt":"Write an Elixir function that computes KL divergence between two probability maps.","tier":4,"tier_name":"code"},{"id":"t4_002","prompt":"Write a Lean 4 theorem stub for 'no-arbitrage implies risk-neutral measure exists' (FTAP).","tier":4,"tier_name":"code"},{"id":"t4_003","prompt":"Write the UCB1 score formula as an Elixir function.","tier":4,"tier_name":"code"},{"id":"t4_004","prompt":"Fix the broken Schnorr verification: g^r == c * h^e mod p when p=q (Wave 4 bug).","tier":4,"tier_name":"code"},{"id":"t4_005","prompt":"Write a GenServer init/1 that registers under a unique name using System.unique_integer.","tier":4,"tier_name":"code"},{"id":"t4_006","prompt":"Write an Elixir test that verifies a MetaBus event is emitted within 100ms.","tier":4,"tier_name":"code"},{"id":"t5_001","prompt":"What is the current sorry_depth SLO status of the stack after Wave 4 remediation?","tier":5,"tier_name":"metacog"},{"id":"t5_002","prompt":"Which metacognitive module would surface a distributional shift in Elan agent outputs?","tier":5,"tier_name":"metacog"},{"id":"t5_003","prompt":"What is the pi-score tradeoff formula used in BenchArena.MetricCollector?","tier":5,"tier_name":"metacog"},{"id":"t5_004","prompt":"If CoverageOracle.coverage_score/0 returns 0.72, which scenario classes are likely uncovered?","tier":5,"tier_name":"metacog"},{"id":"t5_005","prompt":"What did the Wave 4 self-assessment identify as the #1 critical finding?","tier":5,"tier_name":"metacog"}];
+/* ── DATA ─────────────────────────────────────────── */
+const SIMULATED_DATA = [{"tier":1,"adapter":"baseline","question_id":"t1_001","latency_ms":2.559,"tokens_in":17,"tokens_out":1,"total_tokens":18,"score":0.0},{"tier":1,"adapter":"agent_loop","question_id":"t1_001","latency_ms":1420.15,"tokens_in":235,"tokens_out":332,"total_tokens":567,"score":0.7869},{"tier":1,"adapter":"stack","question_id":"t1_001","latency_ms":1537.76,"tokens_in":460,"tokens_out":335,"total_tokens":795,"score":0.7432},{"tier":1,"adapter":"baseline","question_id":"t1_002","latency_ms":2.125,"tokens_in":15,"tokens_out":28,"total_tokens":43,"score":0.8235},{"tier":1,"adapter":"agent_loop","question_id":"t1_002","latency_ms":1431.9,"tokens_in":325,"tokens_out":448,"total_tokens":773,"score":0.845},{"tier":1,"adapter":"stack","question_id":"t1_002","latency_ms":2887.35,"tokens_in":290,"tokens_out":446,"total_tokens":736,"score":0.7809},{"tier":1,"adapter":"baseline","question_id":"t1_003","latency_ms":1.747,"tokens_in":15,"tokens_out":12,"total_tokens":27,"score":1.0},{"tier":1,"adapter":"agent_loop","question_id":"t1_003","latency_ms":1627.92,"tokens_in":305,"tokens_out":361,"total_tokens":666,"score":0.8723},{"tier":1,"adapter":"stack","question_id":"t1_003","latency_ms":2046.21,"tokens_in":348,"tokens_out":510,"total_tokens":858,"score":0.8657},{"tier":1,"adapter":"baseline","question_id":"t1_004","latency_ms":1.92,"tokens_in":15,"tokens_out":18,"total_tokens":33,"score":0.6364},{"tier":1,"adapter":"agent_loop","question_id":"t1_004","latency_ms":1776.48,"tokens_in":272,"tokens_out":270,"total_tokens":542,"score":0.7755},{"tier":1,"adapter":"stack","question_id":"t1_004","latency_ms":2257.7,"tokens_in":265,"tokens_out":327,"total_tokens":592,"score":1.0},{"tier":1,"adapter":"baseline","question_id":"t1_005","latency_ms":1.872,"tokens_in":18,"tokens_out":1,"total_tokens":19,"score":0.0},{"tier":1,"adapter":"agent_loop","question_id":"t1_005","latency_ms":1585.45,"tokens_in":323,"tokens_out":294,"total_tokens":617,"score":0.9373},{"tier":1,"adapter":"stack","question_id":"t1_005","latency_ms":2198.62,"tokens_in":264,"tokens_out":295,"total_tokens":559,"score":0.9},{"tier":1,"adapter":"baseline","question_id":"t1_006","latency_ms":2.1,"tokens_in":14,"tokens_out":20,"total_tokens":34,"score":0.75},{"tier":1,"adapter":"agent_loop","question_id":"t1_006","latency_ms":1320.0,"tokens_in":290,"tokens_out":310,"total_tokens":600,"score":0.82},{"tier":1,"adapter":"stack","question_id":"t1_006","latency_ms":1980.0,"tokens_in":320,"tokens_out":330,"total_tokens":650,"score":0.79},{"tier":1,"adapter":"baseline","question_id":"t1_007","latency_ms":1.5,"tokens_in":12,"tokens_out":5,"total_tokens":17,"score":1.0},{"tier":1,"adapter":"agent_loop","question_id":"t1_007","latency_ms":1100.0,"tokens_in":200,"tokens_out":150,"total_tokens":350,"score":0.95},{"tier":1,"adapter":"stack","question_id":"t1_007","latency_ms":1650.0,"tokens_in":240,"tokens_out":160,"total_tokens":400,"score":0.95},{"tier":1,"adapter":"baseline","question_id":"t1_008","latency_ms":1.8,"tokens_in":13,"tokens_out":8,"total_tokens":21,"score":0.9},{"tier":1,"adapter":"agent_loop","question_id":"t1_008","latency_ms":1200.0,"tokens_in":220,"tokens_out":180,"total_tokens":400,"score":0.93},{"tier":1,"adapter":"stack","question_id":"t1_008","latency_ms":1800.0,"tokens_in":260,"tokens_out":190,"total_tokens":450,"score":1.0},{"tier":1,"adapter":"baseline","question_id":"t1_009","latency_ms":1.6,"tokens_in":12,"tokens_out":10,"total_tokens":22,"score":1.0},{"tier":1,"adapter":"agent_loop","question_id":"t1_009","latency_ms":1050.0,"tokens_in":190,"tokens_out":140,"total_tokens":330,"score":0.96},{"tier":1,"adapter":"stack","question_id":"t1_009","latency_ms":1550.0,"tokens_in":230,"tokens_out":150,"total_tokens":380,"score":0.96},{"tier":1,"adapter":"baseline","question_id":"t1_010","latency_ms":2.0,"tokens_in":16,"tokens_out":22,"total_tokens":38,"score":0.72},{"tier":1,"adapter":"agent_loop","question_id":"t1_010","latency_ms":1400.0,"tokens_in":280,"tokens_out":300,"total_tokens":580,"score":0.85},{"tier":1,"adapter":"stack","question_id":"t1_010","latency_ms":2100.0,"tokens_in":310,"tokens_out":320,"total_tokens":630,"score":0.88},{"tier":2,"adapter":"baseline","question_id":"t2_001","latency_ms":1.9,"tokens_in":18,"tokens_out":10,"total_tokens":28,"score":0.6},{"tier":2,"adapter":"agent_loop","question_id":"t2_001","latency_ms":1650.0,"tokens_in":350,"tokens_out":400,"total_tokens":750,"score":0.75},{"tier":2,"adapter":"stack","question_id":"t2_001","latency_ms":2400.0,"tokens_in":400,"tokens_out":450,"total_tokens":850,"score":0.88},{"tier":2,"adapter":"baseline","question_id":"t2_002","latency_ms":1.7,"tokens_in":14,"tokens_out":8,"total_tokens":22,"score":0.5},{"tier":2,"adapter":"agent_loop","question_id":"t2_002","latency_ms":1400.0,"tokens_in":300,"tokens_out":280,"total_tokens":580,"score":0.82},{"tier":2,"adapter":"stack","question_id":"t2_002","latency_ms":2100.0,"tokens_in":340,"tokens_out":300,"total_tokens":640,"score":0.84},{"tier":2,"adapter":"baseline","question_id":"t2_003","latency_ms":2.1,"tokens_in":17,"tokens_out":12,"total_tokens":29,"score":0.45},{"tier":2,"adapter":"agent_loop","question_id":"t2_003","latency_ms":1750.0,"tokens_in":370,"tokens_out":420,"total_tokens":790,"score":0.71},{"tier":2,"adapter":"stack","question_id":"t2_003","latency_ms":2600.0,"tokens_in":420,"tokens_out":470,"total_tokens":890,"score":0.79},{"tier":2,"adapter":"baseline","question_id":"t2_004","latency_ms":1.8,"tokens_in":15,"tokens_out":9,"total_tokens":24,"score":0.7},{"tier":2,"adapter":"agent_loop","question_id":"t2_004","latency_ms":1300.0,"tokens_in":260,"tokens_out":240,"total_tokens":500,"score":0.79},{"tier":2,"adapter":"stack","question_id":"t2_004","latency_ms":1950.0,"tokens_in":290,"tokens_out":260,"total_tokens":550,"score":0.82},{"tier":2,"adapter":"baseline","question_id":"t2_005","latency_ms":2.0,"tokens_in":16,"tokens_out":14,"total_tokens":30,"score":0.55},{"tier":2,"adapter":"agent_loop","question_id":"t2_005","latency_ms":1500.0,"tokens_in":320,"tokens_out":360,"total_tokens":680,"score":0.68},{"tier":2,"adapter":"stack","question_id":"t2_005","latency_ms":2250.0,"tokens_in":380,"tokens_out":400,"total_tokens":780,"score":0.77},{"tier":2,"adapter":"baseline","question_id":"t2_006","latency_ms":1.9,"tokens_in":15,"tokens_out":11,"total_tokens":26,"score":0.48},{"tier":2,"adapter":"agent_loop","question_id":"t2_006","latency_ms":1600.0,"tokens_in":340,"tokens_out":390,"total_tokens":730,"score":0.7},{"tier":2,"adapter":"stack","question_id":"t2_006","latency_ms":2350.0,"tokens_in":390,"tokens_out":430,"total_tokens":820,"score":0.76},{"tier":2,"adapter":"baseline","question_id":"t2_007","latency_ms":2.2,"tokens_in":18,"tokens_out":13,"total_tokens":31,"score":0.52},{"tier":2,"adapter":"agent_loop","question_id":"t2_007","latency_ms":1700.0,"tokens_in":360,"tokens_out":410,"total_tokens":770,"score":0.65},{"tier":2,"adapter":"stack","question_id":"t2_007","latency_ms":2500.0,"tokens_in":410,"tokens_out":460,"total_tokens":870,"score":0.73},{"tier":2,"adapter":"baseline","question_id":"t2_008","latency_ms":1.6,"tokens_in":14,"tokens_out":10,"total_tokens":24,"score":0.8},{"tier":2,"adapter":"agent_loop","question_id":"t2_008","latency_ms":1100.0,"tokens_in":220,"tokens_out":200,"total_tokens":420,"score":0.88},{"tier":2,"adapter":"stack","question_id":"t2_008","latency_ms":1650.0,"tokens_in":250,"tokens_out":220,"total_tokens":470,"score":0.89},{"tier":3,"adapter":"baseline","question_id":"t3_001","latency_ms":2.1,"tokens_in":16,"tokens_out":18,"total_tokens":34,"score":0.35},{"tier":3,"adapter":"agent_loop","question_id":"t3_001","latency_ms":1800.0,"tokens_in":380,"tokens_out":450,"total_tokens":830,"score":0.58},{"tier":3,"adapter":"stack","question_id":"t3_001","latency_ms":3200.0,"tokens_in":520,"tokens_out":600,"total_tokens":1120,"score":0.82},{"tier":3,"adapter":"baseline","question_id":"t3_002","latency_ms":2.4,"tokens_in":18,"tokens_out":22,"total_tokens":40,"score":0.3},{"tier":3,"adapter":"agent_loop","question_id":"t3_002","latency_ms":2000.0,"tokens_in":420,"tokens_out":490,"total_tokens":910,"score":0.61},{"tier":3,"adapter":"stack","question_id":"t3_002","latency_ms":3500.0,"tokens_in":560,"tokens_out":640,"total_tokens":1200,"score":0.84},{"tier":3,"adapter":"baseline","question_id":"t3_003","latency_ms":1.9,"tokens_in":15,"tokens_out":15,"total_tokens":30,"score":0.28},{"tier":3,"adapter":"agent_loop","question_id":"t3_003","latency_ms":1700.0,"tokens_in":360,"tokens_out":420,"total_tokens":780,"score":0.55},{"tier":3,"adapter":"stack","question_id":"t3_003","latency_ms":2900.0,"tokens_in":490,"tokens_out":560,"total_tokens":1050,"score":0.79},{"tier":3,"adapter":"baseline","question_id":"t3_004","latency_ms":2.2,"tokens_in":17,"tokens_out":19,"total_tokens":36,"score":0.32},{"tier":3,"adapter":"agent_loop","question_id":"t3_004","latency_ms":1850.0,"tokens_in":390,"tokens_out":460,"total_tokens":850,"score":0.6},{"tier":3,"adapter":"stack","question_id":"t3_004","latency_ms":3100.0,"tokens_in":530,"tokens_out":610,"total_tokens":1140,"score":0.81},{"tier":3,"adapter":"baseline","question_id":"t3_005","latency_ms":2.0,"tokens_in":16,"tokens_out":16,"total_tokens":32,"score":0.27},{"tier":3,"adapter":"agent_loop","question_id":"t3_005","latency_ms":1950.0,"tokens_in":410,"tokens_out":480,"total_tokens":890,"score":0.62},{"tier":3,"adapter":"stack","question_id":"t3_005","latency_ms":3300.0,"tokens_in":545,"tokens_out":625,"total_tokens":1170,"score":0.83},{"tier":3,"adapter":"baseline","question_id":"t3_006","latency_ms":2.3,"tokens_in":18,"tokens_out":20,"total_tokens":38,"score":0.31},{"tier":3,"adapter":"agent_loop","question_id":"t3_006","latency_ms":1750.0,"tokens_in":370,"tokens_out":440,"total_tokens":810,"score":0.64},{"tier":3,"adapter":"stack","question_id":"t3_006","latency_ms":3050.0,"tokens_in":510,"tokens_out":590,"total_tokens":1100,"score":0.85},{"tier":4,"adapter":"baseline","question_id":"t4_001","latency_ms":2.5,"tokens_in":20,"tokens_out":35,"total_tokens":55,"score":0.4},{"tier":4,"adapter":"agent_loop","question_id":"t4_001","latency_ms":2100.0,"tokens_in":440,"tokens_out":550,"total_tokens":990,"score":0.72},{"tier":4,"adapter":"stack","question_id":"t4_001","latency_ms":3000.0,"tokens_in":510,"tokens_out":600,"total_tokens":1110,"score":0.74},{"tier":4,"adapter":"baseline","question_id":"t4_002","latency_ms":2.8,"tokens_in":22,"tokens_out":40,"total_tokens":62,"score":0.35},{"tier":4,"adapter":"agent_loop","question_id":"t4_002","latency_ms":2300.0,"tokens_in":480,"tokens_out":580,"total_tokens":1060,"score":0.68},{"tier":4,"adapter":"stack","question_id":"t4_002","latency_ms":3200.0,"tokens_in":540,"tokens_out":630,"total_tokens":1170,"score":0.71},{"tier":4,"adapter":"baseline","question_id":"t4_003","latency_ms":2.1,"tokens_in":18,"tokens_out":28,"total_tokens":46,"score":0.55},{"tier":4,"adapter":"agent_loop","question_id":"t4_003","latency_ms":1800.0,"tokens_in":380,"tokens_out":460,"total_tokens":840,"score":0.8},{"tier":4,"adapter":"stack","question_id":"t4_003","latency_ms":2600.0,"tokens_in":430,"tokens_out":510,"total_tokens":940,"score":0.82},{"tier":4,"adapter":"baseline","question_id":"t4_004","latency_ms":2.3,"tokens_in":19,"tokens_out":32,"total_tokens":51,"score":0.45},{"tier":4,"adapter":"agent_loop","question_id":"t4_004","latency_ms":2000.0,"tokens_in":420,"tokens_out":510,"total_tokens":930,"score":0.78},{"tier":4,"adapter":"stack","question_id":"t4_004","latency_ms":2850.0,"tokens_in":470,"tokens_out":560,"total_tokens":1030,"score":0.81},{"tier":4,"adapter":"baseline","question_id":"t4_005","latency_ms":2.0,"tokens_in":17,"tokens_out":25,"total_tokens":42,"score":0.5},{"tier":4,"adapter":"agent_loop","question_id":"t4_005","latency_ms":1900.0,"tokens_in":400,"tokens_out":490,"total_tokens":890,"score":0.79},{"tier":4,"adapter":"stack","question_id":"t4_005","latency_ms":2700.0,"tokens_in":450,"tokens_out":540,"total_tokens":990,"score":0.8},{"tier":4,"adapter":"baseline","question_id":"t4_006","latency_ms":2.6,"tokens_in":21,"tokens_out":38,"total_tokens":59,"score":0.42},{"tier":4,"adapter":"agent_loop","question_id":"t4_006","latency_ms":2200.0,"tokens_in":460,"tokens_out":560,"total_tokens":1020,"score":0.74},{"tier":4,"adapter":"stack","question_id":"t4_006","latency_ms":3100.0,"tokens_in":520,"tokens_out":610,"total_tokens":1130,"score":0.77},{"tier":5,"adapter":"baseline","question_id":"t5_001","latency_ms":2.0,"tokens_in":16,"tokens_out":18,"total_tokens":34,"score":0.25},{"tier":5,"adapter":"agent_loop","question_id":"t5_001","latency_ms":1600.0,"tokens_in":340,"tokens_out":400,"total_tokens":740,"score":0.52},{"tier":5,"adapter":"stack","question_id":"t5_001","latency_ms":2800.0,"tokens_in":460,"tokens_out":540,"total_tokens":1000,"score":0.78},{"tier":5,"adapter":"baseline","question_id":"t5_002","latency_ms":1.8,"tokens_in":14,"tokens_out":14,"total_tokens":28,"score":0.2},{"tier":5,"adapter":"agent_loop","question_id":"t5_002","latency_ms":1400.0,"tokens_in":300,"tokens_out":360,"total_tokens":660,"score":0.48},{"tier":5,"adapter":"stack","question_id":"t5_002","latency_ms":2500.0,"tokens_in":420,"tokens_out":500,"total_tokens":920,"score":0.76},{"tier":5,"adapter":"baseline","question_id":"t5_003","latency_ms":2.2,"tokens_in":17,"tokens_out":20,"total_tokens":37,"score":0.3},{"tier":5,"adapter":"agent_loop","question_id":"t5_003","latency_ms":1700.0,"tokens_in":360,"tokens_out":420,"total_tokens":780,"score":0.55},{"tier":5,"adapter":"stack","question_id":"t5_003","latency_ms":3000.0,"tokens_in":490,"tokens_out":570,"total_tokens":1060,"score":0.8},{"tier":5,"adapter":"baseline","question_id":"t5_004","latency_ms":1.9,"tokens_in":15,"tokens_out":16,"total_tokens":31,"score":0.22},{"tier":5,"adapter":"agent_loop","question_id":"t5_004","latency_ms":1500.0,"tokens_in":320,"tokens_out":380,"total_tokens":700,"score":0.5},{"tier":5,"adapter":"stack","question_id":"t5_004","latency_ms":2700.0,"tokens_in":450,"tokens_out":530,"total_tokens":980,"score":0.77},{"tier":5,"adapter":"baseline","question_id":"t5_005","latency_ms":2.1,"tokens_in":16,"tokens_out":17,"total_tokens":33,"score":0.28},{"tier":5,"adapter":"agent_loop","question_id":"t5_005","latency_ms":1650.0,"tokens_in":350,"tokens_out":410,"total_tokens":760,"score":0.6},{"tier":5,"adapter":"stack","question_id":"t5_005","latency_ms":2900.0,"tokens_in":475,"tokens_out":555,"total_tokens":1030,"score":0.82}];
 
-const TIER_NAMES = {1:'Factual',2:'Reasoning',3:'Legal',4:'Code',5:'Metacog'};
-const ADAPTER_COLORS = {baseline:'#f0883e',agent_loop:'#58a6ff',stack:'#3fb950'};
+const QUESTIONS = [
+  {id:"t1_001",tier:1,tier_name:"Factual",prompt:"What is the Shannon entropy of a uniform distribution over 8 symbols?"},
+  {id:"t1_002",tier:1,tier_name:"Factual",prompt:"What is the UCB1 formula for multi-armed bandit arm selection?"},
+  {id:"t1_003",tier:1,tier_name:"Factual",prompt:"What does IRAP stand for in the Australian security context?"},
+  {id:"t1_004",tier:1,tier_name:"Factual",prompt:"In Elixir, what does System.unique_integer([:positive]) return?"},
+  {id:"t1_005",tier:1,tier_name:"Factual",prompt:"What is the KL divergence between two identical probability distributions?"},
+  {id:"t1_006",tier:1,tier_name:"Factual",prompt:"Name the 5 CoverageOracle scenario classes built into Recursa."},
+  {id:"t1_007",tier:1,tier_name:"Factual",prompt:"What HTTP method does Elan.Router use for the /run_skill endpoint?"},
+  {id:"t1_008",tier:1,tier_name:"Factual",prompt:"What is the default SLO laxity threshold for IRAP_PROTECTED contexts?"},
+  {id:"t1_009",tier:1,tier_name:"Factual",prompt:"What does FTAP stand for in mathematical finance?"},
+  {id:"t1_010",tier:1,tier_name:"Factual",prompt:"In the Schnorr protocol, what is the verification equation?"},
+  {id:"t2_001",tier:2,tier_name:"Reasoning",prompt:"If laxity_score = 0.23 and context = :irap_protected (max 0.20), what severity does LaxityProbe return?"},
+  {id:"t2_002",tier:2,tier_name:"Reasoning",prompt:"Given UCB1 scores [0.8, 0.6, 0.9], which skill is selected next?"},
+  {id:"t2_003",tier:2,tier_name:"Reasoning",prompt:"A coalition [A,B,C] changes to [A,B] — does SpeculumFreshness return :stale or :changed?"},
+  {id:"t2_004",tier:2,tier_name:"Reasoning",prompt:"Stack has 21 open sorrys. sorry_depth = ceil(21/10) = ? Does it pass the SLO limit of 2?"},
+  {id:"t2_005",tier:2,tier_name:"Reasoning",prompt:"A TokenGov matter has conflicting obligations X and Y. What does ConflictDetector return?"},
+  {id:"t2_006",tier:2,tier_name:"Reasoning",prompt:"If Elan DriftSensor detects KL-divergence 0.15 against threshold 0.10, what MetaBus event is emitted?"},
+  {id:"t2_007",tier:2,tier_name:"Reasoning",prompt:"A skill DAG has 3 nodes: 2 with sorry_depth 1 and 1 clean. What is the overall laxity_score?"},
+  {id:"t2_008",tier:2,tier_name:"Reasoning",prompt:"CSC.RegretState: after 5 plays with rewards [0.9,0.8,0.7,0.85,0.75], what is the mean reward?"},
+  {id:"t3_001",tier:3,tier_name:"Legal",prompt:"Under IRAP ISM-0839, what is the maximum classification for AI-processed documents?"},
+  {id:"t3_002",tier:3,tier_name:"Legal",prompt:"EU AI Act Article 13: what transparency requirements apply to high-risk AI systems?"},
+  {id:"t3_003",tier:3,tier_name:"Legal",prompt:"SRA Principle 6 — what duty does it impose on UK solicitors re: client information?"},
+  {id:"t3_004",tier:3,tier_name:"Legal",prompt:"Under CCPA, what right allows California residents to opt out of sale of personal information?"},
+  {id:"t3_005",tier:3,tier_name:"Legal",prompt:"GDPR Article 44 — under what conditions may personal data transfer to a third country?"},
+  {id:"t3_006",tier:3,tier_name:"Legal",prompt:"What is the regulatory sandbox provision in the EU AI Act and which article covers it?"},
+  {id:"t4_001",tier:4,tier_name:"Code",prompt:"Write an Elixir function that computes KL divergence between two probability maps."},
+  {id:"t4_002",tier:4,tier_name:"Code",prompt:"Write a Lean 4 theorem stub for 'no-arbitrage implies risk-neutral measure exists'."},
+  {id:"t4_003",tier:4,tier_name:"Code",prompt:"Write the UCB1 score formula as an Elixir function."},
+  {id:"t4_004",tier:4,tier_name:"Code",prompt:"Fix this broken Schnorr verification: g^r == c * h^e mod p when p=q (the Wave 4 bug)."},
+  {id:"t4_005",tier:4,tier_name:"Code",prompt:"Write a GenServer init/1 that registers under a unique name using System.unique_integer."},
+  {id:"t4_006",tier:4,tier_name:"Code",prompt:"Write an Elixir test that verifies a MetaBus event is emitted within 100ms."},
+  {id:"t5_001",tier:5,tier_name:"Metacog",prompt:"What is the current sorry_depth SLO status of the stack after Wave 4 remediation?"},
+  {id:"t5_002",tier:5,tier_name:"Metacog",prompt:"Which metacognitive module surfaces distributional shift in Elan agent outputs?"},
+  {id:"t5_003",tier:5,tier_name:"Metacog",prompt:"What is the π-score tradeoff formula used in BenchArena.MetricCollector?"},
+  {id:"t5_004",tier:5,tier_name:"Metacog",prompt:"If CoverageOracle.coverage_score/0 returns 0.72, which scenario classes are likely uncovered?"},
+  {id:"t5_005",tier:5,tier_name:"Metacog",prompt:"What did the Wave 4 self-assessment identify as the #1 critical finding?"}
+];
 
-// === HELPERS ===
-function mean(arr) { return arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0; }
-function round(n,d) { const f=Math.pow(10,d); return Math.round(n*f)/f; }
+const TIER_NAMES={1:'Factual',2:'Reasoning',3:'Legal',4:'Code',5:'Metacog'};
+const AC={baseline:'var(--col-baseline)',agent_loop:'var(--col-agent)',stack:'var(--col-stack)'};
+const AN={baseline:'Baseline',agent_loop:'Agent Loop',stack:'Stack'};
 
-function computeStats(data) {
-  const byAdapter = {};
-  ['baseline','agent_loop','stack'].forEach(a => {
-    const entries = data.filter(d => d.adapter === a);
-    if (!entries.length) return;
-    const lats = entries.map(e=>e.latency_ms);
-    const toks = entries.map(e=>e.total_tokens);
-    const scores = entries.map(e=>e.score);
-    byAdapter[a] = {
-      meanLatency: round(mean(lats),1),
-      minLatency: round(Math.min(...lats),1),
-      maxLatency: round(Math.max(...lats),1),
-      meanTokens: round(mean(toks),0),
-      meanAccuracy: round(mean(scores),4),
-      piScore: 0
+/* ── HELPERS ────────────────────────────────────── */
+function mean(a){return a.length?a.reduce((s,v)=>s+v,0)/a.length:0}
+function round(n,d){const f=Math.pow(10,d);return Math.round(n*f)/f}
+
+function computeStats(data){
+  const s={};
+  ['baseline','agent_loop','stack'].forEach(a=>{
+    const e=data.filter(d=>d.adapter===a);
+    if(!e.length)return;
+    const lats=e.map(d=>d.latency_ms),toks=e.map(d=>d.total_tokens),scores=e.map(d=>d.score);
+    s[a]={
+      meanLatency:round(mean(lats),1),minLatency:round(Math.min(...lats),1),maxLatency:round(Math.max(...lats),1),
+      meanTokens:round(mean(toks),0),meanAccuracy:round(mean(scores),4),piScore:0
     };
   });
-  // pi-score: stack vs agent_loop
-  if (byAdapter.agent_loop && byAdapter.stack) {
-    const ld = byAdapter.stack.meanLatency - byAdapter.agent_loop.meanLatency;
-    const td = byAdapter.stack.meanTokens - byAdapter.agent_loop.meanTokens;
-    const ad = byAdapter.stack.meanAccuracy - byAdapter.agent_loop.meanAccuracy;
-    const pi = ad - 0.001*ld - 0.0001*td;
-    byAdapter.stack.piScore = round(pi,4);
-    byAdapter.agent_loop.piScore = round(-pi,4);
+  if(s.agent_loop&&s.stack){
+    const ld=s.stack.meanLatency-s.agent_loop.meanLatency;
+    const td=s.stack.meanTokens-s.agent_loop.meanTokens;
+    const ad=s.stack.meanAccuracy-s.agent_loop.meanAccuracy;
+    const pi=ad-0.001*ld-0.0001*td;
+    s.stack.piScore=round(pi,4);s.agent_loop.piScore=round(-pi,4);
   }
-  return byAdapter;
+  return s;
 }
-
-function computeTierStats(data) {
-  const result = {};
-  for (let t=1;t<=5;t++) {
-    result[t] = {};
-    ['baseline','agent_loop','stack'].forEach(a => {
-      const entries = data.filter(d => d.tier===t && d.adapter===a);
-      if (entries.length) result[t][a] = round(mean(entries.map(e=>e.score)),4);
+function computeTierStats(data){
+  const r={};
+  for(let t=1;t<=5;t++){
+    r[t]={};
+    ['baseline','agent_loop','stack'].forEach(a=>{
+      const e=data.filter(d=>d.tier===t&&d.adapter===a);
+      if(e.length)r[t][a]=round(mean(e.map(d=>d.score)),4);
     });
   }
-  return result;
+  return r;
+}
+function computeTierTokens(data){
+  const r={};
+  for(let t=1;t<=5;t++){
+    r[t]={};
+    ['baseline','agent_loop','stack'].forEach(a=>{
+      const e=data.filter(d=>d.tier===t&&d.adapter===a);
+      if(e.length)r[t][a]=round(mean(e.map(d=>d.total_tokens)),0);
+    });
+  }
+  return r;
 }
 
-// === TRADEOFF GRID ===
-function renderTradeoff(stats) {
-  const grid = document.getElementById('tradeoffGrid');
-  // Clear non-header cells
-  while (grid.children.length > 4) grid.removeChild(grid.lastChild);
-
-  const rows = [
+/* ── TRADEOFF TABLE ─────────────────────────────── */
+function renderTradeoff(stats){
+  const tbl=document.getElementById('tradeoffTable');
+  // remove old data rows
+  while(tbl.children.length>1)tbl.removeChild(tbl.lastChild);
+  const rows=[
     {label:'Mean Latency',key:'meanLatency',fmt:v=>v+'ms',lower:true},
-    {label:'Mean Tokens',key:'meanTokens',fmt:v=>v,lower:true},
+    {label:'Mean Tokens',key:'meanTokens',fmt:v=>v.toLocaleString(),lower:true},
     {label:'Mean Accuracy',key:'meanAccuracy',fmt:v=>v,lower:false},
-    {label:'\u03C0-Score',key:'piScore',fmt:v=>(v>0?'+':'')+v,lower:false}
+    {label:'π-Score vs loop',key:'piScore',fmt:v=>(v>0?'+':'')+v,lower:false}
   ];
-
-  rows.forEach(row => {
-    const vals = ['baseline','agent_loop','stack'].map(a => stats[a] ? stats[a][row.key] : null);
-    const validVals = vals.filter(v=>v!==null);
-    const best = row.lower ? Math.min(...validVals) : Math.max(...validVals);
-    const worst = row.lower ? Math.max(...validVals) : Math.min(...validVals);
-
-    const label = document.createElement('div');
-    label.className = 'cell row-label';
-    label.textContent = row.label;
-    grid.appendChild(label);
-
-    vals.forEach(v => {
-      const cell = document.createElement('div');
-      cell.className = 'cell';
-      if (v === null) { cell.textContent = '-'; }
-      else {
-        cell.textContent = row.fmt(v);
-        if (v === best) cell.classList.add('best');
-        else if (v === worst) cell.classList.add('worst');
-        else cell.classList.add('mid');
+  rows.forEach(row=>{
+    const adapters=['baseline','agent_loop','stack'];
+    const vals=adapters.map(a=>stats[a]?stats[a][row.key]:null);
+    const valid=vals.filter(v=>v!==null);
+    const best=row.lower?Math.min(...valid):Math.max(...valid);
+    const worst=row.lower?Math.max(...valid):Math.min(...valid);
+    const div=document.createElement('div');
+    div.className='tt-row';
+    const lbl=document.createElement('div');
+    lbl.className='tt-cell row-label';lbl.textContent=row.label;div.appendChild(lbl);
+    vals.forEach(v=>{
+      const c=document.createElement('div');
+      c.className='tt-cell';
+      if(v===null){c.textContent='—';}
+      else{
+        c.textContent=row.fmt(v);
+        if(v===best)c.classList.add('best');
+        else if(v===worst)c.classList.add('worst');
+        else c.classList.add('mid');
       }
-      grid.appendChild(cell);
+      div.appendChild(c);
     });
+    tbl.appendChild(div);
   });
 }
 
-// === TIER CHART ===
-function renderTierChart(tierStats) {
-  const svg = document.getElementById('tierChart');
-  svg.innerHTML = '';
-  const W=800, H=340, pad={t:30,b:60,l:60,r:20};
-  const chartW = W-pad.l-pad.r;
-  const chartH = H-pad.t-pad.b;
-  const groupW = chartW/5;
-  const barW = groupW*0.22;
-  const adapters = ['baseline','agent_loop','stack'];
-
-  // Y axis
-  for (let i=0;i<=5;i++) {
-    const y = pad.t + chartH - (i/5)*chartH;
-    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute('x1',pad.l); line.setAttribute('x2',W-pad.r);
-    line.setAttribute('y1',y); line.setAttribute('y2',y);
-    line.setAttribute('stroke','var(--border)'); line.setAttribute('stroke-width','1');
-    svg.appendChild(line);
-    const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
-    txt.setAttribute('x',pad.l-8); txt.setAttribute('y',y+4);
-    txt.setAttribute('text-anchor','end'); txt.setAttribute('font-size','11');
-    txt.textContent = round(i/5,1);
-    svg.appendChild(txt);
+/* ── TIER ACCURACY CHART ────────────────────────── */
+function renderTierChart(ts){
+  const svg=document.getElementById('tierChart');
+  svg.innerHTML='';
+  const W=480,H=300,pad={t:28,b:68,l:44,r:16};
+  const cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;
+  const gW=cW/5,bW=gW*0.2,adapters=['baseline','agent_loop','stack'];
+  // grid lines
+  for(let i=0;i<=5;i++){
+    const y=pad.t+cH-(i/5)*cH;
+    const g=mk('line',{x1:pad.l,x2:W-pad.r,y1:y,y2:y,stroke:'var(--color-divider)',
+      'stroke-width':i===0?1.5:1,'stroke-dasharray':i===0?'':'3,4'});
+    svg.appendChild(g);
+    const t=mk('text',{x:pad.l-6,y:y+4,'text-anchor':'end','font-size':9,'font-family':'var(--font-mono)'});
+    t.textContent=round(i/5,1);svg.appendChild(t);
   }
-
-  for (let t=1;t<=5;t++) {
-    const gx = pad.l + (t-1)*groupW + groupW/2;
-    // Tier label
-    const lbl = document.createElementNS('http://www.w3.org/2000/svg','text');
-    lbl.setAttribute('x',gx); lbl.setAttribute('y',H-20);
-    lbl.setAttribute('text-anchor','middle'); lbl.setAttribute('font-size','12'); lbl.setAttribute('font-weight','600');
-    lbl.textContent = TIER_NAMES[t];
-    svg.appendChild(lbl);
-    const lbl2 = document.createElementNS('http://www.w3.org/2000/svg','text');
-    lbl2.setAttribute('x',gx); lbl2.setAttribute('y',H-6);
-    lbl2.setAttribute('text-anchor','middle'); lbl2.setAttribute('font-size','10');
-    lbl2.setAttribute('fill','var(--fg2)');
-    lbl2.textContent = 'Tier '+t;
-    svg.appendChild(lbl2);
-
-    adapters.forEach((a,i) => {
-      const val = tierStats[t][a] || 0;
-      const bh = val * chartH;
-      const bx = gx - 1.5*barW + i*(barW+4);
-      const by = pad.t + chartH - bh;
-      const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
-      rect.setAttribute('x',bx); rect.setAttribute('y',by);
-      rect.setAttribute('width',barW); rect.setAttribute('height',bh);
-      rect.setAttribute('fill',ADAPTER_COLORS[a]);
-      rect.setAttribute('rx','3');
-      rect.setAttribute('opacity','0.85');
-      svg.appendChild(rect);
-      // Value label
-      const vt = document.createElementNS('http://www.w3.org/2000/svg','text');
-      vt.setAttribute('x',bx+barW/2); vt.setAttribute('y',by-4);
-      vt.setAttribute('text-anchor','middle'); vt.setAttribute('font-size','9'); vt.setAttribute('font-family','var(--mono)');
-      vt.textContent = round(val,2);
-      svg.appendChild(vt);
+  for(let ti=1;ti<=5;ti++){
+    const gx=pad.l+(ti-1)*gW+gW/2;
+    adapters.forEach((a,i)=>{
+      const val=ts[ti][a]||0;
+      const bh=val*cH,bx=gx-1.5*(bW+3)+i*(bW+3);
+      const r=mk('rect',{x:bx,y:pad.t+cH-bh,width:bW,height:bh,
+        fill:AC[a],rx:2,opacity:.85});
+      svg.appendChild(r);
+      if(bh>14){
+        const vt=mk('text',{x:bx+bW/2,y:pad.t+cH-bh-3,'text-anchor':'middle',
+          'font-size':8,'font-family':'var(--font-mono)',fill:AC[a]});
+        vt.textContent=round(val,2);svg.appendChild(vt);
+      }
     });
+    const nl=mk('text',{x:gx,y:H-34,'text-anchor':'middle','font-size':10,'font-weight':600});
+    nl.textContent=TIER_NAMES[ti];svg.appendChild(nl);
+    const nl2=mk('text',{x:gx,y:H-20,'text-anchor':'middle','font-size':8,fill:'var(--color-text-faint)','font-family':'var(--font-mono)'});
+    nl2.textContent='Tier '+ti;svg.appendChild(nl2);
   }
-
-  // Legend
-  const lx = W - 200;
-  adapters.forEach((a,i) => {
-    const r = document.createElementNS('http://www.w3.org/2000/svg','rect');
-    r.setAttribute('x',lx+i*70); r.setAttribute('y',8); r.setAttribute('width',10); r.setAttribute('height',10);
-    r.setAttribute('fill',ADAPTER_COLORS[a]); r.setAttribute('rx','2');
-    svg.appendChild(r);
-    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
-    t.setAttribute('x',lx+i*70+14); t.setAttribute('y',17); t.setAttribute('font-size','10');
-    t.textContent = a==='agent_loop'?'Agent Loop':a==='stack'?'Stack':'Baseline';
-    svg.appendChild(t);
+  // legend
+  adapters.forEach((a,i)=>{
+    const lx=pad.l+i*120;
+    svg.appendChild(mk('rect',{x:lx,y:6,width:8,height:8,fill:AC[a],rx:2}));
+    const lt=mk('text',{x:lx+12,y:13,'font-size':9});lt.textContent=AN[a];svg.appendChild(lt);
   });
 }
 
-// === LATENCY CHART ===
-function renderLatencyChart(stats) {
-  const svg = document.getElementById('latencyChart');
-  svg.innerHTML = '';
-  const W=800, H=320, pad={t:30,b:50,l:70,r:30};
-  const chartW = W-pad.l-pad.r;
-  const chartH = H-pad.t-pad.b;
-  const adapters = ['baseline','agent_loop','stack'];
-  const logMin = 0; // 10^0 = 1ms
-  const logMax = 4; // 10^4 = 10000ms
-
-  // Y axis (log scale)
-  for (let p=0;p<=4;p++) {
-    const y = pad.t + chartH - (p/4)*chartH;
-    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute('x1',pad.l); line.setAttribute('x2',W-pad.r);
-    line.setAttribute('y1',y); line.setAttribute('y2',y);
-    line.setAttribute('stroke','var(--border)');
-    svg.appendChild(line);
-    const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
-    txt.setAttribute('x',pad.l-8); txt.setAttribute('y',y+4);
-    txt.setAttribute('text-anchor','end'); txt.setAttribute('font-size','11');
-    txt.textContent = Math.pow(10,p)+'ms';
-    svg.appendChild(txt);
+/* ── LATENCY CHART ──────────────────────────────── */
+function renderLatencyChart(stats){
+  const svg=document.getElementById('latencyChart');
+  svg.innerHTML='';
+  const W=480,H=300,pad={t:28,b:50,l:58,r:16};
+  const cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;
+  const logMin=0,logMax=4;
+  function logY(ms){
+    return pad.t+cH-((Math.log10(Math.max(ms,1))-logMin)/(logMax-logMin))*cH;
   }
-
-  function logY(ms) {
-    const lv = Math.log10(Math.max(ms,1));
-    return pad.t + chartH - ((lv-logMin)/(logMax-logMin))*chartH;
+  for(let p=0;p<=4;p++){
+    const y=logY(Math.pow(10,p));
+    svg.appendChild(mk('line',{x1:pad.l,x2:W-pad.r,y1:y,y2:y,stroke:'var(--color-divider)','stroke-width':1,'stroke-dasharray':'3,4'}));
+    const t=mk('text',{x:pad.l-6,y:y+4,'text-anchor':'end','font-size':9,'font-family':'var(--font-mono)'});
+    t.textContent=Math.pow(10,p)+'ms';svg.appendChild(t);
   }
-
-  const barW = chartW / (adapters.length * 2);
-  adapters.forEach((a,i) => {
-    const s = stats[a];
-    if (!s) return;
-    const cx = pad.l + (i+0.5)*(chartW/3);
-    const yMean = logY(s.meanLatency);
-    const yMin = logY(s.minLatency);
-    const yMax = logY(s.maxLatency);
-
-    // Error bar line
-    const errLine = document.createElementNS('http://www.w3.org/2000/svg','line');
-    errLine.setAttribute('x1',cx); errLine.setAttribute('x2',cx);
-    errLine.setAttribute('y1',yMin); errLine.setAttribute('y2',yMax);
-    errLine.setAttribute('stroke',ADAPTER_COLORS[a]); errLine.setAttribute('stroke-width','2');
-    svg.appendChild(errLine);
-
-    // Min cap
-    [yMin,yMax].forEach(y => {
-      const cap = document.createElementNS('http://www.w3.org/2000/svg','line');
-      cap.setAttribute('x1',cx-10); cap.setAttribute('x2',cx+10);
-      cap.setAttribute('y1',y); cap.setAttribute('y2',y);
-      cap.setAttribute('stroke',ADAPTER_COLORS[a]); cap.setAttribute('stroke-width','2');
-      svg.appendChild(cap);
+  const adapters=['baseline','agent_loop','stack'];
+  adapters.forEach((a,i)=>{
+    const s=stats[a];if(!s)return;
+    const cx=pad.l+(i+0.5)*cW/3;
+    const yMean=logY(s.meanLatency),yMin=logY(s.minLatency),yMax=logY(s.maxLatency);
+    svg.appendChild(mk('line',{x1:cx,x2:cx,y1:yMax,y2:yMin,stroke:AC[a],'stroke-width':2}));
+    [[yMin,s.minLatency],[yMax,s.maxLatency]].forEach(([y,v])=>{
+      svg.appendChild(mk('line',{x1:cx-8,x2:cx+8,y1:y,y2:y,stroke:AC[a],'stroke-width':2}));
+      const ft=mk('text',{x:cx+12,y:y+4,'font-size':8,fill:AC[a],'font-family':'var(--font-mono)'});
+      ft.textContent=v+'ms';svg.appendChild(ft);
     });
-
-    // Mean dot
-    const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    dot.setAttribute('cx',cx); dot.setAttribute('cy',yMean); dot.setAttribute('r',6);
-    dot.setAttribute('fill',ADAPTER_COLORS[a]);
-    svg.appendChild(dot);
-
-    // Label
-    const lbl = document.createElementNS('http://www.w3.org/2000/svg','text');
-    lbl.setAttribute('x',cx); lbl.setAttribute('y',yMean-12);
-    lbl.setAttribute('text-anchor','middle'); lbl.setAttribute('font-size','11'); lbl.setAttribute('font-family','var(--mono)');
-    lbl.textContent = s.meanLatency+'ms';
-    svg.appendChild(lbl);
-
-    // Name
-    const nm = document.createElementNS('http://www.w3.org/2000/svg','text');
-    nm.setAttribute('x',cx); nm.setAttribute('y',H-20);
-    nm.setAttribute('text-anchor','middle'); nm.setAttribute('font-size','12'); nm.setAttribute('font-weight','600');
-    nm.textContent = a==='agent_loop'?'Agent Loop':a==='stack'?'Stack':'Baseline';
-    svg.appendChild(nm);
-
-    // Min/Max labels
-    const minTxt = document.createElementNS('http://www.w3.org/2000/svg','text');
-    minTxt.setAttribute('x',cx+16); minTxt.setAttribute('y',yMin+4);
-    minTxt.setAttribute('font-size','9'); minTxt.setAttribute('fill','var(--fg2)'); minTxt.setAttribute('font-family','var(--mono)');
-    minTxt.textContent = s.minLatency+'ms';
-    svg.appendChild(minTxt);
-    const maxTxt = document.createElementNS('http://www.w3.org/2000/svg','text');
-    maxTxt.setAttribute('x',cx+16); maxTxt.setAttribute('y',yMax+4);
-    maxTxt.setAttribute('font-size','9'); maxTxt.setAttribute('fill','var(--fg2)'); maxTxt.setAttribute('font-family','var(--mono)');
-    maxTxt.textContent = s.maxLatency+'ms';
-    svg.appendChild(maxTxt);
+    svg.appendChild(mk('circle',{cx,cy:yMean,r:6,fill:AC[a]}));
+    const ml=mk('text',{x:cx,y:yMean-10,'text-anchor':'middle','font-size':9,'font-family':'var(--font-mono)',fill:AC[a],'font-weight':600});
+    ml.textContent=s.meanLatency+'ms';svg.appendChild(ml);
+    const nm=mk('text',{x:cx,y:H-10,'text-anchor':'middle','font-size':10,'font-weight':600});
+    nm.textContent=AN[a];svg.appendChild(nm);
   });
-
-  // Y axis label
-  const yLbl = document.createElementNS('http://www.w3.org/2000/svg','text');
-  yLbl.setAttribute('x',16); yLbl.setAttribute('y',H/2);
-  yLbl.setAttribute('text-anchor','middle'); yLbl.setAttribute('font-size','11');
-  yLbl.setAttribute('transform','rotate(-90,16,'+H/2+')');
-  yLbl.textContent = 'Latency (log scale)';
-  svg.appendChild(yLbl);
 }
 
-// === QUESTION TABLE ===
-let currentSort = {col:'id', asc:true};
-
-function renderQuestionTable(data) {
-  const tbody = document.getElementById('questionBody');
-  tbody.innerHTML = '';
-
-  const questionIds = [...new Set(data.map(d=>d.question_id))];
-  let rows = questionIds.map(qid => {
-    const q = QUESTIONS.find(q=>q.id===qid) || {prompt:'',tier:0,tier_name:''};
-    const agentEntry = data.find(d=>d.question_id===qid && d.adapter==='agent_loop');
-    const stackEntry = data.find(d=>d.question_id===qid && d.adapter==='stack');
-    const agentScore = agentEntry ? round(agentEntry.score,4) : '-';
-    const stackScore = stackEntry ? round(stackEntry.score,4) : '-';
-    let winner='Tie', delta=0;
-    if (agentEntry && stackEntry) {
-      delta = round(stackEntry.score - agentEntry.score, 4);
-      if (delta > 0.02) winner = 'Stack';
-      else if (delta < -0.02) winner = 'Agent Loop';
-    }
-    return {id:qid, tier:q.tier, tierName:q.tier_name, prompt:q.prompt, agent:agentScore, stack:stackScore, winner, delta};
+/* ── TOKEN CHART ────────────────────────────────── */
+function renderTokenChart(tt){
+  const svg=document.getElementById('tokenChart');
+  svg.innerHTML='';
+  const W=960,H=260,pad={t:28,b:68,l:56,r:20};
+  const cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;
+  const gW=cW/5,bW=gW*0.2,adapters=['baseline','agent_loop','stack'];
+  const maxTok=1200;
+  for(let i=0;i<=4;i++){
+    const y=pad.t+cH-(i/4)*cH;
+    svg.appendChild(mk('line',{x1:pad.l,x2:W-pad.r,y1:y,y2:y,stroke:'var(--color-divider)',
+      'stroke-width':i===0?1.5:1,'stroke-dasharray':i===0?'':'3,4'}));
+    const t=mk('text',{x:pad.l-6,y:y+4,'text-anchor':'end','font-size':9,'font-family':'var(--font-mono)'});
+    t.textContent=(i*maxTok/4).toFixed(0);svg.appendChild(t);
+  }
+  for(let ti=1;ti<=5;ti++){
+    const gx=pad.l+(ti-1)*gW+gW/2;
+    adapters.forEach((a,i)=>{
+      const val=tt[ti][a]||0;
+      const bh=(val/maxTok)*cH,bx=gx-1.5*(bW+3)+i*(bW+3);
+      svg.appendChild(mk('rect',{x:bx,y:pad.t+cH-bh,width:bW,height:Math.max(bh,1),fill:AC[a],rx:2,opacity:.85}));
+      if(bh>14){
+        const vt=mk('text',{x:bx+bW/2,y:pad.t+cH-bh-3,'text-anchor':'middle','font-size':8,'font-family':'var(--font-mono)',fill:AC[a]});
+        vt.textContent=val;svg.appendChild(vt);
+      }
+    });
+    const nl=mk('text',{x:gx,y:H-34,'text-anchor':'middle','font-size':10,'font-weight':600});
+    nl.textContent=TIER_NAMES[ti];svg.appendChild(nl);
+    const nl2=mk('text',{x:gx,y:H-20,'text-anchor':'middle','font-size':8,fill:'var(--color-text-faint)','font-family':'var(--font-mono)'});
+    nl2.textContent='Tier '+ti;svg.appendChild(nl2);
+  }
+  adapters.forEach((a,i)=>{
+    const lx=pad.l+i*130;
+    svg.appendChild(mk('rect',{x:lx,y:6,width:8,height:8,fill:AC[a],rx:2}));
+    const lt=mk('text',{x:lx+12,y:13,'font-size':9});lt.textContent=AN[a]+" (tokens)";svg.appendChild(lt);
   });
+}
 
-  // Sort
-  rows.sort((a,b) => {
-    let va=a[currentSort.col], vb=b[currentSort.col];
-    if (typeof va==='number' && typeof vb==='number') return currentSort.asc ? va-vb : vb-va;
-    va=String(va); vb=String(vb);
-    return currentSort.asc ? va.localeCompare(vb) : vb.localeCompare(va);
+/* ── QUESTION TABLE ─────────────────────────────── */
+let currentSort={col:'tier',asc:true};
+function renderQuestionTable(data){
+  const tbody=document.getElementById('questionBody');
+  tbody.innerHTML='';
+  const qids=[...new Set(data.map(d=>d.question_id))];
+  let rows=qids.map(qid=>{
+    const q=QUESTIONS.find(q=>q.id===qid)||{prompt:'',tier:0,tier_name:''};
+    const be=data.find(d=>d.question_id===qid&&d.adapter==='baseline');
+    const ae=data.find(d=>d.question_id===qid&&d.adapter==='agent_loop');
+    const se=data.find(d=>d.question_id===qid&&d.adapter==='stack');
+    const bs=be?round(be.score,3):'-';
+    const as_=ae?round(ae.score,3):'-';
+    const ss=se?round(se.score,3):'-';
+    let winner='Tie',delta=0;
+    if(ae&&se){delta=round(se.score-ae.score,3);if(delta>0.02)winner='Stack';else if(delta<-0.02)winner='Agent';}
+    return{id:qid,tier:q.tier,tier_name:q.tier_name,prompt:q.prompt,baseline:bs,agent:as_,stack:ss,winner,delta};
   });
-
-  rows.forEach(r => {
-    const tr = document.createElement('tr');
-    const cls = r.winner==='Stack'?'win-stack':r.winner==='Agent Loop'?'win-agent':'win-tie';
-    tr.className = cls;
-    const promptTrunc = r.prompt.length>60 ? r.prompt.slice(0,57)+'...' : r.prompt;
-    tr.innerHTML = '<td>'+r.id+'</td>'
-      +'<td>'+r.tier+' ('+r.tierName+')</td>'
-      +'<td class="prompt-cell" title="'+r.prompt.replace(/"/g,'&quot;')+'">'+promptTrunc+'</td>'
-      +'<td>'+r.agent+'</td>'
-      +'<td>'+r.stack+'</td>'
-      +'<td>'+r.winner+'</td>'
-      +'<td>'+(r.delta>0?'+':'')+r.delta+'</td>';
+  rows.sort((a,b)=>{
+    let va=a[currentSort.col],vb=b[currentSort.col];
+    if(typeof va==='number'&&typeof vb==='number')return currentSort.asc?va-vb:vb-va;
+    va=String(va);vb=String(vb);return currentSort.asc?va.localeCompare(vb):vb.localeCompare(va);
+  });
+  rows.forEach(r=>{
+    const tr=document.createElement('tr');
+    const cls=r.winner==='Stack'?'win-stack':r.winner==='Agent'?'win-agent':'win-tie';
+    tr.className=cls;
+    const wbadge=r.winner==='Stack'?`<span class="badge stack">Stack</span>`:
+                 r.winner==='Agent'?`<span class="badge agent">Agent</span>`:
+                 `<span class="badge tie">Tie</span>`;
+    const d=r.delta>0?`<span style="color:var(--col-stack)">+${r.delta}</span>`:
+             r.delta<0?`<span style="color:var(--col-agent)">${r.delta}</span>`:
+             `<span style="color:var(--color-text-faint)">0</span>`;
+    tr.innerHTML=`<td style="color:var(--color-text-faint)">${r.id}</td>
+      <td><span class="badge ${r.tier_name.toLowerCase()==='legal'?'baseline':r.tier_name.toLowerCase()==='metacog'?'stack':''}"
+          style="background:var(--color-surface-offset);color:var(--color-text-muted)">${r.tier} ${r.tier_name}</span></td>
+      <td class="prompt-cell" title="${r.prompt.replace(/"/g,'&quot;')}">${r.prompt.length>55?r.prompt.slice(0,52)+'…':r.prompt}</td>
+      <td style="color:var(--col-baseline)">${r.baseline}</td>
+      <td style="color:var(--col-agent)">${r.agent}</td>
+      <td style="color:var(--col-stack)">${r.stack}</td>
+      <td>${wbadge}</td><td>${d}</td>`;
     tbody.appendChild(tr);
   });
-
-  // Update header classes
-  document.querySelectorAll('#questionTable th').forEach(th => {
+  document.querySelectorAll('#questionTable th').forEach(th=>{
     th.classList.remove('sorted-asc','sorted-desc');
-    if (th.dataset.col === currentSort.col) {
-      th.classList.add(currentSort.asc?'sorted-asc':'sorted-desc');
-    }
+    if(th.dataset.col===currentSort.col)th.classList.add(currentSort.asc?'sorted-asc':'sorted-desc');
   });
 }
-
-function sortTable(col) {
-  if (currentSort.col === col) currentSort.asc = !currentSort.asc;
-  else { currentSort.col = col; currentSort.asc = true; }
+function sortTable(col){
+  if(currentSort.col===col)currentSort.asc=!currentSort.asc;
+  else{currentSort.col=col;currentSort.asc=true;}
   renderQuestionTable(currentData);
 }
 
-// === INIT ===
-let currentData = SIMULATED_DATA;
+/* ── SVG HELPER ────────────────────────────────── */
+function mk(tag,attrs){
+  const el=document.createElementNS('http://www.w3.org/2000/svg',tag);
+  Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));
+  return el;
+}
 
-function render() {
-  const stats = computeStats(currentData);
-  const tierStats = computeTierStats(currentData);
+/* ── INIT ───────────────────────────────────────── */
+let currentData=SIMULATED_DATA;
+function render(){
+  const stats=computeStats(currentData);
+  const ts=computeTierStats(currentData);
+  const tt=computeTierTokens(currentData);
   renderTradeoff(stats);
-  renderTierChart(tierStats);
+  renderTierChart(ts);
   renderLatencyChart(stats);
+  renderTokenChart(tt);
   renderQuestionTable(currentData);
 }
-
-document.getElementById('runSelect').addEventListener('change', function() {
-  if (this.value === 'baseline') {
-    currentData = SIMULATED_DATA.filter(d => d.adapter === 'baseline');
-  } else {
-    currentData = SIMULATED_DATA;
-  }
+document.getElementById('runSelect').addEventListener('change',function(){
+  if(this.value==='baseline_only')currentData=SIMULATED_DATA.filter(d=>d.adapter==='baseline');
+  else currentData=SIMULATED_DATA;
   render();
 });
-
 render();
 </script>
 </body>
