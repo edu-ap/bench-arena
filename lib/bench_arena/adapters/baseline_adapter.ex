@@ -3,6 +3,9 @@ defmodule BenchArena.Adapters.BaselineAdapter do
   Baseline adapter: no stack, no loop. Returns a stub answer based on the
   question's reference answer with slight perturbation. Used as a floor comparison.
   Always succeeds, latency ~1ms, tokens = reference answer length / 4.
+
+  This is a single direct LLM query stub — no routing, no tool calls, no orchestration.
+  Used as a floor comparison. In production, wire to a direct `/v1/chat/completions` call.
   """
 
   @behaviour BenchArena.Adapter

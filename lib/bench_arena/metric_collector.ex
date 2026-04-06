@@ -59,6 +59,18 @@ defmodule BenchArena.MetricCollector do
   end
 
   @doc """
+  Returns a map grouping adapters by category.
+  """
+  @spec adapter_groups() :: map()
+  def adapter_groups do
+    %{
+      stack_internal: [:baseline, :agent_loop, :stack],
+      perplexity: [:perplexity_standard, :perplexity_deep_research, :perplexity_model_council],
+      external_ai: [:claude_code, :codex, :gemini_cli]
+    }
+  end
+
+  @doc """
   Get all recorded results.
   """
   @spec all_results() :: [map()]

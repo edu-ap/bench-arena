@@ -33,9 +33,15 @@ defmodule BenchArena.Runner do
   alias BenchArena.Corpus.Question
 
   @adapter_modules %{
+    baseline: BenchArena.Adapters.BaselineAdapter,
     agent_loop: BenchArena.Adapters.AgentLoopAdapter,
     stack: BenchArena.Adapters.StackAdapter,
-    baseline: BenchArena.Adapters.BaselineAdapter
+    perplexity_standard: BenchArena.Adapters.PerplexityStandardAdapter,
+    perplexity_deep_research: BenchArena.Adapters.PerplexityDeepResearchAdapter,
+    perplexity_model_council: BenchArena.Adapters.PerplexityModelCouncilAdapter,
+    claude_code: BenchArena.Adapters.ClaudeCodeAdapter,
+    codex: BenchArena.Adapters.CodexAdapter,
+    gemini_cli: BenchArena.Adapters.GeminiCliAdapter
   }
 
   @doc """
@@ -98,7 +104,20 @@ defmodule BenchArena.Runner do
   Run a question through all specified adapters.
   """
   @spec run_all(Question.t(), [atom()]) :: [t()]
-  def run_all(%Question{} = question, adapters \\ [:agent_loop, :stack, :baseline]) do
+  def run_all(
+        %Question{} = question,
+        adapters \\ [
+          :baseline,
+          :agent_loop,
+          :stack,
+          :perplexity_standard,
+          :perplexity_deep_research,
+          :perplexity_model_council,
+          :claude_code,
+          :codex,
+          :gemini_cli
+        ]
+      ) do
     Enum.map(adapters, &run_question(question, &1))
   end
 
