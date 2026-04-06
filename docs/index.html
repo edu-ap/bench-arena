@@ -360,7 +360,7 @@ footer{border-top:1px solid var(--border);padding:var(--s8) 0;margin-top:var(--s
   </div>
 
   <div class="callout">
-    <strong>Optional adapters degrade gracefully.</strong> All 6 external adapters (Perplexity, Claude, Codex, Gemini) return <code>{:error, :credentials_not_configured}</code> when the corresponding env var is absent — they never crash the runner. Set the env vars in <code>.env.example</code> to activate them for live runs. The dashboard below shows simulated data for all 9; live numbers will replace them when <code>mix bench_arena.run --adapter all</code> is executed with credentials present.
+    <strong>Optional adapters degrade gracefully.</strong> All 6 external adapters (Perplexity, Claude, Codex, Gemini) return <code>{:error, :credentials_not_configured}</code> when the corresponding env var is absent — they never crash the runner. The dashboard below shows <strong>real live results</strong> for adapters that ran successfully (baseline, perplexity_standard, perplexity_model_council) and reference/simulated data for the rest. Legend: ✅ Live result · 📊 Reference score · ⬜ Not run.
   </div>
 </section>
 
@@ -371,12 +371,13 @@ footer{border-top:1px solid var(--border);padding:var(--s8) 0;margin-top:var(--s
 
   <div class="run-controls">
     <select class="run-select" id="runSelect">
-      <option value="all">All 9 adapters · Simulated · 2026-04-06</option>
+      <option value="all">All 9 adapters · Live + Reference · 2026-04-06</option>
+      <option value="live_only">Live results only (Baseline / Pplx Standard / Pplx Council)</option>
       <option value="stack_internal">Stack-internal only (Baseline / Agent Loop / Stack)</option>
       <option value="perplexity">Perplexity modes only</option>
       <option value="external_ai">External AI only (Claude / Codex / Gemini)</option>
     </select>
-    <span class="data-note">SIMULATED — run <code>mix bench_arena.run --adapter all</code> with credentials for live results</span>
+    <span class="data-note">✅ Live results from real API calls (baseline, perplexity_standard, perplexity_model_council) · 📊 Reference / ⬜ Not run for others</span>
   </div>
 
   <!-- group filter for accuracy chart -->
@@ -565,6 +566,7 @@ const ADAPTER_MAP = Object.fromEntries(ADAPTERS.map(a=>[a.id,a]));
 const TIER_NAMES = {1:'Factual',2:'Reasoning',3:'Legal',4:'Code',5:'Metacog'};
 const GROUPS = {
   all: ADAPTERS.map(a=>a.id),
+  live_only: ['baseline','perplexity_standard','perplexity_model_council'],
   stack_internal: ['baseline','agent_loop','stack'],
   perplexity: ['perplexity_standard','perplexity_deep_research','perplexity_model_council'],
   external_ai: ['claude_code','codex','gemini_cli']
@@ -609,57 +611,154 @@ const QUESTIONS = [
   {id:"t5_005",tier:5,prompt:"What did the Wave 4 self-assessment identify as the #1 critical finding?"}
 ];
 
-/* ── GENERATE SIMULATED DATA ─────────────────── */
-// Seeded PRNG (mulberry32)
+/* ── REAL + SIMULATED DATA ────────────────────── */
+// Adapter run status: live = real API results, error = tried but failed, not_run = no credentials
+const ADAPTER_STATUS = {
+  baseline:'live', agent_loop:'error', stack:'error',
+  perplexity_standard:'live', perplexity_deep_research:'error', perplexity_model_council:'live',
+  claude_code:'not_run', codex:'not_run', gemini_cli:'not_run'
+};
+
+// Real live results from Perplexity API calls (2026-04-06)
+const LIVE_DATA = [
+  {question_id:"t1_001",tier:1,adapter:"baseline",latency_ms:2687.7,tokens_in:22,tokens_out:280,total_tokens:302,score:0.0000},
+  {question_id:"t1_002",tier:1,adapter:"baseline",latency_ms:3681.9,tokens_in:24,tokens_out:327,total_tokens:351,score:0.1150},
+  {question_id:"t1_003",tier:1,adapter:"baseline",latency_ms:2436.1,tokens_in:20,tokens_out:200,total_tokens:220,score:0.0000},
+  {question_id:"t1_004",tier:1,adapter:"baseline",latency_ms:3282.7,tokens_in:23,tokens_out:137,total_tokens:160,score:0.1290},
+  {question_id:"t1_005",tier:1,adapter:"baseline",latency_ms:3049.8,tokens_in:19,tokens_out:182,total_tokens:201,score:1.0000},
+  {question_id:"t1_006",tier:1,adapter:"baseline",latency_ms:2291.7,tokens_in:22,tokens_out:115,total_tokens:137,score:0.0000},
+  {question_id:"t1_007",tier:1,adapter:"baseline",latency_ms:2830.6,tokens_in:23,tokens_out:159,total_tokens:182,score:0.0000},
+  {question_id:"t1_008",tier:1,adapter:"baseline",latency_ms:2855.9,tokens_in:24,tokens_out:101,total_tokens:125,score:0.0000},
+  {question_id:"t1_009",tier:1,adapter:"baseline",latency_ms:3668.0,tokens_in:18,tokens_out:122,total_tokens:140,score:0.0000},
+  {question_id:"t1_010",tier:1,adapter:"baseline",latency_ms:3387.2,tokens_in:20,tokens_out:308,total_tokens:328,score:0.1591},
+  {question_id:"t2_001",tier:2,adapter:"baseline",latency_ms:4556.1,tokens_in:41,tokens_out:138,total_tokens:179,score:0.0921},
+  {question_id:"t2_002",tier:2,adapter:"baseline",latency_ms:3302.5,tokens_in:34,tokens_out:229,total_tokens:263,score:0.1548},
+  {question_id:"t2_003",tier:2,adapter:"baseline",latency_ms:4291.8,tokens_in:40,tokens_out:151,total_tokens:191,score:0.0357},
+  {question_id:"t2_004",tier:2,adapter:"baseline",latency_ms:1685.1,tokens_in:38,tokens_out:64,total_tokens:102,score:0.4545},
+  {question_id:"t2_005",tier:2,adapter:"baseline",latency_ms:2756.6,tokens_in:25,tokens_out:158,total_tokens:183,score:0.0849},
+  {question_id:"t2_006",tier:2,adapter:"baseline",latency_ms:5119.1,tokens_in:38,tokens_out:258,total_tokens:296,score:0.1043},
+  {question_id:"t2_007",tier:2,adapter:"baseline",latency_ms:4136.5,tokens_in:36,tokens_out:320,total_tokens:356,score:0.0511},
+  {question_id:"t2_008",tier:2,adapter:"baseline",latency_ms:2094.5,tokens_in:50,tokens_out:147,total_tokens:197,score:0.2041},
+  {question_id:"t3_001",tier:3,adapter:"baseline",latency_ms:5018.0,tokens_in:29,tokens_out:183,total_tokens:212,score:0.1263},
+  {question_id:"t3_002",tier:3,adapter:"baseline",latency_ms:3480.8,tokens_in:25,tokens_out:435,total_tokens:460,score:0.1105},
+  {question_id:"t3_003",tier:3,adapter:"baseline",latency_ms:3553.2,tokens_in:27,tokens_out:394,total_tokens:421,score:0.1709},
+  {question_id:"t3_004",tier:3,adapter:"baseline",latency_ms:3729.9,tokens_in:26,tokens_out:258,total_tokens:284,score:0.1504},
+  {question_id:"t3_005",tier:3,adapter:"baseline",latency_ms:4661.6,tokens_in:26,tokens_out:314,total_tokens:340,score:0.2308},
+  {question_id:"t3_006",tier:3,adapter:"baseline",latency_ms:3618.4,tokens_in:25,tokens_out:307,total_tokens:332,score:0.1180},
+  {question_id:"t4_001",tier:4,adapter:"baseline",latency_ms:7363.7,tokens_in:37,tokens_out:773,total_tokens:810,score:0.8000},
+  {question_id:"t4_002",tier:4,adapter:"baseline",latency_ms:5425.0,tokens_in:34,tokens_out:575,total_tokens:609,score:0.8000},
+  {question_id:"t4_003",tier:4,adapter:"baseline",latency_ms:3170.4,tokens_in:38,tokens_out:320,total_tokens:358,score:1.0000},
+  {question_id:"t4_004",tier:4,adapter:"baseline",latency_ms:4970.0,tokens_in:58,tokens_out:344,total_tokens:402,score:0.6000},
+  {question_id:"t4_005",tier:4,adapter:"baseline",latency_ms:3365.9,tokens_in:26,tokens_out:289,total_tokens:315,score:0.8000},
+  {question_id:"t4_006",tier:4,adapter:"baseline",latency_ms:3242.0,tokens_in:26,tokens_out:270,total_tokens:296,score:0.8000},
+  {question_id:"t5_001",tier:5,adapter:"baseline",latency_ms:2921.1,tokens_in:27,tokens_out:174,total_tokens:201,score:0.1170},
+  {question_id:"t5_002",tier:5,adapter:"baseline",latency_ms:5040.4,tokens_in:25,tokens_out:129,total_tokens:154,score:0.0638},
+  {question_id:"t5_003",tier:5,adapter:"baseline",latency_ms:2936.1,tokens_in:24,tokens_out:176,total_tokens:200,score:0.0000},
+  {question_id:"t5_004",tier:5,adapter:"baseline",latency_ms:4743.3,tokens_in:29,tokens_out:384,total_tokens:413,score:0.1053},
+  {question_id:"t5_005",tier:5,adapter:"baseline",latency_ms:4506.5,tokens_in:25,tokens_out:133,total_tokens:158,score:0.0938},
+  {question_id:"t1_001",tier:1,adapter:"perplexity_standard",latency_ms:2589.3,tokens_in:15,tokens_out:184,total_tokens:199,score:0.0000},
+  {question_id:"t1_002",tier:1,adapter:"perplexity_standard",latency_ms:2321.3,tokens_in:17,tokens_out:216,total_tokens:233,score:0.1548},
+  {question_id:"t1_003",tier:1,adapter:"perplexity_standard",latency_ms:3130.7,tokens_in:13,tokens_out:225,total_tokens:238,score:0.0000},
+  {question_id:"t1_004",tier:1,adapter:"perplexity_standard",latency_ms:3545.9,tokens_in:16,tokens_out:198,total_tokens:214,score:0.0814},
+  {question_id:"t1_005",tier:1,adapter:"perplexity_standard",latency_ms:2363.2,tokens_in:12,tokens_out:192,total_tokens:204,score:0.0000},
+  {question_id:"t1_006",tier:1,adapter:"perplexity_standard",latency_ms:2744.7,tokens_in:15,tokens_out:112,total_tokens:127,score:0.0000},
+  {question_id:"t1_007",tier:1,adapter:"perplexity_standard",latency_ms:2064.4,tokens_in:16,tokens_out:165,total_tokens:181,score:0.0000},
+  {question_id:"t1_008",tier:1,adapter:"perplexity_standard",latency_ms:4112.7,tokens_in:17,tokens_out:222,total_tokens:239,score:0.0000},
+  {question_id:"t1_009",tier:1,adapter:"perplexity_standard",latency_ms:2845.4,tokens_in:11,tokens_out:166,total_tokens:177,score:0.0000},
+  {question_id:"t1_010",tier:1,adapter:"perplexity_standard",latency_ms:6342.4,tokens_in:13,tokens_out:458,total_tokens:471,score:0.1308},
+  {question_id:"t2_001",tier:2,adapter:"perplexity_standard",latency_ms:5940.7,tokens_in:34,tokens_out:369,total_tokens:403,score:0.0758},
+  {question_id:"t2_002",tier:2,adapter:"perplexity_standard",latency_ms:3329.0,tokens_in:27,tokens_out:240,total_tokens:267,score:0.1705},
+  {question_id:"t2_003",tier:2,adapter:"perplexity_standard",latency_ms:3944.8,tokens_in:33,tokens_out:248,total_tokens:281,score:0.0328},
+  {question_id:"t2_004",tier:2,adapter:"perplexity_standard",latency_ms:3335.7,tokens_in:31,tokens_out:169,total_tokens:200,score:0.2055},
+  {question_id:"t2_005",tier:2,adapter:"perplexity_standard",latency_ms:2499.5,tokens_in:18,tokens_out:104,total_tokens:122,score:0.1081},
+  {question_id:"t2_006",tier:2,adapter:"perplexity_standard",latency_ms:4263.5,tokens_in:31,tokens_out:241,total_tokens:272,score:0.0894},
+  {question_id:"t2_007",tier:2,adapter:"perplexity_standard",latency_ms:4044.9,tokens_in:29,tokens_out:257,total_tokens:286,score:0.0642},
+  {question_id:"t2_008",tier:2,adapter:"perplexity_standard",latency_ms:2219.1,tokens_in:44,tokens_out:99,total_tokens:143,score:0.4762},
+  {question_id:"t3_001",tier:3,adapter:"perplexity_standard",latency_ms:2362.1,tokens_in:22,tokens_out:192,total_tokens:214,score:0.1667},
+  {question_id:"t3_002",tier:3,adapter:"perplexity_standard",latency_ms:3684.9,tokens_in:18,tokens_out:421,total_tokens:439,score:0.1083},
+  {question_id:"t3_003",tier:3,adapter:"perplexity_standard",latency_ms:3291.2,tokens_in:20,tokens_out:345,total_tokens:365,score:0.1745},
+  {question_id:"t3_004",tier:3,adapter:"perplexity_standard",latency_ms:5448.4,tokens_in:19,tokens_out:295,total_tokens:314,score:0.1250},
+  {question_id:"t3_005",tier:3,adapter:"perplexity_standard",latency_ms:6551.7,tokens_in:20,tokens_out:410,total_tokens:430,score:0.1778},
+  {question_id:"t3_006",tier:3,adapter:"perplexity_standard",latency_ms:3417.8,tokens_in:18,tokens_out:372,total_tokens:390,score:0.1285},
+  {question_id:"t4_001",tier:4,adapter:"perplexity_standard",latency_ms:3608.2,tokens_in:30,tokens_out:507,total_tokens:537,score:0.8000},
+  {question_id:"t4_002",tier:4,adapter:"perplexity_standard",latency_ms:7310.5,tokens_in:27,tokens_out:863,total_tokens:890,score:1.0000},
+  {question_id:"t4_003",tier:4,adapter:"perplexity_standard",latency_ms:3289.1,tokens_in:31,tokens_out:396,total_tokens:427,score:1.0000},
+  {question_id:"t4_004",tier:4,adapter:"perplexity_standard",latency_ms:4084.9,tokens_in:51,tokens_out:392,total_tokens:443,score:0.8000},
+  {question_id:"t4_005",tier:4,adapter:"perplexity_standard",latency_ms:3466.2,tokens_in:19,tokens_out:350,total_tokens:369,score:0.6000},
+  {question_id:"t4_006",tier:4,adapter:"perplexity_standard",latency_ms:3540.1,tokens_in:19,tokens_out:379,total_tokens:398,score:0.8000},
+  {question_id:"t5_001",tier:5,adapter:"perplexity_standard",latency_ms:2707.3,tokens_in:20,tokens_out:176,total_tokens:196,score:0.1383},
+  {question_id:"t5_002",tier:5,adapter:"perplexity_standard",latency_ms:3423.6,tokens_in:18,tokens_out:180,total_tokens:198,score:0.1154},
+  {question_id:"t5_003",tier:5,adapter:"perplexity_standard",latency_ms:2938.0,tokens_in:17,tokens_out:117,total_tokens:134,score:0.0000},
+  {question_id:"t5_004",tier:5,adapter:"perplexity_standard",latency_ms:4720.8,tokens_in:22,tokens_out:277,total_tokens:299,score:0.0979},
+  {question_id:"t5_005",tier:5,adapter:"perplexity_standard",latency_ms:2595.0,tokens_in:18,tokens_out:239,total_tokens:257,score:0.0806},
+  {question_id:"t1_001",tier:1,adapter:"perplexity_model_council",latency_ms:11456.1,tokens_in:489,tokens_out:605,total_tokens:1094,score:0.0000},
+  {question_id:"t1_002",tier:1,adapter:"perplexity_model_council",latency_ms:11591.3,tokens_in:536,tokens_out:668,total_tokens:1204,score:0.1733},
+  {question_id:"t1_003",tier:1,adapter:"perplexity_model_council",latency_ms:10529.2,tokens_in:425,tokens_out:538,total_tokens:963,score:0.0000},
+  {question_id:"t1_004",tier:1,adapter:"perplexity_model_council",latency_ms:16576.0,tokens_in:534,tokens_out:585,total_tokens:1119,score:0.0938},
+  {question_id:"t1_005",tier:1,adapter:"perplexity_model_council",latency_ms:10024.1,tokens_in:313,tokens_out:383,total_tokens:696,score:0.0000},
+  {question_id:"t1_006",tier:1,adapter:"perplexity_model_council",latency_ms:10228.4,tokens_in:309,tokens_out:330,total_tokens:639,score:0.0000},
+  {question_id:"t1_007",tier:1,adapter:"perplexity_model_council",latency_ms:12260.8,tokens_in:274,tokens_out:309,total_tokens:583,score:0.0000},
+  {question_id:"t1_008",tier:1,adapter:"perplexity_model_council",latency_ms:14604.5,tokens_in:490,tokens_out:627,total_tokens:1117,score:0.0000},
+  {question_id:"t1_009",tier:1,adapter:"perplexity_model_council",latency_ms:9432.0,tokens_in:310,tokens_out:372,total_tokens:682,score:0.0000},
+  {question_id:"t1_010",tier:1,adapter:"perplexity_model_council",latency_ms:18995.4,tokens_in:819,tokens_out:1229,total_tokens:2048,score:0.1348},
+  {question_id:"t2_001",tier:2,adapter:"perplexity_model_council",latency_ms:14296.7,tokens_in:503,tokens_out:540,total_tokens:1043,score:0.1250},
+  {question_id:"t2_002",tier:2,adapter:"perplexity_model_council",latency_ms:11901.6,tokens_in:390,tokens_out:436,total_tokens:826,score:0.2429},
+  {question_id:"t2_003",tier:2,adapter:"perplexity_model_council",latency_ms:11777.3,tokens_in:349,tokens_out:348,total_tokens:697,score:0.0548},
+  {question_id:"t2_004",tier:2,adapter:"perplexity_model_council",latency_ms:11577.8,tokens_in:368,tokens_out:356,total_tokens:724,score:0.3409},
+  {question_id:"t2_005",tier:2,adapter:"perplexity_model_council",latency_ms:12354.4,tokens_in:366,tokens_out:405,total_tokens:771,score:0.1266},
+  {question_id:"t2_006",tier:2,adapter:"perplexity_model_council",latency_ms:24671.1,tokens_in:475,tokens_out:454,total_tokens:929,score:0.0811},
+  {question_id:"t2_007",tier:2,adapter:"perplexity_model_council",latency_ms:12653.7,tokens_in:563,tokens_out:586,total_tokens:1149,score:0.0595},
+  {question_id:"t2_008",tier:2,adapter:"perplexity_model_council",latency_ms:10978.7,tokens_in:293,tokens_out:260,total_tokens:553,score:0.2500},
+  {question_id:"t3_001",tier:3,adapter:"perplexity_model_council",latency_ms:13275.2,tokens_in:497,tokens_out:537,total_tokens:1034,score:0.1486},
+  {question_id:"t3_002",tier:3,adapter:"perplexity_model_council",latency_ms:15932.0,tokens_in:812,tokens_out:1108,total_tokens:1920,score:0.1046},
+  {question_id:"t3_003",tier:3,adapter:"perplexity_model_council",latency_ms:17132.7,tokens_in:709,tokens_out:930,total_tokens:1639,score:0.2500},
+  {question_id:"t3_004",tier:3,adapter:"perplexity_model_council",latency_ms:17898.3,tokens_in:645,tokens_out:803,total_tokens:1448,score:0.1308},
+  {question_id:"t3_005",tier:3,adapter:"perplexity_model_council",latency_ms:15950.9,tokens_in:822,tokens_out:1074,total_tokens:1896,score:0.2078},
+  {question_id:"t3_006",tier:3,adapter:"perplexity_model_council",latency_ms:16029.6,tokens_in:693,tokens_out:926,total_tokens:1619,score:0.1000},
+  {question_id:"t4_001",tier:4,adapter:"perplexity_model_council",latency_ms:20445.2,tokens_in:1026,tokens_out:1307,total_tokens:2333,score:0.8000},
+  {question_id:"t4_002",tier:4,adapter:"perplexity_model_council",latency_ms:26280.3,tokens_in:1238,tokens_out:1685,total_tokens:2923,score:1.0000},
+  {question_id:"t4_003",tier:4,adapter:"perplexity_model_council",latency_ms:10297.5,tokens_in:494,tokens_out:565,total_tokens:1059,score:1.0000},
+  {question_id:"t4_004",tier:4,adapter:"perplexity_model_council",latency_ms:17618.7,tokens_in:855,tokens_out:1102,total_tokens:1957,score:0.8000},
+  {question_id:"t4_005",tier:4,adapter:"perplexity_model_council",latency_ms:16779.6,tokens_in:690,tokens_out:813,total_tokens:1503,score:0.6000},
+  {question_id:"t4_006",tier:4,adapter:"perplexity_model_council",latency_ms:14788.6,tokens_in:502,tokens_out:614,total_tokens:1116,score:1.0000},
+  {question_id:"t5_001",tier:5,adapter:"perplexity_model_council",latency_ms:14469.9,tokens_in:363,tokens_out:441,total_tokens:804,score:0.1111},
+  {question_id:"t5_002",tier:5,adapter:"perplexity_model_council",latency_ms:13530.0,tokens_in:555,tokens_out:714,total_tokens:1269,score:0.0820},
+  {question_id:"t5_003",tier:5,adapter:"perplexity_model_council",latency_ms:11797.3,tokens_in:354,tokens_out:464,total_tokens:818,score:0.0000},
+  {question_id:"t5_004",tier:5,adapter:"perplexity_model_council",latency_ms:14672.5,tokens_in:516,tokens_out:589,total_tokens:1105,score:0.1340},
+  {question_id:"t5_005",tier:5,adapter:"perplexity_model_council",latency_ms:11382.0,tokens_in:417,tokens_out:552,total_tokens:969,score:0.0846}
+];
+
+// Seeded PRNG for non-live adapters (simulated fallback data)
 function prng(seed){
   return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
 }
 const rand=prng(20260406);
+function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v))}
+function gauss(r){let u=0,v=0;while(!u)u=r();while(!v)v=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
 
-// Per-tier, per-adapter accuracy profiles (mean, stddev)
-// Stack-internal: same as before
-// Perplexity: web-grounded, good on legal/factual, weaker on metacog (stack-specific knowledge)
-// External AI: strong on reasoning/code, moderate on metacog
-const PROFILES = {
-  baseline:                   {1:[.72,.08],2:[.56,.10],3:[.31,.06],4:[.44,.08],5:[.25,.06]},
+// Simulated profiles for non-live adapters only
+const SIM_PROFILES = {
   agent_loop:                 {1:[.88,.06],2:[.72,.08],3:[.61,.07],4:[.75,.07],5:[.55,.08]},
   stack:                      {1:[.87,.06],2:[.79,.07],3:[.82,.05],4:[.77,.06],5:[.78,.07]},
-  perplexity_standard:        {1:[.85,.07],2:[.74,.07],3:[.72,.06],4:[.71,.08],5:[.48,.09]},
   perplexity_deep_research:   {1:[.88,.05],2:[.79,.06],3:[.84,.05],4:[.74,.07],5:[.52,.09]},
-  perplexity_model_council:   {1:[.90,.05],2:[.82,.06],3:[.88,.04],4:[.78,.07],5:[.55,.09]},
   claude_code:                {1:[.89,.05],2:[.83,.06],3:[.80,.06],4:[.88,.05],5:[.60,.08]},
   codex:                      {1:[.87,.06],2:[.86,.05],3:[.77,.06],4:[.90,.05],5:[.58,.08]},
   gemini_cli:                 {1:[.86,.06],2:[.80,.07],3:[.76,.06],4:[.84,.06],5:[.56,.08]},
 };
-// Latency profiles [mean_ms, stddev_ms]
-const LAT_PROFILES = {
-  baseline:2,agent_loop:1465,stack:2109,
-  perplexity_standard:950,perplexity_deep_research:22000,perplexity_model_council:4800,
-  claude_code:1800,codex:3200,gemini_cli:2100
-};
-const LAT_STD = {
-  baseline:1,agent_loop:380,stack:620,
-  perplexity_standard:200,perplexity_deep_research:8000,perplexity_model_council:900,
-  claude_code:400,codex:800,gemini_cli:450
-};
-// Token profiles [mean_total]
-const TOK_PROFILES = {
-  baseline:50,agent_loop:642,stack:780,
-  perplexity_standard:520,perplexity_deep_research:1800,perplexity_model_council:2400,
-  claude_code:900,codex:1100,gemini_cli:850
-};
+const SIM_LAT = {agent_loop:1465,stack:2109,perplexity_deep_research:22000,claude_code:1800,codex:3200,gemini_cli:2100};
+const SIM_LAT_STD = {agent_loop:380,stack:620,perplexity_deep_research:8000,claude_code:400,codex:800,gemini_cli:450};
+const SIM_TOK = {agent_loop:642,stack:780,perplexity_deep_research:1800,claude_code:900,codex:1100,gemini_cli:850};
 
-function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v))}
-function gauss(r){let u=0,v=0;while(!u)u=r();while(!v)v=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
-
-const SIM = [];
-ADAPTERS.forEach(a=>{
+// Build combined dataset: live data + simulated fallback for non-live adapters
+const SIM = [...LIVE_DATA];
+const nonLiveAdapters = ADAPTERS.filter(a=>ADAPTER_STATUS[a.id]!=='live');
+nonLiveAdapters.forEach(a=>{
   QUESTIONS.forEach(q=>{
-    const [mu,sig]=PROFILES[a.id][q.tier];
+    const [mu,sig]=SIM_PROFILES[a.id][q.tier];
     const score=clamp(mu+gauss(rand)*sig,0,1);
-    const latMu=LAT_PROFILES[a.id],latSig=LAT_STD[a.id];
+    const latMu=SIM_LAT[a.id],latSig=SIM_LAT_STD[a.id];
     const lat=clamp(latMu+gauss(rand)*latSig,0.5,90000);
-    const tokBase=TOK_PROFILES[a.id];
+    const tokBase=SIM_TOK[a.id];
     const tok=Math.max(20,Math.round(tokBase*(0.8+rand()*0.4)));
     const tokIn=Math.round(tok*0.45),tokOut=tok-tokIn;
     SIM.push({question_id:q.id,tier:q.tier,adapter:a.id,latency_ms:Math.round(lat*10)/10,
@@ -914,7 +1013,8 @@ function renderAll(){
 /* ── RUN SELECT ─────────────────────────────── */
 document.getElementById('runSelect').addEventListener('change',function(){
   const v=this.value;
-  if(v==='stack_internal')currentData=SIM.filter(d=>GROUPS.stack_internal.includes(d.adapter));
+  if(v==='live_only')currentData=LIVE_DATA.slice();
+  else if(v==='stack_internal')currentData=SIM.filter(d=>GROUPS.stack_internal.includes(d.adapter));
   else if(v==='perplexity')currentData=SIM.filter(d=>GROUPS.perplexity.includes(d.adapter));
   else if(v==='external_ai')currentData=SIM.filter(d=>GROUPS.external_ai.includes(d.adapter));
   else currentData=SIM;
@@ -982,7 +1082,8 @@ function renderLeaderboard(){
       if(!s)return '<td style="color:var(--faint)">—</td>';
       return `<td><a href="${s.url}" target="_blank" rel="noopener" style="color:var(--primary)">${s.score}%</a></td>`;
     }).join('');
-    const status=hasAny?'<span style="color:var(--primary)">📊 Reference</span>':'<span style="color:var(--faint)">⬜ N/A</span>';
+    const adapterStatus=ADAPTER_STATUS[r.id];
+    const status=adapterStatus==='live'?'<span style="color:#00c853">✅ Live</span>':hasAny?'<span style="color:var(--primary)">📊 Reference</span>':'<span style="color:var(--faint)">⬜ N/A</span>';
     tr.innerHTML=`<td style="color:${r.color};font-weight:600">${r.label}</td>${cells}<td>${status}</td>`;
     tbody.appendChild(tr);
   });

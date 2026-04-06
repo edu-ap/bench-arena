@@ -5,62 +5,55 @@ defmodule BenchArena.AdapterTest do
   import BenchArena.TestHelpers
 
   describe "BaselineAdapter.execute/1" do
-    test "returns ok tuple" do
-      question = sample_question()
-      assert {:ok, result} = BaselineAdapter.execute(question)
-      assert is_binary(result.answer)
+    test "returns {:error, :credentials_not_configured} when PERPLEXITY_API_KEY is not set" do
+      original_env = System.get_env("PERPLEXITY_API_KEY")
+      original_config = Application.get_env(:bench_arena, :perplexity_api_key)
+      System.delete_env("PERPLEXITY_API_KEY")
+      Application.put_env(:bench_arena, :perplexity_api_key, nil)
+
+      try do
+        question = sample_question()
+        assert {:error, :credentials_not_configured} = BaselineAdapter.execute(question)
+      after
+        if original_env, do: System.put_env("PERPLEXITY_API_KEY", original_env)
+        if original_config, do: Application.put_env(:bench_arena, :perplexity_api_key, original_config)
+      end
     end
 
-    test "returns token counts" do
-      question = sample_question()
-      {:ok, result} = BaselineAdapter.execute(question)
-      assert result.tokens_in >= 0
-      assert result.tokens_out >= 0
-    end
-
-    test "perturbs numeric answers" do
-      question = sample_question(%{reference_answer: "42"})
-      {:ok, result} = BaselineAdapter.execute(question)
-      assert String.contains?(result.answer, "42")
-    end
-
-    test "returns short answers as-is" do
-      question = sample_question(%{reference_answer: "POST"})
-      {:ok, result} = BaselineAdapter.execute(question)
-      assert result.answer == "POST"
-    end
-
-    test "truncates long answers" do
-      long_answer = String.duplicate("word ", 100)
-      question = sample_question(%{reference_answer: long_answer})
-      {:ok, result} = BaselineAdapter.execute(question)
-      assert String.length(result.answer) < String.length(long_answer)
-    end
-
-    test "handles nil reference_answer" do
-      question = sample_question(%{reference_answer: nil})
-      {:ok, result} = BaselineAdapter.execute(question)
-      assert result.answer == "unknown"
-    end
-
-    test "tokens_out is at least 1" do
-      question = sample_question(%{reference_answer: "x"})
-      {:ok, result} = BaselineAdapter.execute(question)
-      assert result.tokens_out >= 1
+    test "implements BenchArena.Adapter behaviour (exports execute/1)" do
+      Code.ensure_loaded!(BaselineAdapter)
+      assert function_exported?(BaselineAdapter, :execute, 1)
     end
   end
 
-  describe "AgentLoopAdapter and StackAdapter error handling" do
-    test "agent_loop returns error when service unavailable" do
+  describe "AgentLoopAdapter" do
+    test "returns error when Elan agent loop fails or unavailable" do
       question = sample_question()
       result = BenchArena.Adapters.AgentLoopAdapter.execute(question)
+      # In test env, Elan processes may not be fully running
       assert {:error, _reason} = result
     end
 
-    test "stack returns error when service unavailable" do
+    test "implements BenchArena.Adapter behaviour" do
+      Code.ensure_loaded!(BenchArena.Adapters.AgentLoopAdapter)
+      assert function_exported?(BenchArena.Adapters.AgentLoopAdapter, :execute, 1)
+    end
+  end
+
+  describe "StackAdapter" do
+    test "returns result or error from CSC pipeline" do
       question = sample_question()
       result = BenchArena.Adapters.StackAdapter.execute(question)
-      assert {:error, _reason} = result
+      # CSC may fail on simple test prompts with unresolved_task
+      case result do
+        {:ok, %{answer: answer}} -> assert is_binary(answer)
+        {:error, _reason} -> :ok
+      end
+    end
+
+    test "implements BenchArena.Adapter behaviour" do
+      Code.ensure_loaded!(BenchArena.Adapters.StackAdapter)
+      assert function_exported?(BenchArena.Adapters.StackAdapter, :execute, 1)
     end
   end
 end

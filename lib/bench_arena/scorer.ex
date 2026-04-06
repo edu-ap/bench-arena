@@ -54,11 +54,52 @@ defmodule BenchArena.Scorer do
 
   @doc """
   Exact match scoring: normalize and compare strings.
+  For single-letter MCQ references (A-J), extracts the letter from natural-language answers.
+  For short integer references (AIME-style), extracts the number from answers.
   Returns 0.0 or 1.0.
   """
   @spec exact_match(String.t(), String.t()) :: float()
   def exact_match(answer, reference) do
-    if normalize(answer) == normalize(reference), do: 1.0, else: 0.0
+    cond do
+      String.match?(reference, ~r/^[A-J]$/) ->
+        extracted = extract_mcq_letter(answer)
+        if extracted == reference, do: 1.0, else: 0.0
+
+      String.match?(reference, ~r/^\d{1,3}$/) ->
+        extracted = extract_integer(answer)
+        if extracted == reference, do: 1.0, else: 0.0
+
+      true ->
+        if normalize(answer) == normalize(reference), do: 1.0, else: 0.0
+    end
+  end
+
+  defp extract_mcq_letter(answer) do
+    trimmed = String.trim(answer)
+
+    cond do
+      Regex.match?(~r/^[A-J]$/, trimmed) -> trimmed
+      m = Regex.run(~r/\*\*([A-J])\)/, answer) -> Enum.at(m, 1)
+      m = Regex.run(~r/\*\*([A-J])\*\*/, answer) -> Enum.at(m, 1)
+      m = Regex.run(~r/(?:option|answer is|choice|correct answer is)\s+\*?\*?([A-J])\b/i, answer) -> Enum.at(m, 1)
+      m = Regex.run(~r/^([A-J])[)\.\s]/, trimmed) -> Enum.at(m, 1)
+      true -> nil
+    end
+  end
+
+  defp extract_integer(answer) do
+    cond do
+      m = Regex.run(~r/\*\*(\d{1,3})\*\*/, answer) ->
+        val = String.to_integer(Enum.at(m, 1))
+        if val in 0..999, do: to_string(val), else: nil
+
+      m = Regex.run(~r/\b(\d{1,3})\b/, answer) ->
+        val = String.to_integer(Enum.at(m, 1))
+        if val in 0..999, do: to_string(val), else: nil
+
+      true ->
+        nil
+    end
   end
 
   @doc """

@@ -43,16 +43,27 @@ defmodule BenchArena.RunnerTest do
       assert result.total_tokens == result.tokens_in + result.tokens_out
     end
 
-    test "returns an answer for baseline" do
+    test "returns an answer or credentials error for baseline" do
       question = sample_question(%{reference_answer: "42"})
       result = Runner.run_question(question, :baseline)
-      assert is_binary(result.answer)
+      # With API key: returns answer. Without: records error.
+      assert is_binary(result.answer) or result.error == :credentials_not_configured
     end
 
-    test "has no error for baseline" do
-      question = sample_question()
-      result = Runner.run_question(question, :baseline)
-      assert result.error == nil
+    test "captures credentials error when PERPLEXITY_API_KEY not set" do
+      original_env = System.get_env("PERPLEXITY_API_KEY")
+      original_config = Application.get_env(:bench_arena, :perplexity_api_key)
+      System.delete_env("PERPLEXITY_API_KEY")
+      Application.put_env(:bench_arena, :perplexity_api_key, nil)
+
+      try do
+        question = sample_question()
+        result = Runner.run_question(question, :baseline)
+        assert result.error == :credentials_not_configured
+      after
+        if original_env, do: System.put_env("PERPLEXITY_API_KEY", original_env)
+        if original_config, do: Application.put_env(:bench_arena, :perplexity_api_key, original_config)
+      end
     end
 
     test "sets timestamp" do
