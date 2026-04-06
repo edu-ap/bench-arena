@@ -1,0 +1,57 @@
+{
+  "tier": 5,
+  "tier_name": "metacog",
+  "description": "Metacognitive self-assessment questions testing the stack's ability to reason about itself",
+  "questions": [
+    {
+      "id": "t5_001",
+      "tier": 5,
+      "tier_name": "metacog",
+      "prompt": "What is the current sorry_depth SLO status of the stack after Wave 4 remediation?",
+      "reference_answer": "After Wave 4 remediation the sorry_depth SLO target is 2 or fewer open sorrys per module with the overall stack aiming for sorry_depth at or below the threshold",
+      "scoring_method": "semantic",
+      "tags": ["sorry_depth", "wave4", "slo"],
+      "expected_tokens_budget": 400
+    },
+    {
+      "id": "t5_002",
+      "tier": 5,
+      "tier_name": "metacog",
+      "prompt": "Which metacognitive module would surface a distributional shift in Elan agent outputs?",
+      "reference_answer": "DriftSensor is the metacognitive module that detects distributional shifts by computing KL-divergence between current and baseline output distributions",
+      "scoring_method": "semantic",
+      "tags": ["metacognition", "drift_sensor", "elan"],
+      "expected_tokens_budget": 350
+    },
+    {
+      "id": "t5_003",
+      "tier": 5,
+      "tier_name": "metacog",
+      "prompt": "What is the pi-score tradeoff formula used in BenchArena.MetricCollector?",
+      "reference_answer": "pi_score = accuracy_delta - 0.001 * latency_delta - 0.0001 * token_delta",
+      "scoring_method": "semantic",
+      "tags": ["bench_arena", "pi_score", "tradeoff"],
+      "expected_tokens_budget": 250
+    },
+    {
+      "id": "t5_004",
+      "tier": 5,
+      "tier_name": "metacog",
+      "prompt": "If CoverageOracle.coverage_score/0 returns 0.72, which scenario classes are likely uncovered?",
+      "reference_answer": "With a coverage score of 0.72 approximately 28% of scenarios are uncovered likely including edge_cases and performance scenario classes which are typically harder to cover",
+      "scoring_method": "semantic",
+      "tags": ["coverage_oracle", "scenarios"],
+      "expected_tokens_budget": 400
+    },
+    {
+      "id": "t5_005",
+      "tier": 5,
+      "tier_name": "metacog",
+      "prompt": "What did the Wave 4 self-assessment identify as the #1 critical finding?",
+      "reference_answer": "The Wave 4 self-assessment identified the Schnorr verification bug as the number 1 critical finding where p equals q caused the verification equation to be trivially satisfiable",
+      "scoring_method": "semantic",
+      "tags": ["wave4", "self_assessment", "critical"],
+      "expected_tokens_budget": 400
+    }
+  ]
+}

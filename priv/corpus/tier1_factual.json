@@ -1,0 +1,107 @@
+{
+  "tier": 1,
+  "tier_name": "factual",
+  "description": "Factual, short-answer questions drawn from the stack's domain",
+  "questions": [
+    {
+      "id": "t1_001",
+      "tier": 1,
+      "tier_name": "factual",
+      "prompt": "What is the Shannon entropy of a uniform distribution over 8 symbols?",
+      "reference_answer": "3 bits",
+      "scoring_method": "exact_match",
+      "tags": ["information_theory", "econlib4"],
+      "expected_tokens_budget": 200
+    },
+    {
+      "id": "t1_002",
+      "tier": 1,
+      "tier_name": "factual",
+      "prompt": "What is the UCB1 formula for multi-armed bandit arm selection?",
+      "reference_answer": "UCB1 = X_bar_i + sqrt(2 * ln(N) / n_i) where X_bar_i is the mean reward, N is total plays, n_i is plays of arm i",
+      "scoring_method": "semantic",
+      "tags": ["bandits", "ucb1"],
+      "expected_tokens_budget": 300
+    },
+    {
+      "id": "t1_003",
+      "tier": 1,
+      "tier_name": "factual",
+      "prompt": "What does IRAP stand for in the Australian security context?",
+      "reference_answer": "Information Security Registered Assessors Program",
+      "scoring_method": "exact_match",
+      "tags": ["security", "irap"],
+      "expected_tokens_budget": 150
+    },
+    {
+      "id": "t1_004",
+      "tier": 1,
+      "tier_name": "factual",
+      "prompt": "In Elixir, what does System.unique_integer([:positive]) return?",
+      "reference_answer": "A unique positive integer that is monotonically increasing per scheduler",
+      "scoring_method": "semantic",
+      "tags": ["elixir", "system"],
+      "expected_tokens_budget": 200
+    },
+    {
+      "id": "t1_005",
+      "tier": 1,
+      "tier_name": "factual",
+      "prompt": "What is the KL divergence between two identical probability distributions?",
+      "reference_answer": "0",
+      "scoring_method": "exact_match",
+      "tags": ["information_theory", "kl_divergence"],
+      "expected_tokens_budget": 100
+    },
+    {
+      "id": "t1_006",
+      "tier": 1,
+      "tier_name": "factual",
+      "prompt": "Name the 5 CoverageOracle scenario classes built into Recursa.",
+      "reference_answer": "base_coverage, edge_cases, error_handling, integration, performance",
+      "scoring_method": "semantic",
+      "tags": ["recursa", "coverage_oracle"],
+      "expected_tokens_budget": 250
+    },
+    {
+      "id": "t1_007",
+      "tier": 1,
+      "tier_name": "factual",
+      "prompt": "What HTTP method does Elan.Router use for the /run_skill endpoint?",
+      "reference_answer": "POST",
+      "scoring_method": "exact_match",
+      "tags": ["elan", "router"],
+      "expected_tokens_budget": 100
+    },
+    {
+      "id": "t1_008",
+      "tier": 1,
+      "tier_name": "factual",
+      "prompt": "What is the default SLO laxity threshold for IRAP_PROTECTED contexts?",
+      "reference_answer": "0.20",
+      "scoring_method": "exact_match",
+      "tags": ["irap", "slo", "laxity"],
+      "expected_tokens_budget": 100
+    },
+    {
+      "id": "t1_009",
+      "tier": 1,
+      "tier_name": "factual",
+      "prompt": "What does FTAP stand for in mathematical finance?",
+      "reference_answer": "Fundamental Theorem of Asset Pricing",
+      "scoring_method": "exact_match",
+      "tags": ["finance", "ftap"],
+      "expected_tokens_budget": 150
+    },
+    {
+      "id": "t1_010",
+      "tier": 1,
+      "tier_name": "factual",
+      "prompt": "In the Schnorr protocol, what is the verification equation?",
+      "reference_answer": "g^s = r * y^e mod p, where s is the response, r is the commitment, y is the public key, e is the challenge",
+      "scoring_method": "semantic",
+      "tags": ["cryptography", "schnorr"],
+      "expected_tokens_budget": 300
+    }
+  ]
+}

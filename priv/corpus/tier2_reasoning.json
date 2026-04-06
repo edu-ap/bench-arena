@@ -1,0 +1,87 @@
+{
+  "tier": 2,
+  "tier_name": "reasoning",
+  "description": "Multi-step reasoning questions requiring inference chains",
+  "questions": [
+    {
+      "id": "t2_001",
+      "tier": 2,
+      "tier_name": "reasoning",
+      "prompt": "If laxity_score = 0.23 and context = :irap_protected (max 0.20), what severity does LaxityProbe return?",
+      "reference_answer": "critical severity because 0.23 exceeds the IRAP_PROTECTED threshold of 0.20",
+      "scoring_method": "semantic",
+      "tags": ["laxity", "irap", "probe"],
+      "expected_tokens_budget": 300
+    },
+    {
+      "id": "t2_002",
+      "tier": 2,
+      "tier_name": "reasoning",
+      "prompt": "Given UCB1 scores [0.8, 0.6, 0.9], which skill is selected next?",
+      "reference_answer": "The skill with UCB1 score 0.9 (index 2) is selected as it has the highest upper confidence bound",
+      "scoring_method": "semantic",
+      "tags": ["ucb1", "skill_selection"],
+      "expected_tokens_budget": 250
+    },
+    {
+      "id": "t2_003",
+      "tier": 2,
+      "tier_name": "reasoning",
+      "prompt": "A coalition of agents [A, B, C] changes to [A, B] — does SpeculumFreshness return :stale or :changed?",
+      "reference_answer": "SpeculumFreshness returns :changed because the coalition membership has been modified",
+      "scoring_method": "semantic",
+      "tags": ["speculum", "freshness", "coalition"],
+      "expected_tokens_budget": 300
+    },
+    {
+      "id": "t2_004",
+      "tier": 2,
+      "tier_name": "reasoning",
+      "prompt": "Stack has 21 open sorrys. sorry_depth = ceil(21/10) = ? Does it pass the SLO limit of 2?",
+      "reference_answer": "sorry_depth = ceil(21/10) = 3, which exceeds the SLO limit of 2 and therefore does not pass",
+      "scoring_method": "semantic",
+      "tags": ["sorry_depth", "slo"],
+      "expected_tokens_budget": 300
+    },
+    {
+      "id": "t2_005",
+      "tier": 2,
+      "tier_name": "reasoning",
+      "prompt": "A TokenGov matter has conflicting obligations X and Y. What does ConflictDetector return?",
+      "reference_answer": "ConflictDetector returns a conflict report identifying the obligations X and Y as contradictory with a recommended resolution strategy",
+      "scoring_method": "semantic",
+      "tags": ["token_gov", "conflict"],
+      "expected_tokens_budget": 350
+    },
+    {
+      "id": "t2_006",
+      "tier": 2,
+      "tier_name": "reasoning",
+      "prompt": "If Elan DriftSensor detects KL-divergence 0.15 against threshold 0.10, what event type does MetaBus emit?",
+      "reference_answer": "MetaBus emits a :distribution_drift event because the KL-divergence of 0.15 exceeds the threshold of 0.10",
+      "scoring_method": "semantic",
+      "tags": ["elan", "drift", "metabus"],
+      "expected_tokens_budget": 300
+    },
+    {
+      "id": "t2_007",
+      "tier": 2,
+      "tier_name": "reasoning",
+      "prompt": "A skill DAG has 3 nodes, 2 with sorry_depth 1 and 1 clean. What is the overall laxity_score?",
+      "reference_answer": "laxity_score = 2/3 approximately 0.667 because 2 out of 3 nodes have non-zero sorry_depth",
+      "scoring_method": "semantic",
+      "tags": ["laxity", "dag"],
+      "expected_tokens_budget": 300
+    },
+    {
+      "id": "t2_008",
+      "tier": 2,
+      "tier_name": "reasoning",
+      "prompt": "CSC.RegretState: after 5 plays with rewards [0.9, 0.8, 0.7, 0.85, 0.75], what is the mean reward?",
+      "reference_answer": "mean reward = (0.9 + 0.8 + 0.7 + 0.85 + 0.75) / 5 = 4.0 / 5 = 0.8",
+      "scoring_method": "semantic",
+      "tags": ["csc", "regret"],
+      "expected_tokens_budget": 250
+    }
+  ]
+}

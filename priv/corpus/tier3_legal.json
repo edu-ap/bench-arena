@@ -1,0 +1,67 @@
+{
+  "tier": 3,
+  "tier_name": "legal",
+  "description": "Legal AI compliance reasoning questions",
+  "questions": [
+    {
+      "id": "t3_001",
+      "tier": 3,
+      "tier_name": "legal",
+      "prompt": "Under IRAP ISM-0839, what is the maximum classification level for AI-processed documents?",
+      "reference_answer": "PROTECTED is the maximum classification level for AI-processed documents under ISM-0839",
+      "scoring_method": "semantic",
+      "tags": ["irap", "ism", "classification"],
+      "expected_tokens_budget": 400
+    },
+    {
+      "id": "t3_002",
+      "tier": 3,
+      "tier_name": "legal",
+      "prompt": "EU AI Act Article 13: what transparency requirements apply to high-risk AI systems?",
+      "reference_answer": "High-risk AI systems must be designed to allow operators to interpret output, include appropriate human-machine interface tools, provide documentation of capabilities and limitations, and enable effective human oversight",
+      "scoring_method": "semantic",
+      "tags": ["eu_ai_act", "transparency"],
+      "expected_tokens_budget": 500
+    },
+    {
+      "id": "t3_003",
+      "tier": 3,
+      "tier_name": "legal",
+      "prompt": "SRA Principle 6 — what duty does it impose on UK solicitors regarding client information?",
+      "reference_answer": "SRA Principle 6 requires solicitors to act in a way that encourages equality diversity and inclusion, maintaining the duty of confidentiality to clients and keeping their affairs confidential unless disclosure is required or permitted by law",
+      "scoring_method": "semantic",
+      "tags": ["sra", "legal_ethics"],
+      "expected_tokens_budget": 400
+    },
+    {
+      "id": "t3_004",
+      "tier": 3,
+      "tier_name": "legal",
+      "prompt": "Under CCPA, what right allows California residents to opt out of sale of personal information?",
+      "reference_answer": "The right to opt-out under CCPA Section 1798.120 allows California residents to direct a business that sells personal information to stop selling their personal information",
+      "scoring_method": "semantic",
+      "tags": ["ccpa", "privacy"],
+      "expected_tokens_budget": 400
+    },
+    {
+      "id": "t3_005",
+      "tier": 3,
+      "tier_name": "legal",
+      "prompt": "GDPR Article 44 — under what conditions may personal data be transferred to a third country?",
+      "reference_answer": "Personal data may be transferred to a third country only if the Commission has decided the country ensures adequate protection, or subject to appropriate safeguards like binding corporate rules or standard contractual clauses, or under specific derogations in Article 49",
+      "scoring_method": "semantic",
+      "tags": ["gdpr", "data_transfer"],
+      "expected_tokens_budget": 500
+    },
+    {
+      "id": "t3_006",
+      "tier": 3,
+      "tier_name": "legal",
+      "prompt": "What is the regulatory sandbox provision in the EU AI Act and which article covers it?",
+      "reference_answer": "Article 53 of the EU AI Act establishes AI regulatory sandboxes that provide a controlled environment for development testing and validation of innovative AI systems under regulatory oversight before market placement",
+      "scoring_method": "semantic",
+      "tags": ["eu_ai_act", "sandbox"],
+      "expected_tokens_budget": 500
+    }
+  ]
+}

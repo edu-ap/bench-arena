@@ -1,0 +1,91 @@
+{
+  "tier": 4,
+  "tier_name": "code",
+  "description": "Code generation and review questions — expected answers are code snippets",
+  "questions": [
+    {
+      "id": "t4_001",
+      "tier": 4,
+      "tier_name": "code",
+      "prompt": "Write an Elixir function that computes KL divergence between two probability maps. The function should take two maps where keys are events and values are probabilities.",
+      "reference_answer": "def kl_divergence(p, q) do\n  p |> Enum.reduce(0.0, fn {k, p_k}, acc ->\n    q_k = Map.get(q, k, 1.0e-10)\n    acc + p_k * :math.log(p_k / q_k)\n  end)\nend",
+      "scoring_method": "rubric",
+      "rubric": {
+        "criteria": ["kl_divergence", "Enum.reduce", "math.log", "Map.get", "probability"],
+        "max_score": 5
+      },
+      "tags": ["elixir", "kl_divergence", "code_gen"],
+      "expected_tokens_budget": 500
+    },
+    {
+      "id": "t4_002",
+      "tier": 4,
+      "tier_name": "code",
+      "prompt": "Write a Lean 4 theorem stub for 'no-arbitrage implies risk-neutral measure exists' (FTAP first fundamental theorem).",
+      "reference_answer": "theorem ftap_first (market : Market) (h : NoArbitrage market) : ∃ Q : Measure, RiskNeutral Q market := by\n  sorry",
+      "scoring_method": "rubric",
+      "rubric": {
+        "criteria": ["theorem", "NoArbitrage", "RiskNeutral", "Measure", "sorry"],
+        "max_score": 5
+      },
+      "tags": ["lean4", "ftap", "formal_verification"],
+      "expected_tokens_budget": 400
+    },
+    {
+      "id": "t4_003",
+      "tier": 4,
+      "tier_name": "code",
+      "prompt": "Write the UCB1 score formula as an Elixir function. It should take mean_reward, total_plays, and arm_plays as arguments.",
+      "reference_answer": "def ucb1_score(mean_reward, total_plays, arm_plays) do\n  mean_reward + :math.sqrt(2 * :math.log(total_plays) / arm_plays)\nend",
+      "scoring_method": "rubric",
+      "rubric": {
+        "criteria": ["ucb1", "math.sqrt", "math.log", "mean_reward", "arm_plays"],
+        "max_score": 5
+      },
+      "tags": ["elixir", "ucb1", "code_gen"],
+      "expected_tokens_budget": 300
+    },
+    {
+      "id": "t4_004",
+      "tier": 4,
+      "tier_name": "code",
+      "prompt": "Fix this broken Schnorr verification: `g^r == c * h^e mod p` when p=q (the Wave 4 bug). The correct equation should use the response s, commitment r, public key y, and challenge e.",
+      "reference_answer": "def verify_schnorr(g, p, s, r, y, e) do\n  lhs = :crypto.mod_pow(g, s, p)\n  rhs = rem(r * :crypto.mod_pow(y, e, p), p)\n  lhs == rhs\nend",
+      "scoring_method": "rubric",
+      "rubric": {
+        "criteria": ["mod_pow", "verify", "schnorr", "commitment", "challenge"],
+        "max_score": 5
+      },
+      "tags": ["cryptography", "schnorr", "bug_fix"],
+      "expected_tokens_budget": 500
+    },
+    {
+      "id": "t4_005",
+      "tier": 4,
+      "tier_name": "code",
+      "prompt": "Write a GenServer init/1 that registers under a unique name using System.unique_integer.",
+      "reference_answer": "def init(opts) do\n  name = {:via, Registry, {MyRegistry, System.unique_integer([:positive])}}\n  {:ok, %{name: name, opts: opts}}\nend",
+      "scoring_method": "rubric",
+      "rubric": {
+        "criteria": ["GenServer", "init", "unique_integer", "Registry", "opts"],
+        "max_score": 5
+      },
+      "tags": ["elixir", "genserver", "code_gen"],
+      "expected_tokens_budget": 300
+    },
+    {
+      "id": "t4_006",
+      "tier": 4,
+      "tier_name": "code",
+      "prompt": "Write an Elixir test that verifies a MetaBus event is emitted within 100ms.",
+      "reference_answer": "test \"MetaBus emits event within 100ms\" do\n  :telemetry.attach(\"test-handler\", [:meta_bus, :event], fn _name, _measurements, metadata, _config ->\n    send(self(), {:event, metadata})\n  end, nil)\n\n  MetaBus.emit(:test_event, %{data: \"test\"})\n\n  assert_receive {:event, %{data: \"test\"}}, 100\nend",
+      "scoring_method": "rubric",
+      "rubric": {
+        "criteria": ["test", "telemetry", "assert_receive", "MetaBus", "100"],
+        "max_score": 5
+      },
+      "tags": ["elixir", "testing", "metabus"],
+      "expected_tokens_budget": 400
+    }
+  ]
+}
