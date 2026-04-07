@@ -20,6 +20,7 @@ defmodule BenchArena.Adapters.StackAdapter do
 
   alias BenchArena.Corpus.Question
   alias BenchArena.ConfabulumRate
+  alias BenchArena.CompetenceSignal
 
   @impl true
   @spec execute(Question.t()) ::
@@ -180,7 +181,10 @@ defmodule BenchArena.Adapters.StackAdapter do
          """,
          {:ok, verified, v_in, v_out} <- call_perplexity(verify_prompt, model, api_key, timeout),
          :ok <- confabulum_check(verified, question.prompt, :verify),
-         # Step 4: Synthesise (mirrors Elan.AgentLoop final answer)
+         # Step 4: Synthesise with CompetenceSignal gate
+         # Collect confidence scores from upstream steps (heuristic: each successful
+         # step that passed confabulum gate scores 0.85; retrieval augmented = 0.90)
+         confidence_vector = build_confidence_vector(decomposition, retrieved_context, verified),
          synth_prompt = """
          [Elan Agent — Final Synthesis]
 
@@ -193,7 +197,9 @@ defmodule BenchArena.Adapters.StackAdapter do
          Be direct and concise. For multiple-choice questions, state the correct
          letter option clearly.
          """,
-         {:ok, answer, s_in, s_out} <- call_perplexity(synth_prompt, model, api_key, timeout),
+         {:ok, _vocab, gated_prompt} <-
+           competence_signal_check(synth_prompt, confidence_vector),
+         {:ok, answer, s_in, s_out} <- call_perplexity(gated_prompt, model, api_key, timeout),
          :ok <- confabulum_check(answer, question.prompt, :synthesise) do
       {:ok,
        %{
@@ -322,6 +328,35 @@ defmodule BenchArena.Adapters.StackAdapter do
       err -> err
     end
   end
+
+  # ---------------------------------------------------------------------------
+  # CompetenceSignal gate
+  # ---------------------------------------------------------------------------
+
+  defp competence_signal_check(prompt, confidence_vector) do
+    case CompetenceSignal.inject_into_prompt(prompt, confidence_vector) do
+      {:halt, :competence_signal, info} ->
+        {:error, {:competence_signal_halt, info}}
+
+      {:ok, vocab, gated_prompt} ->
+        {:ok, vocab, gated_prompt}
+    end
+  end
+
+  defp build_confidence_vector(decomposition, retrieved_context, _verified) do
+    # Heuristic confidence scoring for each pipeline step:
+    # - Decompose: 0.85 base (structured output from model)
+    # - Retrieve: 0.90 if context was returned, 0.70 if empty
+    # - Verify: 0.85 base (cross-checked against retrieved sources)
+    decompose_confidence = if String.length(decomposition) > 20, do: 0.85, else: 0.65
+    retrieve_confidence = if String.length(retrieved_context) > 50, do: 0.90, else: 0.70
+    verify_confidence = 0.85
+    [decompose_confidence, retrieve_confidence, verify_confidence]
+  end
+
+  # ---------------------------------------------------------------------------
+  # Perplexity API helpers
+  # ---------------------------------------------------------------------------
 
   defp call_perplexity(prompt, model, api_key, timeout) do
     body = %{
