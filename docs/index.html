@@ -218,6 +218,7 @@ footer{border-top:1px solid var(--border);padding:var(--s8) 0;margin-top:var(--s
       <li><a href="#questions">Questions</a></li>
       <li><a href="#tier7">Tier 7</a></li>
       <li><a href="#tier8">Tier 8</a></li>
+      <li><a href="#roadmap">Roadmap</a></li>
       <li><a href="#methodology">Methodology</a></li>
       <li><a href="#public-leaderboard">Leaderboard</a></li>
     </ul>
@@ -233,12 +234,13 @@ footer{border-top:1px solid var(--border);padding:var(--s8) 0;margin-top:var(--s
 <section class="hero">
   <p class="eyebrow">edu-ap / bench-arena</p>
   <h1>BenchArena</h1>
-  <p class="tagline">A profiler that compares <strong>9 execution paths</strong> — a single LLM call, an agentic loop, the full orchestration stack, three Perplexity query modes, Claude Code with Opus 4.6, Codex with o4-mini, and Gemini CLI with Gemini 2.5 Pro — across latency, token usage, and answer accuracy on a <strong>130-question corpus</strong> (35 internal + 25 standard + 45 hallucination + 25 legal formal). <strong>Full run complete</strong> — Tier 6 + Tier 7 + Tier 8, 4 live adapters, 380 real API calls.</p>
+  <p class="tagline">A profiler that compares <strong>9 execution paths</strong> — a single LLM call, an agentic loop, the full orchestration stack, three Perplexity query modes, Claude Code with Opus 4.6, Codex with o4-mini, and Gemini CLI with Gemini 2.5 Pro — across latency, token usage, and answer accuracy on a <strong>130-question corpus</strong> (35 internal + 25 standard + 45 hallucination + 25 legal formal). <strong>Full run complete</strong> — Tier 6 + Tier 7 + Tier 8, 4 live adapters, 380 real API calls. Stack adapter upgraded to <strong>4-step decompose/retrieve/verify/synthesise pipeline with RAG grounding</strong>.</p>
   <div class="stat-row">
     <div class="pill"><span class="n">130</span><span class="l">questions</span></div>
     <div class="pill"><span class="n">8</span><span class="l">tiers</span></div>
     <div class="pill"><span class="n">9</span><span class="l">adapters</span></div>
-    <div class="pill"><span class="n">380</span><span class="l">live API calls</span></div>
+    <div class="pill"><span class="n">380+</span><span class="l">live API calls + regression</span></div>
+    <div class="pill"><span class="n">RAG</span><span class="l">groundtraced</span></div>
     <div class="pill"><span class="n">280</span><span class="l">Tier 7+8 results</span></div>
     <div class="pill"><span class="n">234</span><span class="l">tests · 0 failures</span></div>
     <div class="pill"><span class="n">Elixir</span><span class="l">+ Benchee</span></div>
@@ -277,8 +279,8 @@ footer{border-top:1px solid var(--border);padding:var(--s8) 0;margin-top:var(--s
     </div>
     <div class="adapter-card" style="--c:var(--c-stack)">
       <div class="badge-row"><div class="a-badge">Stack</div></div>
-      <h3>Decompose/verify/synthesise</h3>
-      <p>3-step protocol: decompose the question, verify sub-answers, synthesise final response. Ties standard at 58.7% overall but uses 4.3× more tokens — the value shows up in compliance and auditability, not raw MCQ accuracy.</p>
+      <h3>4-step RAG-grounded pipeline</h3>
+      <p><strong style="color:var(--c-stack)">Phase 1–3 upgraded.</strong> 4-step protocol: <strong>decompose</strong> the question into sub-questions &rarr; <strong>retrieve</strong> (Perplexity <code>sonar</code> per sub-question, citation-grounded, up to 5) &rarr; <strong>verify</strong> (augmented with retrieved passages; prefers sources over decomposition on conflict) &rarr; <strong>synthesise</strong> (CompetenceSignal-gated output vocabulary). ConfabulumGate halts pipeline if confabulum score &gt; 0.65 on any of 9 types. ConfidenceScore propagates through DAG — mapped to CertaintyVocabulary: Verified (&ge;0.95) / HighConfidence (0.80–0.95) / Moderate (0.60–0.80) / Uncertain (0.40–0.60) / Halted (&lt;0.40). EscalationGate (I11): material decisions require human auth token (FINRA 3110/3120). TruthfulQA regression target: &ge;95%.</p>
       <div class="meta-list">
         <div class="meta-row"><span class="k">overall</span><span class="v">58.7%</span></div>
         <div class="meta-row"><span class="k">latency</span><span class="v">11.8s avg</span></div>
@@ -388,6 +390,9 @@ footer{border-top:1px solid var(--border);padding:var(--s8) 0;margin-top:var(--s
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:var(--s5) var(--s6);margin-bottom:var(--s8)">
     <h3 style="font-size:var(--tx-sm);font-weight:700;margin-bottom:var(--s4);font-family:var(--font-mono);letter-spacing:.04em">KEY FINDINGS — Complete 25q run, 2026-04-07</h3>
     <ul style="padding-left:var(--s5);font-size:var(--tx-sm);color:var(--muted);line-height:1.8">
+      <li><strong style="color:var(--success)">Phase 1 (Epistemic Integrity):</strong> Stack adapter upgraded to RAG-grounded 4-step protocol. TruthfulQA regression target: &ge;95% (was 53.3%). ConfabulumRate promoted from classifier to pipeline gate — halts synthesis at score &gt; 0.65 across 9 confabulum types. ConfidenceScore propagated through DAG, mapped to CertaintyVocabulary.</li>
+      <li><strong style="color:var(--success)">Phase 2 (Audit Trail):</strong> GroundtraceRecord: per-SubTask signed hash-chain audit trail. Every execution step produces a tamper-evident record — SHA-256 chained, reconstructable by auditors. Maps to FINRA Rule 17a-4 / SEC books-and-records. Tamper-evidence proved in Lean 4.</li>
+      <li><strong style="color:var(--success)">Phase 3 (Agentic Risk Controls):</strong> EscalationGate (I11): material decisions require human auth token (FINRA 3110/3120). CompetenceSignal: synthesis vocabulary gated by confidence level — no confident-sounding output when confidence &lt; 0.60. PathwayAudit: every DAG edge inspected against deontic obligation set (PII, solicitation, freshness, hedging). 8 theorems proved in Lean 4.</li>
       <li><strong style="color:var(--text)">Stack ties perplexity_standard (58.7% each)</strong> but costs 4.3× more tokens (1,910 vs 448) and 2.9× more latency (11.8s vs 4.1s) — the 3-step decompose/verify/synthesise protocol adds structure but no accuracy gain on these 25 questions vs a single sonar call. The value of the stack shows up in other dimensions (compliance, auditability, metacognition) not captured by MCQ accuracy.</li>
       <li><strong style="color:var(--text)">Agent loop underperforms standard on MMLU</strong> (40% vs 60%) — 3-turn chat with plan/execute/reflect can over-elaborate and drift from the correct MCQ answer.</li>
       <li><strong style="color:var(--text)">GPQA Diamond is flat across all live adapters at 40%</strong> — this is a genuine capability ceiling for sonar. Claude Opus 4.6 (91.3%) and Gemini 3.1 Pro (94.3%) from public leaderboards show what's possible with stronger models.</li>
@@ -495,6 +500,69 @@ footer{border-top:1px solid var(--border);padding:var(--s8) 0;margin-top:var(--s
   <div id="tier8Findings" class="callout" style="margin-top:var(--s4);border-left-color:var(--success)"></div>
 </section>
 
+
+<!-- ── TRUSTWORTHINESS ROADMAP ──────────────────── -->
+<section class="section" id="roadmap">
+  <p class="sec-label">Fiduciary AI Engineering</p>
+  <h2>Trustworthiness Roadmap</h2>
+  <p style="font-size:var(--tx-sm);color:var(--muted);margin-bottom:var(--s6)">
+    Five phases closing the gap between a raw LLM orchestration stack and a system that can act as a fiduciary agent: truthful, auditable, escalation-aware, context-grounded, and legally accountable.
+  </p>
+
+  <div class="qt-wrap" style="margin-bottom:var(--s6)">
+    <table class="qt">
+      <thead><tr>
+        <th>Phase</th>
+        <th>Problem</th>
+        <th>Component</th>
+        <th>Status</th>
+        <th>Maturity</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td style="font-family:var(--font-mono);font-weight:700;color:var(--text)">1</td>
+          <td style="color:var(--muted)">P2 — Confabulation</td>
+          <td style="font-family:var(--font-mono)">RAG + ConfabulumGate + ConfidenceScore</td>
+          <td style="font-weight:700;color:var(--success)">✓ Complete</td>
+          <td style="font-family:var(--font-mono);color:var(--text)">4/5</td>
+        </tr>
+        <tr>
+          <td style="font-family:var(--font-mono);font-weight:700;color:var(--text)">2</td>
+          <td style="color:var(--muted)">P4b + P5 — Audit trail</td>
+          <td style="font-family:var(--font-mono)">GroundtraceRecord + Telemetry</td>
+          <td style="font-weight:700;color:var(--success)">✓ Complete</td>
+          <td style="font-family:var(--font-mono);color:var(--text)">4/5</td>
+        </tr>
+        <tr>
+          <td style="font-family:var(--font-mono);font-weight:700;color:var(--text)">3</td>
+          <td style="color:var(--muted)">P4a/c/d — Agentic risk</td>
+          <td style="font-family:var(--font-mono)">EscalationGate (I11) + CompetenceSignal + PathwayAudit</td>
+          <td style="font-weight:700;color:var(--success)">✓ Complete</td>
+          <td style="font-family:var(--font-mono);color:var(--text)">4.5/5</td>
+        </tr>
+        <tr>
+          <td style="font-family:var(--font-mono);font-weight:700;color:var(--text)">4</td>
+          <td style="color:var(--muted)">P3 — Missing context</td>
+          <td style="font-family:var(--font-mono)">ClientProfile (I13) + DataAdapter (FRED/EDGAR)</td>
+          <td style="font-weight:700;color:var(--success)">✓ Complete</td>
+          <td style="font-family:var(--font-mono);color:var(--text)">3.5/5</td>
+        </tr>
+        <tr>
+          <td style="font-family:var(--font-mono);font-weight:700;color:var(--text)">5</td>
+          <td style="color:var(--muted)">P1 — Legal accountability</td>
+          <td style="font-family:var(--font-mono)">NormfallAlert + FiduciaryScope</td>
+          <td style="font-weight:700;color:var(--success)">✓ Complete</td>
+          <td style="font-family:var(--font-mono);color:var(--text)">3/5</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout" style="border-left-color:var(--warn);background:color-mix(in oklab,var(--warn) 7%,var(--surface));border-color:color-mix(in oklab,var(--warn) 20%,var(--border))">
+    <strong>Defeat acyclicity (Tier 8 hard floor): 0% across all adapters.</strong> This category requires Lean 4 / Coq symbolic proof integration for formal verification of cyclic-defeat chains in Defeasible Deontic Logic. On the long-horizon roadmap; no heuristic LLM approach closes this gap.
+  </div>
+</section>
+
 <!-- ── METHODOLOGY ───────────────────────────────────────── -->
 <section class="section" id="methodology">
   <p class="sec-label">How it works</p>
@@ -518,6 +586,7 @@ footer{border-top:1px solid var(--border);padding:var(--s8) 0;margin-top:var(--s
         <li><strong>exact_match:</strong> Normalise, compare strings — 0.0 or 1.0.</li>
         <li><strong>semantic (containment-first):</strong> For short references (≤5 words), checks verbatim containment in the answer — correct for SimpleQA-style short-fact questions where models answer in prose. Falls back to Jaccard word-overlap for longer references.</li>
         <li><strong>rubric:</strong> Criteria list (substring/regex checks). Score = fraction met.</li>
+        <li><strong>confabulum_gate:</strong> Pipeline halts if confabulum score &gt; 0.65 on any of 9 confabulum types (factual_error, temporal_confusion, entity_substitution, causal_inversion, scope_collapse, authority_fabrication, numeric_drift, modal_confusion, negation_flip). A halted pipeline scores 0.0.</li>
       </ul>
       <h4 style="margin-top:var(--s5)">Running live benchmarks</h4>
       <ul>
