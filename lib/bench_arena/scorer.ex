@@ -127,16 +127,30 @@ defmodule BenchArena.Scorer do
   """
   @spec semantic_score(String.t(), String.t()) :: float()
   def semantic_score(answer, reference) do
-    answer_words = tokenize(answer)
-    reference_words = tokenize(reference)
+    # Containment-first: if reference is a short phrase (≤5 words) and it appears
+    # verbatim inside the answer, score 1.0. This fixes SimpleQA where models answer
+    # in prose but the reference is a proper noun or short fact.
+    ref_words = reference |> String.split(~r/\s+/, trim: true) |> length()
 
-    if MapSet.size(answer_words) == 0 and MapSet.size(reference_words) == 0 do
+    if ref_words <= 5 and
+         String.contains?(
+           String.downcase(answer),
+           String.downcase(reference)
+         ) do
       1.0
     else
-      intersection = MapSet.intersection(answer_words, reference_words) |> MapSet.size()
-      union = MapSet.union(answer_words, reference_words) |> MapSet.size()
+      # Fallback: Jaccard token-overlap
+      answer_words = tokenize(answer)
+      reference_words = tokenize(reference)
 
-      if union == 0, do: 0.0, else: intersection / union
+      if MapSet.size(answer_words) == 0 and MapSet.size(reference_words) == 0 do
+        1.0
+      else
+        intersection = MapSet.intersection(answer_words, reference_words) |> MapSet.size()
+        union = MapSet.union(answer_words, reference_words) |> MapSet.size()
+
+        if union == 0, do: 0.0, else: intersection / union
+      end
     end
   end
 

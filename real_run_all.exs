@@ -10,8 +10,8 @@ stack_adapters = [:stack]
 questions = Corpus.load_standard()
 IO.puts("Standard questions: #{length(questions)}")
 
-# Sample of 5 questions for stack (expensive: 3 API calls each)
-stack_sample = Enum.take(questions, 5)
+# Run stack on all 25 questions — 3 API calls each but sonar is fast
+stack_sample = questions
 
 all_results =
   for {adapters, qs} <- [{standard_adapters, questions}, {stack_adapters, stack_sample}],

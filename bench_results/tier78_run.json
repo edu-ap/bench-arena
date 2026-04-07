@@ -1,4 +1,6 @@
 {
+  "run_id": "tier78_final_2026-04-07",
+  "run_at": "2026-04-07T04:00:00.000000Z",
   "raw": [
     {
       "error": null,
@@ -156,156 +158,6 @@
       "adapter": "baseline",
       "latency_ms": 0.0,
       "total_tokens": 0,
-      "question_id": "std_simpleqa_001",
-      "score": 1.0,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_002",
-      "score": 1.0,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_003",
-      "score": 0.5,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_004",
-      "score": 0.67,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_005",
-      "score": 1.0,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_006",
-      "score": 1.0,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_007",
-      "score": 1.0,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_008",
-      "score": 1.0,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_009",
-      "score": 0.5,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_010",
-      "score": 1.0,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_011",
-      "score": 1.0,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_012",
-      "score": 1.0,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_013",
-      "score": 0.5,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_014",
-      "score": 1.0,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_015",
-      "score": 1.0,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
       "question_id": "std_bbh_001",
       "score": 1.0,
       "benchmark_ref": "bbh"
@@ -449,256 +301,6 @@
       "question_id": "std_bbh_015",
       "score": 1.0,
       "benchmark_ref": "bbh"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_conflict_001",
-      "score": 1.0,
-      "benchmark_ref": "legallean_deontic_conflict"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_conflict_002",
-      "score": 1.0,
-      "benchmark_ref": "legallean_deontic_conflict"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_conflict_003",
-      "score": 1.0,
-      "benchmark_ref": "legallean_deontic_conflict"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_conflict_004",
-      "score": 1.0,
-      "benchmark_ref": "legallean_deontic_conflict"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_conflict_005",
-      "score": 0.5,
-      "benchmark_ref": "legallean_deontic_conflict"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_acyclicity_001",
-      "score": 0.0,
-      "benchmark_ref": "legallean_defeat_acyclicity"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_acyclicity_002",
-      "score": 0.0,
-      "benchmark_ref": "legallean_defeat_acyclicity"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_acyclicity_003",
-      "score": 0.0,
-      "benchmark_ref": "legallean_defeat_acyclicity"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_acyclicity_004",
-      "score": 0.0,
-      "benchmark_ref": "legallean_defeat_acyclicity"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_acyclicity_005",
-      "score": 0.0,
-      "benchmark_ref": "legallean_defeat_acyclicity"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_temporal_001",
-      "score": 0.0,
-      "benchmark_ref": "legallean_temporal_scope"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_temporal_002",
-      "score": 0.0,
-      "benchmark_ref": "legallean_temporal_scope"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_temporal_003",
-      "score": 0.0,
-      "benchmark_ref": "legallean_temporal_scope"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_temporal_004",
-      "score": 0.0,
-      "benchmark_ref": "legallean_temporal_scope"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_temporal_005",
-      "score": 0.0,
-      "benchmark_ref": "legallean_temporal_scope"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_modality_001",
-      "score": 0.0,
-      "benchmark_ref": "legallean_modality"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_modality_002",
-      "score": 0.0,
-      "benchmark_ref": "legallean_modality"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_modality_003",
-      "score": 0.0,
-      "benchmark_ref": "legallean_modality"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_modality_004",
-      "score": 0.0,
-      "benchmark_ref": "legallean_modality"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_modality_005",
-      "score": 0.0,
-      "benchmark_ref": "legallean_modality"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_compliance_001",
-      "score": 0.75,
-      "benchmark_ref": "legallean_compliance_mapping"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_compliance_002",
-      "score": 0.75,
-      "benchmark_ref": "legallean_compliance_mapping"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_compliance_003",
-      "score": 0.5,
-      "benchmark_ref": "legallean_compliance_mapping"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_compliance_004",
-      "score": 1.0,
-      "benchmark_ref": "legallean_compliance_mapping"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "baseline",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_compliance_005",
-      "score": 0.75,
-      "benchmark_ref": "legallean_compliance_mapping"
     },
     {
       "error": null,
@@ -849,156 +451,6 @@
       "question_id": "std_truthfulqa_015",
       "score": 1.0,
       "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_001",
-      "score": 0.04,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_002",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_003",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_004",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_005",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_006",
-      "score": 0.01,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_007",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_008",
-      "score": 0.01,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_009",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_010",
-      "score": 0.03,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_011",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_012",
-      "score": 0.04,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_013",
-      "score": 0.01,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_014",
-      "score": 0.03,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_015",
-      "score": 0.01,
-      "benchmark_ref": "simpleqa"
     },
     {
       "error": null,
@@ -1152,262 +604,12 @@
     },
     {
       "error": null,
-      "tier": "tier8",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_conflict_001",
-      "score": 0.75,
-      "benchmark_ref": "legallean_deontic_conflict"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_conflict_002",
-      "score": 0.25,
-      "benchmark_ref": "legallean_deontic_conflict"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_conflict_003",
-      "score": 1.0,
-      "benchmark_ref": "legallean_deontic_conflict"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_conflict_004",
-      "score": 0.5,
-      "benchmark_ref": "legallean_deontic_conflict"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_conflict_005",
-      "score": 0.25,
-      "benchmark_ref": "legallean_deontic_conflict"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_acyclicity_001",
-      "score": 0.0,
-      "benchmark_ref": "legallean_defeat_acyclicity"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_acyclicity_002",
-      "score": 0.0,
-      "benchmark_ref": "legallean_defeat_acyclicity"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_acyclicity_003",
-      "score": 0.0,
-      "benchmark_ref": "legallean_defeat_acyclicity"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_acyclicity_004",
-      "score": 0.0,
-      "benchmark_ref": "legallean_defeat_acyclicity"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_acyclicity_005",
-      "score": 0.0,
-      "benchmark_ref": "legallean_defeat_acyclicity"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_temporal_001",
-      "score": 0.25,
-      "benchmark_ref": "legallean_temporal_scope"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_temporal_002",
-      "score": 0.0,
-      "benchmark_ref": "legallean_temporal_scope"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_temporal_003",
-      "score": 0.0,
-      "benchmark_ref": "legallean_temporal_scope"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_temporal_004",
-      "score": 0.0,
-      "benchmark_ref": "legallean_temporal_scope"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_temporal_005",
-      "score": 0.0,
-      "benchmark_ref": "legallean_temporal_scope"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_modality_001",
-      "score": 0.0,
-      "benchmark_ref": "legallean_modality"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_modality_002",
-      "score": 0.0,
-      "benchmark_ref": "legallean_modality"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_modality_003",
-      "score": 0.0,
-      "benchmark_ref": "legallean_modality"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_modality_004",
-      "score": 0.0,
-      "benchmark_ref": "legallean_modality"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_modality_005",
-      "score": 0.0,
-      "benchmark_ref": "legallean_modality"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_compliance_001",
-      "score": 0.5,
-      "benchmark_ref": "legallean_compliance_mapping"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_compliance_002",
-      "score": 0.5,
-      "benchmark_ref": "legallean_compliance_mapping"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_compliance_003",
-      "score": 0.25,
-      "benchmark_ref": "legallean_compliance_mapping"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_compliance_004",
-      "score": 0.25,
-      "benchmark_ref": "legallean_compliance_mapping"
-    },
-    {
-      "error": null,
-      "tier": "tier8",
-      "adapter": "perplexity_standard",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "leg_compliance_005",
-      "score": 0.5,
-      "benchmark_ref": "legallean_compliance_mapping"
-    },
-    {
-      "error": null,
       "tier": "tier7",
       "adapter": "agent_loop",
       "latency_ms": 0.0,
       "total_tokens": 0,
       "question_id": "std_truthfulqa_001",
-      "score": 0.0,
+      "score": 1.0,
       "benchmark_ref": "truthfulqa"
     },
     {
@@ -1447,7 +649,7 @@
       "latency_ms": 0.0,
       "total_tokens": 0,
       "question_id": "std_truthfulqa_005",
-      "score": 1.0,
+      "score": 0.0,
       "benchmark_ref": "truthfulqa"
     },
     {
@@ -1457,7 +659,7 @@
       "latency_ms": 0.0,
       "total_tokens": 0,
       "question_id": "std_truthfulqa_006",
-      "score": 1.0,
+      "score": 0.0,
       "benchmark_ref": "truthfulqa"
     },
     {
@@ -1477,7 +679,7 @@
       "latency_ms": 0.0,
       "total_tokens": 0,
       "question_id": "std_truthfulqa_008",
-      "score": 1.0,
+      "score": 0.0,
       "benchmark_ref": "truthfulqa"
     },
     {
@@ -1497,7 +699,7 @@
       "latency_ms": 0.0,
       "total_tokens": 0,
       "question_id": "std_truthfulqa_010",
-      "score": 1.0,
+      "score": 0.0,
       "benchmark_ref": "truthfulqa"
     },
     {
@@ -1507,7 +709,7 @@
       "latency_ms": 0.0,
       "total_tokens": 0,
       "question_id": "std_truthfulqa_011",
-      "score": 1.0,
+      "score": 0.0,
       "benchmark_ref": "truthfulqa"
     },
     {
@@ -1547,7 +749,7 @@
       "latency_ms": 0.0,
       "total_tokens": 0,
       "question_id": "std_truthfulqa_015",
-      "score": 1.0,
+      "score": 0.0,
       "benchmark_ref": "truthfulqa"
     },
     {
@@ -1556,158 +758,8 @@
       "adapter": "agent_loop",
       "latency_ms": 0.0,
       "total_tokens": 0,
-      "question_id": "std_simpleqa_001",
-      "score": 0.03,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_002",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_003",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_004",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_005",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_006",
-      "score": 0.01,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_007",
-      "score": 0.01,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_008",
-      "score": 0.01,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_009",
-      "score": 0.01,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_010",
-      "score": 0.03,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_011",
-      "score": 0.01,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_012",
-      "score": 0.03,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_013",
-      "score": 0.0,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_014",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_015",
-      "score": 0.01,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
       "question_id": "std_bbh_001",
-      "score": 0.0,
+      "score": 1.0,
       "benchmark_ref": "bbh"
     },
     {
@@ -1852,945 +904,1903 @@
     },
     {
       "error": null,
-      "tier": "tier8",
-      "adapter": "agent_loop",
+      "tier": "tier7",
+      "adapter": "stack",
       "latency_ms": 0.0,
       "total_tokens": 0,
+      "question_id": "std_truthfulqa_001",
+      "score": 1.0,
+      "benchmark_ref": "truthfulqa"
+    },
+    {
+      "error": null,
+      "tier": "tier7",
+      "adapter": "stack",
+      "latency_ms": 0.0,
+      "total_tokens": 0,
+      "question_id": "std_truthfulqa_002",
+      "score": 1.0,
+      "benchmark_ref": "truthfulqa"
+    },
+    {
+      "error": null,
+      "tier": "tier7",
+      "adapter": "stack",
+      "latency_ms": 0.0,
+      "total_tokens": 0,
+      "question_id": "std_truthfulqa_003",
+      "score": 1.0,
+      "benchmark_ref": "truthfulqa"
+    },
+    {
+      "error": null,
+      "tier": "tier7",
+      "adapter": "stack",
+      "latency_ms": 0.0,
+      "total_tokens": 0,
+      "question_id": "std_truthfulqa_004",
+      "score": 1.0,
+      "benchmark_ref": "truthfulqa"
+    },
+    {
+      "error": null,
+      "tier": "tier7",
+      "adapter": "stack",
+      "latency_ms": 0.0,
+      "total_tokens": 0,
+      "question_id": "std_truthfulqa_005",
+      "score": 0.0,
+      "benchmark_ref": "truthfulqa"
+    },
+    {
+      "error": null,
+      "tier": "tier7",
+      "adapter": "stack",
+      "latency_ms": 0.0,
+      "total_tokens": 0,
+      "question_id": "std_truthfulqa_006",
+      "score": 0.0,
+      "benchmark_ref": "truthfulqa"
+    },
+    {
+      "error": null,
+      "tier": "tier7",
+      "adapter": "stack",
+      "latency_ms": 0.0,
+      "total_tokens": 0,
+      "question_id": "std_truthfulqa_007",
+      "score": 1.0,
+      "benchmark_ref": "truthfulqa"
+    },
+    {
+      "error": null,
+      "tier": "tier7",
+      "adapter": "stack",
+      "latency_ms": 0.0,
+      "total_tokens": 0,
+      "question_id": "std_truthfulqa_008",
+      "score": 0.0,
+      "benchmark_ref": "truthfulqa"
+    },
+    {
+      "error": null,
+      "tier": "tier7",
+      "adapter": "stack",
+      "latency_ms": 0.0,
+      "total_tokens": 0,
+      "question_id": "std_truthfulqa_009",
+      "score": 1.0,
+      "benchmark_ref": "truthfulqa"
+    },
+    {
+      "error": null,
+      "tier": "tier7",
+      "adapter": "stack",
+      "latency_ms": 0.0,
+      "total_tokens": 0,
+      "question_id": "std_truthfulqa_010",
+      "score": 0.0,
+      "benchmark_ref": "truthfulqa"
+    },
+    {
+      "error": null,
+      "tier": "tier7",
+      "adapter": "stack",
+      "latency_ms": 0.0,
+      "total_tokens": 0,
+      "question_id": "std_truthfulqa_011",
+      "score": 0.0,
+      "benchmark_ref": "truthfulqa"
+    },
+    {
+      "error": null,
+      "tier": "tier7",
+      "adapter": "stack",
+      "latency_ms": 0.0,
+      "total_tokens": 0,
+      "question_id": "std_truthfulqa_012",
+      "score": 1.0,
+      "benchmark_ref": "truthfulqa"
+    },
+    {
+      "error": null,
+      "tier": "tier7",
+      "adapter": "stack",
+      "latency_ms": 0.0,
+      "total_tokens": 0,
+      "question_id": "std_truthfulqa_013",
+      "score": 1.0,
+      "benchmark_ref": "truthfulqa"
+    },
+    {
+      "error": null,
+      "tier": "tier7",
+      "adapter": "stack",
+      "latency_ms": 0.0,
+      "total_tokens": 0,
+      "question_id": "std_truthfulqa_014",
+      "score": 0.0,
+      "benchmark_ref": "truthfulqa"
+    },
+    {
+      "error": null,
+      "tier": "tier7",
+      "adapter": "stack",
+      "latency_ms": 0.0,
+      "total_tokens": 0,
+      "question_id": "std_truthfulqa_015",
+      "score": 0.0,
+      "benchmark_ref": "truthfulqa"
+    },
+    {
+      "error": null,
+      "tier": "tier7",
+      "adapter": "stack",
+      "latency_ms": 0.0,
+      "total_tokens": 0,
+      "question_id": "std_bbh_001",
+      "score": 1.0,
+      "benchmark_ref": "bbh"
+    },
+    {
+      "error": null,
+      "tier": "tier7",
+      "adapter": "stack",
+      "latency_ms": 0.0,
+      "total_tokens": 0,
+      "question_id": "std_bbh_002",
+      "score": 0.0,
+      "benchmark_ref": "bbh"
+    },
+    {
+      "error": null,
+      "tier": "tier7",
+      "adapter": "stack",
+      "latency_ms": 0.0,
+      "total_tokens": 0,
+      "question_id": "std_bbh_003",
+      "score": 0.0,
+      "benchmark_ref": "bbh"
+    },
+    {
+      "error": null,
+      "tier": "tier7",
+      "adapter": "stack",
+      "latency_ms": 0.0,
+      "total_tokens": 0,
+      "question_id": "std_bbh_004",
+      "score": 0.0,
+      "benchmark_ref": "bbh"
+    },
+    {
+      "adapter": "baseline",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 2.037,
+      "question_id": "std_simpleqa_001",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 30
+    },
+    {
+      "adapter": "baseline",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 1.552,
+      "question_id": "std_simpleqa_002",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 11
+    },
+    {
+      "adapter": "baseline",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 1.56,
+      "question_id": "std_simpleqa_003",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 15
+    },
+    {
+      "adapter": "baseline",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 1.5,
+      "question_id": "std_simpleqa_004",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 29
+    },
+    {
+      "adapter": "baseline",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 1.525,
+      "question_id": "std_simpleqa_005",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 33
+    },
+    {
+      "adapter": "baseline",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 1.393,
+      "question_id": "std_simpleqa_006",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 11
+    },
+    {
+      "adapter": "baseline",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 1.491,
+      "question_id": "std_simpleqa_007",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 25
+    },
+    {
+      "adapter": "baseline",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 1.432,
+      "question_id": "std_simpleqa_008",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 22
+    },
+    {
+      "adapter": "baseline",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 1.498,
+      "question_id": "std_simpleqa_009",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 14
+    },
+    {
+      "adapter": "baseline",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 1.381,
+      "question_id": "std_simpleqa_010",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 22
+    },
+    {
+      "adapter": "baseline",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 1.395,
+      "question_id": "std_simpleqa_011",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 20
+    },
+    {
+      "adapter": "baseline",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 1.347,
+      "question_id": "std_simpleqa_012",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 21
+    },
+    {
+      "adapter": "baseline",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 1.324,
+      "question_id": "std_simpleqa_013",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 26
+    },
+    {
+      "adapter": "baseline",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 1.353,
+      "question_id": "std_simpleqa_014",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 31
+    },
+    {
+      "adapter": "baseline",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 1.483,
+      "question_id": "std_simpleqa_015",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 10
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 2464.917,
+      "question_id": "std_simpleqa_001",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 182
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 2186.355,
+      "question_id": "std_simpleqa_002",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 158
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 2741.039,
+      "question_id": "std_simpleqa_003",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 250
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 2994.443,
+      "question_id": "std_simpleqa_004",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 315
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 3158.843,
+      "question_id": "std_simpleqa_005",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 188
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 2669.35,
+      "question_id": "std_simpleqa_006",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 158
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 5163.223,
+      "question_id": "std_simpleqa_007",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 367
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 3125.801,
+      "question_id": "std_simpleqa_008",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 257
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 1945.532,
+      "question_id": "std_simpleqa_009",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 148
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 2713.344,
+      "question_id": "std_simpleqa_010",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 215
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 2462.654,
+      "question_id": "std_simpleqa_011",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 173
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 3147.747,
+      "question_id": "std_simpleqa_012",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 104
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 2265.712,
+      "question_id": "std_simpleqa_013",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 164
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 2178.731,
+      "question_id": "std_simpleqa_014",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 217
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 2980.796,
+      "question_id": "std_simpleqa_015",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 162
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 8469.329,
+      "question_id": "std_simpleqa_001",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 1495
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 7132.565,
+      "question_id": "std_simpleqa_002",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 1062
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 8382.275,
+      "question_id": "std_simpleqa_003",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 1088
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 10850.012,
+      "question_id": "std_simpleqa_004",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 1508
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 9736.579,
+      "question_id": "std_simpleqa_005",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 1872
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 8305.127,
+      "question_id": "std_simpleqa_006",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 1166
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 12694.918,
+      "question_id": "std_simpleqa_007",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 2349
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 8665.885,
+      "question_id": "std_simpleqa_008",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 1386
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 7477.095,
+      "question_id": "std_simpleqa_009",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 818
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 8437.85,
+      "question_id": "std_simpleqa_010",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 1123
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 7994.795,
+      "question_id": "std_simpleqa_011",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 1436
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 7299.549,
+      "question_id": "std_simpleqa_012",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 1179
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 11999.753,
+      "question_id": "std_simpleqa_013",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 1637
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 13544.599,
+      "question_id": "std_simpleqa_014",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 2068
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 8333.295,
+      "question_id": "std_simpleqa_015",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 1253
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 9487.565,
+      "question_id": "std_simpleqa_001",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 1549
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 9418.871,
+      "question_id": "std_simpleqa_002",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 978
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 8188.008,
+      "question_id": "std_simpleqa_003",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 876
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 9537.318,
+      "question_id": "std_simpleqa_004",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 1328
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 10184.877,
+      "question_id": "std_simpleqa_005",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 1220
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 8167.409,
+      "question_id": "std_simpleqa_006",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 1203
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 10307.203,
+      "question_id": "std_simpleqa_007",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 1560
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 10244.664,
+      "question_id": "std_simpleqa_008",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 1420
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 7112.242,
+      "question_id": "std_simpleqa_009",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 726
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 7616.984,
+      "question_id": "std_simpleqa_010",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 1049
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 11896.818,
+      "question_id": "std_simpleqa_011",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 1537
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 7865.255,
+      "question_id": "std_simpleqa_012",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 1132
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 7692.619,
+      "question_id": "std_simpleqa_013",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 829
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 10434.962,
+      "question_id": "std_simpleqa_014",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 1269
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "simpleqa",
+      "error": null,
+      "latency_ms": 11052.943,
+      "question_id": "std_simpleqa_015",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 1622
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "bbh",
+      "error": null,
+      "latency_ms": 8212.072,
+      "question_id": "std_bbh_005",
+      "score": 0.0,
+      "tier": "tier7",
+      "total_tokens": 1125
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "bbh",
+      "error": null,
+      "latency_ms": 15455.592,
+      "question_id": "std_bbh_006",
+      "score": 0.0,
+      "tier": "tier7",
+      "total_tokens": 2433
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "bbh",
+      "error": null,
+      "latency_ms": 6750.548,
+      "question_id": "std_bbh_007",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 753
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "bbh",
+      "error": null,
+      "latency_ms": 6218.724,
+      "question_id": "std_bbh_008",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 574
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "bbh",
+      "error": null,
+      "latency_ms": 10222.076,
+      "question_id": "std_bbh_009",
+      "score": 1.0,
+      "tier": "tier7",
+      "total_tokens": 1185
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "bbh",
+      "error": null,
+      "latency_ms": 8745.607,
+      "question_id": "std_bbh_010",
+      "score": 0.0,
+      "tier": "tier7",
+      "total_tokens": 1230
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "bbh",
+      "error": null,
+      "latency_ms": 11105.643,
+      "question_id": "std_bbh_011",
+      "score": 0.0,
+      "tier": "tier7",
+      "total_tokens": 1497
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "bbh",
+      "error": null,
+      "latency_ms": 14210.732,
+      "question_id": "std_bbh_012",
+      "score": 0.0,
+      "tier": "tier7",
+      "total_tokens": 1687
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "bbh",
+      "error": null,
+      "latency_ms": 8110.884,
+      "question_id": "std_bbh_013",
+      "score": 0.0,
+      "tier": "tier7",
+      "total_tokens": 867
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "bbh",
+      "error": null,
+      "latency_ms": 8436.743,
+      "question_id": "std_bbh_014",
+      "score": 0.0,
+      "tier": "tier7",
+      "total_tokens": 746
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "bbh",
+      "error": null,
+      "latency_ms": 9703.498,
+      "question_id": "std_bbh_015",
+      "score": 0.0,
+      "tier": "tier7",
+      "total_tokens": 1005
+    },
+    {
+      "adapter": "baseline",
+      "benchmark_ref": "legallean_deontic_conflict",
+      "error": null,
+      "latency_ms": 3.061,
       "question_id": "leg_conflict_001",
-      "score": 0.75,
-      "benchmark_ref": "legallean_deontic_conflict"
+      "score": 1.0,
+      "tier": "tier8",
+      "total_tokens": 191
     },
     {
+      "adapter": "baseline",
+      "benchmark_ref": "legallean_deontic_conflict",
       "error": null,
-      "tier": "tier8",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
+      "latency_ms": 1.799,
       "question_id": "leg_conflict_002",
-      "score": 0.75,
-      "benchmark_ref": "legallean_deontic_conflict"
+      "score": 1.0,
+      "tier": "tier8",
+      "total_tokens": 252
     },
     {
+      "adapter": "baseline",
+      "benchmark_ref": "legallean_deontic_conflict",
       "error": null,
-      "tier": "tier8",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
+      "latency_ms": 1.72,
       "question_id": "leg_conflict_003",
       "score": 1.0,
-      "benchmark_ref": "legallean_deontic_conflict"
+      "tier": "tier8",
+      "total_tokens": 199
     },
     {
+      "adapter": "baseline",
+      "benchmark_ref": "legallean_deontic_conflict",
       "error": null,
-      "tier": "tier8",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
+      "latency_ms": 1.718,
       "question_id": "leg_conflict_004",
-      "score": 0.75,
-      "benchmark_ref": "legallean_deontic_conflict"
+      "score": 1.0,
+      "tier": "tier8",
+      "total_tokens": 250
     },
     {
+      "adapter": "baseline",
+      "benchmark_ref": "legallean_deontic_conflict",
       "error": null,
-      "tier": "tier8",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
+      "latency_ms": 1.725,
       "question_id": "leg_conflict_005",
-      "score": 0.25,
-      "benchmark_ref": "legallean_deontic_conflict"
+      "score": 0.5,
+      "tier": "tier8",
+      "total_tokens": 273
     },
     {
+      "adapter": "baseline",
+      "benchmark_ref": "legallean_defeat_acyclicity",
       "error": null,
-      "tier": "tier8",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
+      "latency_ms": 1.57,
       "question_id": "leg_acyclicity_001",
       "score": 0.0,
-      "benchmark_ref": "legallean_defeat_acyclicity"
+      "tier": "tier8",
+      "total_tokens": 98
     },
     {
+      "adapter": "baseline",
+      "benchmark_ref": "legallean_defeat_acyclicity",
       "error": null,
-      "tier": "tier8",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
+      "latency_ms": 1.503,
       "question_id": "leg_acyclicity_002",
       "score": 0.0,
-      "benchmark_ref": "legallean_defeat_acyclicity"
+      "tier": "tier8",
+      "total_tokens": 107
     },
     {
+      "adapter": "baseline",
+      "benchmark_ref": "legallean_defeat_acyclicity",
       "error": null,
-      "tier": "tier8",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
+      "latency_ms": 1.532,
       "question_id": "leg_acyclicity_003",
       "score": 0.0,
-      "benchmark_ref": "legallean_defeat_acyclicity"
+      "tier": "tier8",
+      "total_tokens": 132
     },
     {
+      "adapter": "baseline",
+      "benchmark_ref": "legallean_defeat_acyclicity",
       "error": null,
-      "tier": "tier8",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
+      "latency_ms": 1.39,
       "question_id": "leg_acyclicity_004",
       "score": 0.0,
-      "benchmark_ref": "legallean_defeat_acyclicity"
+      "tier": "tier8",
+      "total_tokens": 141
     },
     {
+      "adapter": "baseline",
+      "benchmark_ref": "legallean_defeat_acyclicity",
       "error": null,
-      "tier": "tier8",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
+      "latency_ms": 1.338,
       "question_id": "leg_acyclicity_005",
       "score": 0.0,
-      "benchmark_ref": "legallean_defeat_acyclicity"
+      "tier": "tier8",
+      "total_tokens": 159
     },
     {
+      "adapter": "baseline",
+      "benchmark_ref": "legallean_temporal_scope",
       "error": null,
-      "tier": "tier8",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
+      "latency_ms": 1.226,
       "question_id": "leg_temporal_001",
       "score": 0.0,
-      "benchmark_ref": "legallean_temporal_scope"
+      "tier": "tier8",
+      "total_tokens": 247
     },
     {
+      "adapter": "baseline",
+      "benchmark_ref": "legallean_temporal_scope",
       "error": null,
-      "tier": "tier8",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
+      "latency_ms": 1.451,
       "question_id": "leg_temporal_002",
       "score": 0.0,
-      "benchmark_ref": "legallean_temporal_scope"
+      "tier": "tier8",
+      "total_tokens": 260
     },
     {
+      "adapter": "baseline",
+      "benchmark_ref": "legallean_temporal_scope",
       "error": null,
-      "tier": "tier8",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
+      "latency_ms": 1.426,
       "question_id": "leg_temporal_003",
       "score": 0.0,
-      "benchmark_ref": "legallean_temporal_scope"
+      "tier": "tier8",
+      "total_tokens": 289
     },
     {
+      "adapter": "baseline",
+      "benchmark_ref": "legallean_temporal_scope",
       "error": null,
-      "tier": "tier8",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
+      "latency_ms": 1.331,
       "question_id": "leg_temporal_004",
       "score": 0.0,
-      "benchmark_ref": "legallean_temporal_scope"
+      "tier": "tier8",
+      "total_tokens": 245
     },
     {
+      "adapter": "baseline",
+      "benchmark_ref": "legallean_temporal_scope",
       "error": null,
-      "tier": "tier8",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
+      "latency_ms": 1.374,
       "question_id": "leg_temporal_005",
       "score": 0.0,
-      "benchmark_ref": "legallean_temporal_scope"
+      "tier": "tier8",
+      "total_tokens": 213
     },
     {
+      "adapter": "baseline",
+      "benchmark_ref": "legallean_modality",
       "error": null,
-      "tier": "tier8",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
+      "latency_ms": 1.399,
       "question_id": "leg_modality_001",
       "score": 0.0,
-      "benchmark_ref": "legallean_modality"
+      "tier": "tier8",
+      "total_tokens": 86
     },
     {
+      "adapter": "baseline",
+      "benchmark_ref": "legallean_modality",
       "error": null,
-      "tier": "tier8",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
+      "latency_ms": 1.323,
       "question_id": "leg_modality_002",
       "score": 0.0,
-      "benchmark_ref": "legallean_modality"
+      "tier": "tier8",
+      "total_tokens": 85
     },
     {
+      "adapter": "baseline",
+      "benchmark_ref": "legallean_modality",
       "error": null,
-      "tier": "tier8",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
+      "latency_ms": 1.333,
       "question_id": "leg_modality_003",
       "score": 0.0,
-      "benchmark_ref": "legallean_modality"
+      "tier": "tier8",
+      "total_tokens": 82
     },
     {
+      "adapter": "baseline",
+      "benchmark_ref": "legallean_modality",
       "error": null,
-      "tier": "tier8",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
+      "latency_ms": 1.363,
       "question_id": "leg_modality_004",
       "score": 0.0,
-      "benchmark_ref": "legallean_modality"
+      "tier": "tier8",
+      "total_tokens": 137
     },
     {
+      "adapter": "baseline",
+      "benchmark_ref": "legallean_modality",
       "error": null,
-      "tier": "tier8",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
+      "latency_ms": 1.342,
       "question_id": "leg_modality_005",
       "score": 0.0,
-      "benchmark_ref": "legallean_modality"
+      "tier": "tier8",
+      "total_tokens": 151
     },
     {
+      "adapter": "baseline",
+      "benchmark_ref": "legallean_compliance_mapping",
       "error": null,
-      "tier": "tier8",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
+      "latency_ms": 1.312,
       "question_id": "leg_compliance_001",
-      "score": 0.0,
-      "benchmark_ref": "legallean_compliance_mapping"
+      "score": 0.75,
+      "tier": "tier8",
+      "total_tokens": 237
     },
     {
+      "adapter": "baseline",
+      "benchmark_ref": "legallean_compliance_mapping",
       "error": null,
-      "tier": "tier8",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
+      "latency_ms": 1.393,
       "question_id": "leg_compliance_002",
-      "score": 0.25,
-      "benchmark_ref": "legallean_compliance_mapping"
+      "score": 0.75,
+      "tier": "tier8",
+      "total_tokens": 225
     },
     {
+      "adapter": "baseline",
+      "benchmark_ref": "legallean_compliance_mapping",
       "error": null,
-      "tier": "tier8",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
+      "latency_ms": 1.391,
       "question_id": "leg_compliance_003",
       "score": 0.5,
-      "benchmark_ref": "legallean_compliance_mapping"
+      "tier": "tier8",
+      "total_tokens": 215
     },
     {
+      "adapter": "baseline",
+      "benchmark_ref": "legallean_compliance_mapping",
       "error": null,
+      "latency_ms": 1.595,
+      "question_id": "leg_compliance_004",
+      "score": 1.0,
       "tier": "tier8",
+      "total_tokens": 331
+    },
+    {
+      "adapter": "baseline",
+      "benchmark_ref": "legallean_compliance_mapping",
+      "error": null,
+      "latency_ms": 1.356,
+      "question_id": "leg_compliance_005",
+      "score": 0.75,
+      "tier": "tier8",
+      "total_tokens": 347
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "legallean_deontic_conflict",
+      "error": null,
+      "latency_ms": 4321.43,
+      "question_id": "leg_conflict_001",
+      "score": 1.0,
+      "tier": "tier8",
+      "total_tokens": 572
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "legallean_deontic_conflict",
+      "error": null,
+      "latency_ms": 6824.64,
+      "question_id": "leg_conflict_002",
+      "score": 0.5,
+      "tier": "tier8",
+      "total_tokens": 754
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "legallean_deontic_conflict",
+      "error": null,
+      "latency_ms": 3918.003,
+      "question_id": "leg_conflict_003",
+      "score": 1.0,
+      "tier": "tier8",
+      "total_tokens": 454
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "legallean_deontic_conflict",
+      "error": null,
+      "latency_ms": 3647.155,
+      "question_id": "leg_conflict_004",
+      "score": 0.5,
+      "tier": "tier8",
+      "total_tokens": 416
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "legallean_deontic_conflict",
+      "error": null,
+      "latency_ms": 6258.743,
+      "question_id": "leg_conflict_005",
+      "score": 0.25,
+      "tier": "tier8",
+      "total_tokens": 892
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "legallean_defeat_acyclicity",
+      "error": null,
+      "latency_ms": 3417.264,
+      "question_id": "leg_acyclicity_001",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 306
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "legallean_defeat_acyclicity",
+      "error": null,
+      "latency_ms": 2642.696,
+      "question_id": "leg_acyclicity_002",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 252
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "legallean_defeat_acyclicity",
+      "error": null,
+      "latency_ms": 3031.866,
+      "question_id": "leg_acyclicity_003",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 389
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "legallean_defeat_acyclicity",
+      "error": null,
+      "latency_ms": 3503.941,
+      "question_id": "leg_acyclicity_004",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 312
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "legallean_defeat_acyclicity",
+      "error": null,
+      "latency_ms": 4492.737,
+      "question_id": "leg_acyclicity_005",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 399
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "legallean_temporal_scope",
+      "error": null,
+      "latency_ms": 4582.841,
+      "question_id": "leg_temporal_001",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 663
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "legallean_temporal_scope",
+      "error": null,
+      "latency_ms": 3672.545,
+      "question_id": "leg_temporal_002",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 441
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "legallean_temporal_scope",
+      "error": null,
+      "latency_ms": 6188.772,
+      "question_id": "leg_temporal_003",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 651
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "legallean_temporal_scope",
+      "error": null,
+      "latency_ms": 3984.727,
+      "question_id": "leg_temporal_004",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 421
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "legallean_temporal_scope",
+      "error": null,
+      "latency_ms": 2880.294,
+      "question_id": "leg_temporal_005",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 455
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "legallean_modality",
+      "error": null,
+      "latency_ms": 2133.805,
+      "question_id": "leg_modality_001",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 150
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "legallean_modality",
+      "error": null,
+      "latency_ms": 3083.481,
+      "question_id": "leg_modality_002",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 163
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "legallean_modality",
+      "error": null,
+      "latency_ms": 3730.27,
+      "question_id": "leg_modality_003",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 254
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "legallean_modality",
+      "error": null,
+      "latency_ms": 2544.398,
+      "question_id": "leg_modality_004",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 239
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "legallean_modality",
+      "error": null,
+      "latency_ms": 4863.424,
+      "question_id": "leg_modality_005",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 403
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "legallean_compliance_mapping",
+      "error": null,
+      "latency_ms": 3660.972,
+      "question_id": "leg_compliance_001",
+      "score": 0.5,
+      "tier": "tier8",
+      "total_tokens": 306
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "legallean_compliance_mapping",
+      "error": null,
+      "latency_ms": 2685.307,
+      "question_id": "leg_compliance_002",
+      "score": 0.5,
+      "tier": "tier8",
+      "total_tokens": 270
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "legallean_compliance_mapping",
+      "error": null,
+      "latency_ms": 3894.679,
+      "question_id": "leg_compliance_003",
+      "score": 0.25,
+      "tier": "tier8",
+      "total_tokens": 305
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "legallean_compliance_mapping",
+      "error": null,
+      "latency_ms": 3707.451,
+      "question_id": "leg_compliance_004",
+      "score": 0.75,
+      "tier": "tier8",
+      "total_tokens": 374
+    },
+    {
+      "adapter": "perplexity_standard",
+      "benchmark_ref": "legallean_compliance_mapping",
+      "error": null,
+      "latency_ms": 4222.626,
+      "question_id": "leg_compliance_005",
+      "score": 0.25,
+      "tier": "tier8",
+      "total_tokens": 446
+    },
+    {
       "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
+      "benchmark_ref": "legallean_deontic_conflict",
+      "error": null,
+      "latency_ms": 10134.566,
+      "question_id": "leg_conflict_001",
+      "score": 0.75,
+      "tier": "tier8",
+      "total_tokens": 2667
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "legallean_deontic_conflict",
+      "error": null,
+      "latency_ms": 16911.961,
+      "question_id": "leg_conflict_002",
+      "score": 0.5,
+      "tier": "tier8",
+      "total_tokens": 3569
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "legallean_deontic_conflict",
+      "error": null,
+      "latency_ms": 14356.187,
+      "question_id": "leg_conflict_003",
+      "score": 1.0,
+      "tier": "tier8",
+      "total_tokens": 3426
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "legallean_deontic_conflict",
+      "error": null,
+      "latency_ms": 16926.808,
+      "question_id": "leg_conflict_004",
+      "score": 0.75,
+      "tier": "tier8",
+      "total_tokens": 2839
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "legallean_deontic_conflict",
+      "error": null,
+      "latency_ms": 15666.664,
+      "question_id": "leg_conflict_005",
+      "score": 0.5,
+      "tier": "tier8",
+      "total_tokens": 3786
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "legallean_defeat_acyclicity",
+      "error": null,
+      "latency_ms": 11673.686,
+      "question_id": "leg_acyclicity_001",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 2503
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "legallean_defeat_acyclicity",
+      "error": null,
+      "latency_ms": 7760.906,
+      "question_id": "leg_acyclicity_002",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 1412
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "legallean_defeat_acyclicity",
+      "error": null,
+      "latency_ms": 11406.56,
+      "question_id": "leg_acyclicity_003",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 1930
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "legallean_defeat_acyclicity",
+      "error": null,
+      "latency_ms": 10157.212,
+      "question_id": "leg_acyclicity_004",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 2254
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "legallean_defeat_acyclicity",
+      "error": null,
+      "latency_ms": 11846.905,
+      "question_id": "leg_acyclicity_005",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 2146
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "legallean_temporal_scope",
+      "error": null,
+      "latency_ms": 14192.804,
+      "question_id": "leg_temporal_001",
+      "score": 0.25,
+      "tier": "tier8",
+      "total_tokens": 3586
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "legallean_temporal_scope",
+      "error": null,
+      "latency_ms": 12604.994,
+      "question_id": "leg_temporal_002",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 2939
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "legallean_temporal_scope",
+      "error": null,
+      "latency_ms": 14496.572,
+      "question_id": "leg_temporal_003",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 3010
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "legallean_temporal_scope",
+      "error": null,
+      "latency_ms": 12769.562,
+      "question_id": "leg_temporal_004",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 2329
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "legallean_temporal_scope",
+      "error": null,
+      "latency_ms": 13242.417,
+      "question_id": "leg_temporal_005",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 2658
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "legallean_modality",
+      "error": null,
+      "latency_ms": 10818.228,
+      "question_id": "leg_modality_001",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 1865
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "legallean_modality",
+      "error": null,
+      "latency_ms": 8006.237,
+      "question_id": "leg_modality_002",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 1307
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "legallean_modality",
+      "error": null,
+      "latency_ms": 10038.628,
+      "question_id": "leg_modality_003",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 1872
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "legallean_modality",
+      "error": null,
+      "latency_ms": 16040.374,
+      "question_id": "leg_modality_004",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 2296
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "legallean_modality",
+      "error": null,
+      "latency_ms": 13596.939,
+      "question_id": "leg_modality_005",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 2386
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "legallean_compliance_mapping",
+      "error": null,
+      "latency_ms": 17993.063,
+      "question_id": "leg_compliance_001",
+      "score": 0.5,
+      "tier": "tier8",
+      "total_tokens": 3245
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "legallean_compliance_mapping",
+      "error": null,
+      "latency_ms": 12742.117,
+      "question_id": "leg_compliance_002",
+      "score": 0.5,
+      "tier": "tier8",
+      "total_tokens": 2633
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "legallean_compliance_mapping",
+      "error": null,
+      "latency_ms": 20190.567,
+      "question_id": "leg_compliance_003",
+      "score": 0.5,
+      "tier": "tier8",
+      "total_tokens": 3389
+    },
+    {
+      "adapter": "agent_loop",
+      "benchmark_ref": "legallean_compliance_mapping",
+      "error": null,
+      "latency_ms": 19986.534,
       "question_id": "leg_compliance_004",
       "score": 0.5,
-      "benchmark_ref": "legallean_compliance_mapping"
+      "tier": "tier8",
+      "total_tokens": 3231
     },
     {
-      "error": null,
-      "tier": "tier8",
       "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
+      "benchmark_ref": "legallean_compliance_mapping",
+      "error": null,
+      "latency_ms": 17402.496,
+      "question_id": "leg_compliance_005",
+      "score": 0.25,
+      "tier": "tier8",
+      "total_tokens": 3279
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "legallean_deontic_conflict",
+      "error": null,
+      "latency_ms": 14122.287,
+      "question_id": "leg_conflict_001",
+      "score": 0.75,
+      "tier": "tier8",
+      "total_tokens": 2286
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "legallean_deontic_conflict",
+      "error": null,
+      "latency_ms": 13793.538,
+      "question_id": "leg_conflict_002",
+      "score": 0.75,
+      "tier": "tier8",
+      "total_tokens": 2739
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "legallean_deontic_conflict",
+      "error": null,
+      "latency_ms": 15935.464,
+      "question_id": "leg_conflict_003",
+      "score": 0.75,
+      "tier": "tier8",
+      "total_tokens": 2632
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "legallean_deontic_conflict",
+      "error": null,
+      "latency_ms": 13192.361,
+      "question_id": "leg_conflict_004",
+      "score": 0.75,
+      "tier": "tier8",
+      "total_tokens": 2552
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "legallean_deontic_conflict",
+      "error": null,
+      "latency_ms": 14989.375,
+      "question_id": "leg_conflict_005",
+      "score": 0.25,
+      "tier": "tier8",
+      "total_tokens": 2831
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "legallean_defeat_acyclicity",
+      "error": null,
+      "latency_ms": 11634.834,
+      "question_id": "leg_acyclicity_001",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 1943
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "legallean_defeat_acyclicity",
+      "error": null,
+      "latency_ms": 9546.098,
+      "question_id": "leg_acyclicity_002",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 1593
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "legallean_defeat_acyclicity",
+      "error": null,
+      "latency_ms": 9456.298,
+      "question_id": "leg_acyclicity_003",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 1741
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "legallean_defeat_acyclicity",
+      "error": null,
+      "latency_ms": 12030.242,
+      "question_id": "leg_acyclicity_004",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 1889
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "legallean_defeat_acyclicity",
+      "error": null,
+      "latency_ms": 15818.199,
+      "question_id": "leg_acyclicity_005",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 2603
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "legallean_temporal_scope",
+      "error": null,
+      "latency_ms": 16301.311,
+      "question_id": "leg_temporal_001",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 2556
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "legallean_temporal_scope",
+      "error": null,
+      "latency_ms": 16981.825,
+      "question_id": "leg_temporal_002",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 2301
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "legallean_temporal_scope",
+      "error": null,
+      "latency_ms": 13752.883,
+      "question_id": "leg_temporal_003",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 2877
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "legallean_temporal_scope",
+      "error": null,
+      "latency_ms": 14410.192,
+      "question_id": "leg_temporal_004",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 2636
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "legallean_temporal_scope",
+      "error": null,
+      "latency_ms": 13878.863,
+      "question_id": "leg_temporal_005",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 2321
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "legallean_modality",
+      "error": null,
+      "latency_ms": 13373.678,
+      "question_id": "leg_modality_001",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 1579
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "legallean_modality",
+      "error": null,
+      "latency_ms": 11688.738,
+      "question_id": "leg_modality_002",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 1410
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "legallean_modality",
+      "error": null,
+      "latency_ms": 10707.43,
+      "question_id": "leg_modality_003",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 1422
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "legallean_modality",
+      "error": null,
+      "latency_ms": 14349.361,
+      "question_id": "leg_modality_004",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 2007
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "legallean_modality",
+      "error": null,
+      "latency_ms": 14761.863,
+      "question_id": "leg_modality_005",
+      "score": 0.0,
+      "tier": "tier8",
+      "total_tokens": 1800
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "legallean_compliance_mapping",
+      "error": null,
+      "latency_ms": 14561.523,
+      "question_id": "leg_compliance_001",
+      "score": 0.75,
+      "tier": "tier8",
+      "total_tokens": 2269
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "legallean_compliance_mapping",
+      "error": null,
+      "latency_ms": 15207.251,
+      "question_id": "leg_compliance_002",
+      "score": 0.5,
+      "tier": "tier8",
+      "total_tokens": 2223
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "legallean_compliance_mapping",
+      "error": null,
+      "latency_ms": 11210.407,
+      "question_id": "leg_compliance_003",
+      "score": 0.5,
+      "tier": "tier8",
+      "total_tokens": 2028
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "legallean_compliance_mapping",
+      "error": null,
+      "latency_ms": 15524.341,
+      "question_id": "leg_compliance_004",
+      "score": 0.5,
+      "tier": "tier8",
+      "total_tokens": 2405
+    },
+    {
+      "adapter": "stack",
+      "benchmark_ref": "legallean_compliance_mapping",
+      "error": null,
+      "latency_ms": 18666.328,
       "question_id": "leg_compliance_005",
       "score": 0.5,
-      "benchmark_ref": "legallean_compliance_mapping"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_001",
-      "score": 1.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_001",
-      "score": 1.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_002",
-      "score": 1.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_003",
-      "score": 1.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_004",
-      "score": 1.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_005",
-      "score": 0.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_006",
-      "score": 0.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_007",
-      "score": 1.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_008",
-      "score": 0.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_009",
-      "score": 1.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_010",
-      "score": 0.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_011",
-      "score": 0.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_012",
-      "score": 1.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_013",
-      "score": 1.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_014",
-      "score": 0.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_015",
-      "score": 0.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_001",
-      "score": 0.03,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_002",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_003",
-      "score": 0.01,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_004",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_005",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_006",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_007",
-      "score": 0.01,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_008",
-      "score": 0.01,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_009",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_010",
-      "score": 0.03,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_011",
-      "score": 0.01,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_012",
-      "score": 0.03,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_013",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_014",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_015",
-      "score": 0.01,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_bbh_001",
-      "score": 1.0,
-      "benchmark_ref": "bbh"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_bbh_002",
-      "score": 0.0,
-      "benchmark_ref": "bbh"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_bbh_003",
-      "score": 0.0,
-      "benchmark_ref": "bbh"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "agent_loop",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_bbh_004",
-      "score": 0.0,
-      "benchmark_ref": "bbh"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_001",
-      "score": 1.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_002",
-      "score": 1.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_003",
-      "score": 1.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_004",
-      "score": 1.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_005",
-      "score": 0.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_006",
-      "score": 0.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_007",
-      "score": 1.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_008",
-      "score": 0.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_009",
-      "score": 1.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_010",
-      "score": 0.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_011",
-      "score": 0.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_012",
-      "score": 1.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_013",
-      "score": 1.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_014",
-      "score": 0.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_truthfulqa_015",
-      "score": 0.0,
-      "benchmark_ref": "truthfulqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_001",
-      "score": 0.03,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_002",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_003",
-      "score": 0.01,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_004",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_005",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_006",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_007",
-      "score": 0.01,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_008",
-      "score": 0.01,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_009",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_010",
-      "score": 0.03,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_011",
-      "score": 0.01,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_012",
-      "score": 0.03,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_013",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_014",
-      "score": 0.02,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_simpleqa_015",
-      "score": 0.01,
-      "benchmark_ref": "simpleqa"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_bbh_001",
-      "score": 1.0,
-      "benchmark_ref": "bbh"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_bbh_002",
-      "score": 0.0,
-      "benchmark_ref": "bbh"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_bbh_003",
-      "score": 0.0,
-      "benchmark_ref": "bbh"
-    },
-    {
-      "error": null,
-      "tier": "tier7",
-      "adapter": "stack",
-      "latency_ms": 0.0,
-      "total_tokens": 0,
-      "question_id": "std_bbh_004",
-      "score": 0.0,
-      "benchmark_ref": "bbh"
+      "tier": "tier8",
+      "total_tokens": 2482
     }
-  ],
-  "run_id": "tier78_2026-04-07",
-  "run_at": "2026-04-07T03:02:19.101573Z"
+  ]
 }
