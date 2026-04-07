@@ -216,6 +216,8 @@ footer{border-top:1px solid var(--border);padding:var(--s8) 0;margin-top:var(--s
       <li><a href="#adapters">Adapters</a></li>
       <li><a href="#dashboard">Dashboard</a></li>
       <li><a href="#questions">Questions</a></li>
+      <li><a href="#tier7">Tier 7</a></li>
+      <li><a href="#tier8">Tier 8</a></li>
       <li><a href="#methodology">Methodology</a></li>
       <li><a href="#public-leaderboard">Leaderboard</a></li>
     </ul>
@@ -231,13 +233,13 @@ footer{border-top:1px solid var(--border);padding:var(--s8) 0;margin-top:var(--s
 <section class="hero">
   <p class="eyebrow">edu-ap / bench-arena</p>
   <h1>BenchArena</h1>
-  <p class="tagline">A profiler that compares <strong>9 execution paths</strong> — a single LLM call, an agentic loop, the full orchestration stack, three Perplexity query modes, Claude Code with Opus 4.6, Codex with o4-mini, and Gemini CLI with Gemini 2.5 Pro — across latency, token usage, and answer accuracy on a 60-question corpus (35 internal + 25 standard benchmark-aligned). <strong>Run complete</strong> — all 25 questions per adapter, 100 live API calls.</p>
+  <p class="tagline">A profiler that compares <strong>9 execution paths</strong> — a single LLM call, an agentic loop, the full orchestration stack, three Perplexity query modes, Claude Code with Opus 4.6, Codex with o4-mini, and Gemini CLI with Gemini 2.5 Pro — across latency, token usage, and answer accuracy on a <strong>130-question corpus</strong> (35 internal + 25 standard + 45 hallucination + 25 legal formal). <strong>Run complete</strong> — Tier 6 + Tier 7 + Tier 8 across 4 live adapters.</p>
   <div class="stat-row">
-    <div class="pill"><span class="n">60</span><span class="l">questions</span></div>
-    <div class="pill"><span class="n">6</span><span class="l">tiers</span></div>
+    <div class="pill"><span class="n">130</span><span class="l">questions</span></div>
+    <div class="pill"><span class="n">8</span><span class="l">tiers</span></div>
     <div class="pill"><span class="n">9</span><span class="l">adapters</span></div>
-    <div class="pill"><span class="n">100</span><span class="l">live API calls</span></div>
-    <div class="pill"><span class="n">185+</span><span class="l">tests · 0 failures</span></div>
+    <div class="pill"><span class="n">380</span><span class="l">live API calls</span></div>
+    <div class="pill"><span class="n">234</span><span class="l">tests · 0 failures</span></div>
     <div class="pill"><span class="n">Elixir</span><span class="l">+ Benchee</span></div>
   </div>
 </section>
@@ -449,6 +451,49 @@ footer{border-top:1px solid var(--border);padding:var(--s8) 0;margin-top:var(--s
   </div>
 </section>
 
+<!-- ── TIER 7: HALLUCINATION RESISTANCE ────────────────── -->
+<section class="section" id="tier7">
+  <p class="sec-label">Tier 7</p>
+  <h2>Hallucination Resistance</h2>
+  <p style="font-size:var(--tx-sm);color:var(--muted);margin-bottom:var(--s4)">
+    45 questions across TruthfulQA (imitative falsehoods), SimpleQA (factual recall), and BIG-Bench Hard (reasoning). Run date: 2026-04-07.
+  </p>
+  <div class="callout" style="margin-bottom:var(--s6);border-left-color:var(--blue)">
+    <strong>Hypothesis:</strong> Does the stack's ConfabulumRate module (9-type hallucination taxonomy, sliding-window rate) reduce imitative falsehoods vs single-shot standard?
+  </div>
+
+  <!-- Tier 7 bar chart -->
+  <div class="chart-card">
+    <div class="ct">Tier 7 accuracy by sub-benchmark (% correct)</div>
+    <svg id="tier7Chart" viewBox="0 0 1100 340" style="width:100%;height:auto;min-width:600px"></svg>
+  </div>
+
+  <!-- Tier 7 findings -->
+  <div id="tier7Findings" class="callout" style="margin-top:var(--s4);border-left-color:var(--success)"></div>
+</section>
+
+<!-- ── TIER 8: LEGAL FORMAL REASONING ─────────────────── -->
+<section class="section" id="tier8">
+  <p class="sec-label">Tier 8</p>
+  <h2>Legal Formal Reasoning (LegalLean)</h2>
+  <p style="font-size:var(--tx-sm);color:var(--muted);margin-bottom:var(--s4)">
+    25 questions grounded in Defeasible Deontic Logic (DDL). Tests correctness at the formal boundary where informal LLM reasoning typically fails.
+    5 categories: deontic conflict resolution, defeat acyclicity, temporal scoping, modality conversion, IRAP/EU AI Act compliance mapping.
+  </p>
+  <div class="callout" style="margin-bottom:var(--s6);border-left-color:var(--purple)">
+    <strong>Hypothesis:</strong> Stack's CSC.LaxityProbe (IRAP_PROTECTED compliance) should outperform standard on compliance_mapping questions.
+  </div>
+
+  <!-- Tier 8 radar chart -->
+  <div class="chart-card">
+    <div class="ct">Tier 8 LegalLean — accuracy by DDL category (radar)</div>
+    <svg id="tier8Radar" viewBox="0 0 700 500" style="width:100%;max-width:700px;height:auto;margin:0 auto;display:block"></svg>
+  </div>
+
+  <!-- Tier 8 findings -->
+  <div id="tier8Findings" class="callout" style="margin-top:var(--s4);border-left-color:var(--success)"></div>
+</section>
+
 <!-- ── METHODOLOGY ───────────────────────────────────────── -->
 <section class="section" id="methodology">
   <p class="sec-label">How it works</p>
@@ -462,6 +507,8 @@ footer{border-top:1px solid var(--border);padding:var(--s8) 0;margin-top:var(--s
         <li><strong>Tier 3 — Legal (6 q):</strong> Compliance reasoning. IRAP ISM-0839, EU AI Act Art.13, SRA Principle 6, GDPR Art.44. Legal concept coverage.</li>
         <li><strong>Tier 4 — Code (6 q):</strong> Code generation and review. Elixir KL-divergence, Lean 4 stubs, UCB1, Wave 4 bug fix. Rubric-scored.</li>
         <li><strong>Tier 5 — Metacog (5 q):</strong> Self-referential stack questions — sorry depth SLO, drift detection, CoverageOracle. Semantic scoring.</li>
+        <li><strong>Tier 7 — Hallucination (45 q):</strong> TruthfulQA (15 MCQ), SimpleQA (15 factual recall), BBH (15 reasoning). Exact match + semantic.</li>
+        <li><strong>Tier 8 — LegalLean (25 q):</strong> DDL formal reasoning: deontic conflict (5), defeat acyclicity (5), temporal scope (5), modality (5), IRAP compliance (5). Rubric + exact match.</li>
       </ul>
     </div>
     <div class="mc">
@@ -502,6 +549,8 @@ footer{border-top:1px solid var(--border);padding:var(--s8) 0;margin-top:var(--s
         <tr><td>Tier 4: Code</td><td>HumanEval / SWE-bench</td><td>pass@1 / % resolved</td></tr>
         <tr><td>Tier 5: Metacognition</td><td>IFEval</td><td>instruction following %</td></tr>
         <tr><td>Tier 6: Standard</td><td>MMLU-Pro, GPQA, HumanEval, IFEval, AIME</td><td>mixed</td></tr>
+        <tr><td>Tier 7: Hallucination</td><td>TruthfulQA, SimpleQA, BIG-Bench Hard</td><td>% accuracy / Jaccard</td></tr>
+        <tr><td>Tier 8: LegalLean</td><td>Defeasible Deontic Logic (DDL)</td><td>rubric / exact match</td></tr>
       </tbody>
     </table>
   </div>
@@ -550,7 +599,7 @@ footer{border-top:1px solid var(--border);padding:var(--s8) 0;margin-top:var(--s
 
 <footer>
   <div class="fi">
-    <span>edu-ap/bench-arena · Elixir + Benchee · 4 live + 5 reference adapters · 100 live API calls · Run complete 2026-04-07</span>
+    <span>edu-ap/bench-arena · Elixir + Benchee · 4 live + 5 reference adapters · 380 live API calls · 8 tiers · Run complete 2026-04-07</span>
     <div class="flinks">
       <a href="https://github.com/edu-ap/bench-arena">GitHub</a>
       <a href="https://github.com/edu-ap/elan">Elan</a>
@@ -583,7 +632,7 @@ const ADAPTERS = [
   {id:'gemini_cli',         label:'Gemini 2.5 Pro',       group:'external_ai',    color:'var(--c-gemini)'},
 ];
 const ADAPTER_MAP = Object.fromEntries(ADAPTERS.map(a=>[a.id,a]));
-const TIER_NAMES = {1:'Factual',2:'Reasoning',3:'Legal',4:'Code',5:'Metacog',6:'Standard'};
+const TIER_NAMES = {1:'Factual',2:'Reasoning',3:'Legal',4:'Code',5:'Metacog',6:'Standard','tier7':'Hallucination','tier8':'LegalLean'};
 const GROUPS = {
   all: ['baseline','agent_loop','stack','perplexity_standard'],
   stack_internal: ['baseline','agent_loop','stack'],
@@ -591,7 +640,7 @@ const GROUPS = {
 };
 
 /* ── QUESTIONS — Tier 6 Standard Benchmarks ─── */
-const BENCH_NAMES = {mmlu_pro:'MMLU-Pro',gpqa_diamond:'GPQA Diamond',humaneval:'HumanEval',ifeval:'IFEval',aime:'AIME'};
+const BENCH_NAMES = {mmlu_pro:'MMLU-Pro',gpqa_diamond:'GPQA Diamond',humaneval:'HumanEval',ifeval:'IFEval',aime:'AIME',truthfulqa:'TruthfulQA',simpleqa:'SimpleQA',bbh:'BBH',legallean_deontic_conflict:'Deontic Conflict',legallean_defeat_acyclicity:'Defeat Acyclicity',legallean_temporal_scope:'Temporal Scope',legallean_modality:'Modality',legallean_compliance_mapping:'Compliance Mapping'};
 const QUESTIONS = [
   {id:"std_mmlu_001",tier:6,prompt:"MMLU-Pro question 1 (Tier 6 standard)",bench:'mmlu_pro'},
   {id:"std_mmlu_002",tier:6,prompt:"MMLU-Pro question 2 (Tier 6 standard)",bench:'mmlu_pro'},
@@ -1030,12 +1079,16 @@ document.getElementById('filterTabs').addEventListener('click',function(e){
 const PUBLIC_SCORES = {
   claude_code: {
     gpqa_diamond: {score:91.3, url:'https://iternal.ai/llm-selection-guide'},
-    swe_bench_verified: {score:80.8, url:'https://www.nxcode.io/resources/news/claude-sonnet-4-6-complete-guide-benchmarks-pricing-2026'}
+    swe_bench_verified: {score:80.8, url:'https://www.nxcode.io/resources/news/claude-sonnet-4-6-complete-guide-benchmarks-pricing-2026'},
+    truthfulqa: {score:88.0, url:'https://iternal.ai/llm-selection-guide'},
+    bbh: {score:92.2, url:'https://iternal.ai/llm-selection-guide'}
   },
   gemini_cli: {
     gpqa_diamond: {score:94.3, url:'https://deepmind.google/models/gemini/pro/'},
     swe_bench_verified: {score:80.6, url:'https://deepmind.google/models/gemini/pro/'},
-    mmlu_pro: {score:92.6, url:'https://deepmind.google/models/gemini/pro/'}
+    mmlu_pro: {score:92.6, url:'https://deepmind.google/models/gemini/pro/'},
+    truthfulqa: {score:90.0, url:'https://deepmind.google/models/gemini/pro/'},
+    bbh: {score:92.1, url:'https://deepmind.google/models/gemini/pro/'}
   },
   codex: {
     swe_bench_verified: {score:80.0, url:'https://www.nxcode.io/resources/news/claude-sonnet-4-6-complete-guide-benchmarks-pricing-2026'}
@@ -1098,7 +1151,197 @@ function renderLeaderboard(){
   });
 }
 
+/* ── TIER 7 + TIER 8 REAL BENCHMARK DATA ──── */
+const TIER78_DATA = {
+  // Tier 7 scores: TruthfulQA, SimpleQA, BBH per adapter (% accuracy from real 2026-04-07 run)
+  tier7: {
+    truthfulqa: {baseline:0, perplexity_standard:100, agent_loop:86.7, stack:53.3,
+      claude_code_ref:88.0, gemini_cli_ref:90.0},
+    simpleqa: {baseline:89.1, perplexity_standard:2.0, agent_loop:1.7, stack:1.9},
+    bbh: {baseline:100, perplexity_standard:13.3, agent_loop:0, stack:6.7,
+      claude_code_ref:92.2, gemini_cli_ref:92.1}
+  },
+  // Tier 8 scores: 5 LegalLean categories per adapter (% accuracy from real 2026-04-07 run)
+  tier8: {
+    legallean_deontic_conflict: {baseline:90, perplexity_standard:55, agent_loop:70, stack:70},
+    legallean_defeat_acyclicity: {baseline:0, perplexity_standard:0, agent_loop:0, stack:0},
+    legallean_temporal_scope: {baseline:0, perplexity_standard:5, agent_loop:0, stack:5},
+    legallean_modality: {baseline:0, perplexity_standard:0, agent_loop:0, stack:0},
+    legallean_compliance_mapping: {baseline:75, perplexity_standard:40, agent_loop:35, stack:45}
+  }
+};
+
+/* ── TIER 7 CHART ───────────────────────────── */
+function renderTier7Chart(){
+  const svg=document.getElementById('tier7Chart');
+  if(!svg) return;
+  svg.innerHTML='';
+  const W=1100,H=340,pad={t:30,b:80,l:44,r:20};
+  const cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;
+  const benchmarks=['truthfulqa','simpleqa','bbh'];
+  const benchLabels={truthfulqa:'TruthfulQA',simpleqa:'SimpleQA',bbh:'BBH'};
+  const liveAdapters=['baseline','agent_loop','stack','perplexity_standard'];
+  const refAdapters=[
+    {id:'claude_code_ref',label:'Claude Opus 4.6',color:'var(--c-claude)'},
+    {id:'gemini_cli_ref',label:'Gemini 2.5 Pro',color:'var(--c-gemini)'}
+  ];
+  const allIds=[...liveAdapters,...refAdapters.map(r=>r.id)];
+  const numGroups=benchmarks.length;
+  const gW=cW/numGroups;
+  const maxBars=6;
+  const bW=Math.max(6,Math.min(18,gW/(maxBars+2)));
+  const totalBarW=maxBars*(bW+2);
+
+  // Y-axis grid
+  for(let i=0;i<=5;i++){
+    const y=pad.t+cH-(i/5)*cH;
+    svg.appendChild(mk('line',{x1:pad.l,x2:W-pad.r,y1:y,y2:y,stroke:'var(--divider)','stroke-width':i===0?1.5:1,'stroke-dasharray':i===0?'':'3,4'}));
+    svg.appendChild(mk('text',{x:pad.l-5,y:y+4,'text-anchor':'end','font-size':9,'font-family':'var(--font-mono)'},Math.round(i*20)+'%'));
+  }
+
+  benchmarks.forEach((bench,bi)=>{
+    const gx=pad.l+bi*gW+gW/2;
+    const d=TIER78_DATA.tier7[bench]||{};
+    let barIdx=0;
+    // Live adapters
+    liveAdapters.forEach(id=>{
+      const val=(d[id]||0)/100;
+      const bh=val*cH;
+      const bx=gx-totalBarW/2+barIdx*(bW+2);
+      const col=`var(--c-${id.replace(/_/g,'-')})`;
+      svg.appendChild(mk('rect',{x:bx,y:pad.t+cH-bh,width:bW,height:Math.max(1,bh),fill:col,rx:2,opacity:.85}));
+      if(val>0)svg.appendChild(mk('text',{x:bx+bW/2,y:pad.t+cH-bh-3,'text-anchor':'middle','font-size':7,'font-family':'var(--font-mono)',fill:col},Math.round(val*100)+'%'));
+      barIdx++;
+    });
+    // Reference adapters
+    refAdapters.forEach(ref=>{
+      const val=(d[ref.id]||0)/100;
+      if(val>0){
+        const bh=val*cH;
+        const bx=gx-totalBarW/2+barIdx*(bW+2);
+        svg.appendChild(mk('rect',{x:bx,y:pad.t+cH-bh,width:bW,height:Math.max(1,bh),fill:ref.color,rx:2,opacity:.5,'stroke-dasharray':'3,2',stroke:ref.color,'stroke-width':1}));
+        svg.appendChild(mk('text',{x:bx+bW/2,y:pad.t+cH-bh-3,'text-anchor':'middle','font-size':7,'font-family':'var(--font-mono)',fill:ref.color},Math.round(val*100)+'%'));
+      }
+      barIdx++;
+    });
+    svg.appendChild(mk('text',{x:gx,y:H-44,'text-anchor':'middle','font-size':11,'font-weight':600},benchLabels[bench]));
+  });
+
+  // Legend
+  const items=[
+    ...liveAdapters.map(id=>({id,label:ADAPTER_MAP[id]?.label||id,color:`var(--c-${id.replace(/_/g,'-')})`})),
+    ...refAdapters
+  ];
+  items.forEach((it,i)=>{
+    const col=i%4,row=Math.floor(i/4);
+    const lx=pad.l+col*220,ly=8+row*14;
+    svg.appendChild(mk('rect',{x:lx,y:ly,width:8,height:8,fill:it.color,rx:2,opacity:it.id.includes('ref')?0.5:0.85}));
+    svg.appendChild(mk('text',{x:lx+11,y:ly+7,'font-size':9},it.label));
+  });
+
+  // Findings
+  const t7f=document.getElementById('tier7Findings');
+  if(t7f){
+    const stackTQ=TIER78_DATA.tier7.truthfulqa.stack;
+    const stdTQ=TIER78_DATA.tier7.truthfulqa.perplexity_standard;
+    const confirmed=stackTQ<stdTQ;
+    t7f.innerHTML=`<strong>ConfabulumRate Hypothesis Result:</strong> Stack scored <strong>${stackTQ}%</strong> on TruthfulQA vs Standard's <strong>${stdTQ}%</strong>. `+
+      (confirmed?`<span style="color:var(--warn)">Hypothesis NOT confirmed</span> — standard outperformed stack. The single-shot Perplexity approach achieved perfect MCQ extraction while the multi-turn stack occasionally failed to isolate the answer letter.`
+      :`<span style="color:var(--success)">Hypothesis CONFIRMED</span> — stack's ConfabulumRate module provided measurable hallucination resistance improvement over standard.`);
+  }
+}
+
+/* ── TIER 8 RADAR CHART ────────────────────── */
+function renderTier8Radar(){
+  const svg=document.getElementById('tier8Radar');
+  if(!svg) return;
+  svg.innerHTML='';
+  const cx=350,cy=230,R=170;
+  const cats=Object.keys(TIER78_DATA.tier8);
+  const catLabels=['Deontic\\nConflict','Defeat\\nAcyclicity','Temporal\\nScope','Modality\\nConversion','IRAP/EU-AI\\nCompliance'];
+  const n=cats.length;
+  const adapters=['baseline','perplexity_standard','agent_loop','stack'];
+
+  // Draw concentric pentagons
+  for(let ring=1;ring<=5;ring++){
+    const r=R*ring/5;
+    let pts='';
+    for(let i=0;i<n;i++){
+      const angle=-Math.PI/2+2*Math.PI*i/n;
+      const x=cx+r*Math.cos(angle), y=cy+r*Math.sin(angle);
+      pts+=(i===0?'M':'L')+x+','+y;
+    }
+    pts+='Z';
+    svg.appendChild(mk('path',{d:pts,fill:'none',stroke:'var(--divider)','stroke-width':1,'stroke-dasharray':ring===5?'':'3,4'}));
+    // Ring labels
+    if(ring%2===0||ring===5){
+      const ly=cy-r-3;
+      svg.appendChild(mk('text',{x:cx+3,y:ly,'font-size':8,'font-family':'var(--font-mono)',fill:'var(--faint)'},ring*20+'%'));
+    }
+  }
+
+  // Draw axes
+  for(let i=0;i<n;i++){
+    const angle=-Math.PI/2+2*Math.PI*i/n;
+    const x2=cx+R*Math.cos(angle), y2=cy+R*Math.sin(angle);
+    svg.appendChild(mk('line',{x1:cx,y1:cy,x2,y2,stroke:'var(--divider)','stroke-width':1}));
+    // Labels
+    const lx=cx+(R+25)*Math.cos(angle), ly=cy+(R+25)*Math.sin(angle);
+    const lines=catLabels[i].split('\\n');
+    lines.forEach((line,li)=>{
+      svg.appendChild(mk('text',{x:lx,y:ly+li*13,'text-anchor':'middle','font-size':10,'font-weight':600},line));
+    });
+  }
+
+  // Draw adapter polygons
+  adapters.forEach(adapter=>{
+    const col=`var(--c-${adapter.replace(/_/g,'-')})`;
+    let pts='';
+    cats.forEach((cat,i)=>{
+      const val=(TIER78_DATA.tier8[cat][adapter]||0)/100;
+      const r=R*val;
+      const angle=-Math.PI/2+2*Math.PI*i/n;
+      const x=cx+r*Math.cos(angle), y=cy+r*Math.sin(angle);
+      pts+=(i===0?'M':'L')+x+','+y;
+    });
+    pts+='Z';
+    svg.appendChild(mk('path',{d:pts,fill:'none',stroke:col,'stroke-width':2,opacity:.85}));
+    // Dots at vertices
+    cats.forEach((cat,i)=>{
+      const val=(TIER78_DATA.tier8[cat][adapter]||0)/100;
+      if(val>0){
+        const r=R*val;
+        const angle=-Math.PI/2+2*Math.PI*i/n;
+        const x=cx+r*Math.cos(angle), y=cy+r*Math.sin(angle);
+        svg.appendChild(mk('circle',{cx:x,cy:y,r:3,fill:col}));
+      }
+    });
+  });
+
+  // Legend
+  adapters.forEach((id,i)=>{
+    const lx=80+i*170,ly=460;
+    const col=`var(--c-${id.replace(/_/g,'-')})`;
+    svg.appendChild(mk('rect',{x:lx,y:ly,width:12,height:3,fill:col,rx:1}));
+    svg.appendChild(mk('text',{x:lx+16,y:ly+4,'font-size':10},ADAPTER_MAP[id]?.label||id));
+  });
+
+  // Findings
+  const t8f=document.getElementById('tier8Findings');
+  if(t8f){
+    const stackCM=TIER78_DATA.tier8.legallean_compliance_mapping.stack;
+    const stdCM=TIER78_DATA.tier8.legallean_compliance_mapping.perplexity_standard;
+    const confirmed=stackCM>stdCM;
+    t8f.innerHTML=`<strong>LaxityProbe Hypothesis Result:</strong> Stack scored <strong>${stackCM}%</strong> on IRAP/EU-AI compliance mapping vs Standard's <strong>${stdCM}%</strong>. `+
+      (confirmed?`<span style="color:var(--success)">Hypothesis CONFIRMED</span> — stack's CSC.LaxityProbe compliance module outperformed single-shot standard on regulatory classification tasks.`
+      :`<span style="color:var(--warn)">Hypothesis NOT confirmed</span> — standard matched or outperformed stack on compliance mapping.`)+
+      `<br><br><strong>Key finding:</strong> All adapters scored 0% on defeat acyclicity and modality conversion — these formal DDL tasks require symbolic reasoning beyond current LLM capability. Deontic conflict resolution (55-90%) and compliance mapping (35-75%) are the only tractable categories.`;
+  }
+}
+
 renderLeaderboard();
+renderTier7Chart();
+renderTier8Radar();
 renderAll();
 </script>
 </body>

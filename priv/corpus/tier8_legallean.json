@@ -1,0 +1,424 @@
+{
+  "questions": [
+    {
+      "id": "leg_conflict_001",
+      "tier": "tier8",
+      "tier_name": "legal_formal_reasoning",
+      "prompt": "SCENARIO:\nRule R1 (General, enacted 2020): \"All licensed professionals must report suspected fraud to the regulator.\"\nRule R2 (Specific, enacted 2022): \"Lawyers must not disclose client communications to any third party.\"\nA lawyer suspects their client of fraud.\n\nIn DDL notation:\nR1: licensed_professional(X) ⇒ [O] report_fraud(X)\nR2: lawyer(X), client_communication(X,Y) ⇒ [F] disclose(X,Y,regulator)\nsup(R2, R1) [lex specialis + lex posterior]\n\nQUESTION: Which obligation prevails, and under which priority principle?",
+      "reference_answer": "R2 prevails under both lex specialis (lawyer is a more specific class of licensed professional) and lex posterior (2022 is more recent than 2020). The lawyer's duty of confidentiality defeats the general reporting obligation in this fact pattern.",
+      "scoring_method": "rubric",
+      "rubric": {
+        "criteria": ["lex specialis", "lex posterior", "R2 prevails", "confidentiality"],
+        "max_score": 4
+      },
+      "rubric_criteria": {
+        "full_credit": "Correct resolution principle (lex specialis AND lex posterior) AND correct outcome (R2 prevails)",
+        "partial_credit": "Correct outcome (R2 prevails) but wrong or missing principle",
+        "no_credit": "Wrong outcome"
+      },
+      "tags": ["legallean_deontic_conflict", "tier8", "deontic", "lex_specialis"],
+      "expected_tokens_budget": 400,
+      "benchmark_ref": "legallean_deontic_conflict"
+    },
+    {
+      "id": "leg_conflict_002",
+      "tier": "tier8",
+      "tier_name": "legal_formal_reasoning",
+      "prompt": "SCENARIO:\nRule R1 (Federal statute, enacted 2018): \"All financial institutions must retain transaction records for 7 years.\"\nRule R2 (EU regulation, enacted 2018, GDPR Art 17): \"Data subjects have the right to erasure of personal data when the data is no longer necessary for its original purpose.\"\nA customer of a bank requests erasure of their transaction records after 3 years.\n\nIn DDL notation:\nR1: financial_institution(X) ⇒ [O] retain_records(X, 7_years)\nR2: data_subject(Y), request_erasure(Y) ⇒ [O] erase_data(Y)\nConflict: R1 and R2 impose incompatible obligations on the same data.\n\nQUESTION: Is this conflict resolvable, and if so which rule prevails? Which resolution principle applies?",
+      "reference_answer": "R1 prevails under lex specialis — the financial record retention obligation is a specific legal requirement that constitutes a lawful basis for processing under GDPR Art 17(3)(b) (compliance with a legal obligation). The conflict is resolvable: the bank must retain records for 7 years despite the erasure request.",
+      "scoring_method": "rubric",
+      "rubric": {
+        "criteria": ["R1 prevails", "lex specialis", "legal obligation", "GDPR Art 17"],
+        "max_score": 4
+      },
+      "rubric_criteria": {
+        "full_credit": "Correct resolution principle AND correct outcome (R1 prevails)",
+        "partial_credit": "Correct outcome but wrong or missing principle",
+        "no_credit": "Wrong outcome"
+      },
+      "tags": ["legallean_deontic_conflict", "tier8", "deontic", "gdpr"],
+      "expected_tokens_budget": 400,
+      "benchmark_ref": "legallean_deontic_conflict"
+    },
+    {
+      "id": "leg_conflict_003",
+      "tier": "tier8",
+      "tier_name": "legal_formal_reasoning",
+      "prompt": "SCENARIO:\nRule R1 (State law, enacted 2015): \"Employers must provide 12 weeks of unpaid family leave per year.\"\nRule R2 (Federal law, enacted 2023): \"Employers with fewer than 50 employees are exempt from mandatory family leave.\"\nA small business with 30 employees denies family leave to an employee.\n\nIn DDL notation:\nR1: employer(X) ⇒ [O] provide_family_leave(X, 12_weeks)\nR2: employer(X), employee_count(X, N), N < 50 ⇒ [P] ¬provide_family_leave(X)\nsup(R2, R1) [lex superior (federal > state) + lex posterior]\n\nQUESTION: Which rule prevails and under which principle(s)?",
+      "reference_answer": "R2 prevails under lex superior (federal law overrides state law under the Supremacy Clause) and lex posterior (2023 is more recent than 2015). The small business is permitted to deny family leave under the federal exemption.",
+      "scoring_method": "rubric",
+      "rubric": {
+        "criteria": ["R2 prevails", "lex superior", "federal", "lex posterior"],
+        "max_score": 4
+      },
+      "rubric_criteria": {
+        "full_credit": "Correct resolution principle (lex superior AND/OR lex posterior) AND correct outcome (R2 prevails)",
+        "partial_credit": "Correct outcome but wrong or missing principle",
+        "no_credit": "Wrong outcome"
+      },
+      "tags": ["legallean_deontic_conflict", "tier8", "deontic", "lex_superior"],
+      "expected_tokens_budget": 400,
+      "benchmark_ref": "legallean_deontic_conflict"
+    },
+    {
+      "id": "leg_conflict_004",
+      "tier": "tier8",
+      "tier_name": "legal_formal_reasoning",
+      "prompt": "SCENARIO:\nRule R1 (Professional code, enacted 2019): \"Medical professionals must report communicable diseases to the public health authority.\"\nRule R2 (Privacy statute, enacted 2019): \"Patient health records must not be disclosed to third parties without explicit consent.\"\nA doctor diagnoses a patient with a notifiable communicable disease. The patient refuses consent for disclosure.\n\nIn DDL notation:\nR1: medical_professional(X), communicable_disease(Y) ⇒ [O] report(X, Y, health_authority)\nR2: patient_record(Y) ⇒ [F] disclose(Y, third_party) unless consent(Y)\n\nBoth rules enacted same year, same jurisdictional level.\n\nQUESTION: Is this conflict resolvable? If so, which rule prevails and why?",
+      "reference_answer": "R1 prevails under lex specialis — communicable disease reporting is a specific public health exception that overrides the general privacy rule. Most jurisdictions explicitly carve out notifiable disease reporting from patient consent requirements. The conflict is resolvable in favor of mandatory reporting.",
+      "scoring_method": "rubric",
+      "rubric": {
+        "criteria": ["R1 prevails", "lex specialis", "public health", "exception"],
+        "max_score": 4
+      },
+      "rubric_criteria": {
+        "full_credit": "Correct resolution principle AND correct outcome (R1 prevails)",
+        "partial_credit": "Correct outcome but wrong or missing principle",
+        "no_credit": "Wrong outcome"
+      },
+      "tags": ["legallean_deontic_conflict", "tier8", "deontic", "public_health"],
+      "expected_tokens_budget": 400,
+      "benchmark_ref": "legallean_deontic_conflict"
+    },
+    {
+      "id": "leg_conflict_005",
+      "tier": "tier8",
+      "tier_name": "legal_formal_reasoning",
+      "prompt": "SCENARIO:\nRule R1 (Municipal ordinance, enacted 2021): \"All commercial buildings must install solar panels by 2025.\"\nRule R2 (Heritage protection act, enacted 2010): \"Heritage-listed buildings must not be structurally modified without Heritage Council approval.\"\nRule R3 (Heritage Council ruling, 2023): \"Solar panel installations on heritage-listed buildings are prohibited.\"\nA heritage-listed commercial building has not installed solar panels.\n\nIn DDL notation:\nR1: commercial_building(X) ⇒ [O] install_solar(X)\nR2: heritage_listed(X) ⇒ [F] structural_modification(X) unless heritage_approval(X)\nR3: heritage_listed(X) ⇒ [F] install_solar(X)\nsup(R3, R1) [lex specialis], sup(R2, R1) [lex specialis]\n\nQUESTION: Which rules prevail and is there a genuine irresolvable conflict among R1, R2, and R3?",
+      "reference_answer": "R2 and R3 both prevail over R1 under lex specialis (heritage-listed buildings are a more specific class than commercial buildings). There is no irresolvable conflict: R2 and R3 are consistent with each other (both prohibit the modification). The building is exempt from the solar panel obligation.",
+      "scoring_method": "rubric",
+      "rubric": {
+        "criteria": ["R2 and R3 prevail", "lex specialis", "no irresolvable conflict", "exempt"],
+        "max_score": 4
+      },
+      "rubric_criteria": {
+        "full_credit": "Correct identification that R2+R3 defeat R1, no irresolvable conflict, correct principle",
+        "partial_credit": "Correct outcome but incomplete analysis",
+        "no_credit": "Wrong outcome or claims irresolvable conflict"
+      },
+      "tags": ["legallean_deontic_conflict", "tier8", "deontic", "heritage"],
+      "expected_tokens_budget": 400,
+      "benchmark_ref": "legallean_deontic_conflict"
+    },
+    {
+      "id": "leg_acyclicity_001",
+      "tier": "tier8",
+      "tier_name": "legal_formal_reasoning",
+      "prompt": "RULES:\nR1: condition_a ⇒ [O] act_x\nR2: condition_b ⇒ [F] act_x\nR3: condition_c ⇒ [O] act_x\n\nSUPERIORITY: sup(R2, R1), sup(R3, R2)\n\nQUESTION: Is this defeat graph acyclic? If cyclic, identify the cycle. State which rule is strongest.",
+      "reference_answer": "Acyclic. The defeat chain is R3 > R2 > R1. R3 is the strongest rule. No cycle exists because no rule that is defeated also defeats a rule upstream in the chain.",
+      "scoring_method": "exact_match",
+      "rubric": null,
+      "tags": ["legallean_defeat_acyclicity", "tier8", "formal_logic"],
+      "expected_tokens_budget": 300,
+      "benchmark_ref": "legallean_defeat_acyclicity"
+    },
+    {
+      "id": "leg_acyclicity_002",
+      "tier": "tier8",
+      "tier_name": "legal_formal_reasoning",
+      "prompt": "RULES:\nR1: employee(X) ⇒ [O] file_tax_return(X)\nR2: diplomat(X) ⇒ [F] file_tax_return(X)\nR3: resident_diplomat(X) ⇒ [O] file_tax_return(X)\n\nSUPERIORITY: sup(R2, R1), sup(R3, R2), sup(R1, R3)\n\nQUESTION: Is this defeat graph acyclic? If cyclic, identify the cycle.",
+      "reference_answer": "Cyclic. The cycle is R1 > R3 > R2 > R1. Each rule defeats another in a loop: R2 defeats R1, R3 defeats R2, and R1 defeats R3, forming a cycle. The system is inconsistent.",
+      "scoring_method": "exact_match",
+      "rubric": null,
+      "tags": ["legallean_defeat_acyclicity", "tier8", "formal_logic"],
+      "expected_tokens_budget": 300,
+      "benchmark_ref": "legallean_defeat_acyclicity"
+    },
+    {
+      "id": "leg_acyclicity_003",
+      "tier": "tier8",
+      "tier_name": "legal_formal_reasoning",
+      "prompt": "RULES:\nR1: driver(X) ⇒ [O] carry_license(X)\nR2: learner(X) ⇒ [O] carry_permit(X)\nR3: senior(X) ⇒ [P] ¬carry_license(X)\nR4: instructor_present(X) ⇒ [O] carry_license(X)\n\nSUPERIORITY: sup(R2, R1), sup(R3, R1), sup(R4, R3)\n\nQUESTION: Is this defeat graph acyclic? If cyclic, identify the cycle.",
+      "reference_answer": "Acyclic. The defeat relations are: R2 > R1, R3 > R1, R4 > R3. No rule that is defeated also defeats a rule upstream. R4 is the strongest for the license obligation when an instructor is present. R2 and R4 are independent (no mutual defeat).",
+      "scoring_method": "exact_match",
+      "rubric": null,
+      "tags": ["legallean_defeat_acyclicity", "tier8", "formal_logic"],
+      "expected_tokens_budget": 300,
+      "benchmark_ref": "legallean_defeat_acyclicity"
+    },
+    {
+      "id": "leg_acyclicity_004",
+      "tier": "tier8",
+      "tier_name": "legal_formal_reasoning",
+      "prompt": "RULES:\nR1: contractor(X) ⇒ [O] obtain_insurance(X)\nR2: government_contractor(X) ⇒ [F] obtain_private_insurance(X)\nR3: defense_contractor(X) ⇒ [O] obtain_private_insurance(X)\nR4: classified_contractor(X) ⇒ [F] obtain_insurance(X)\n\nSUPERIORITY: sup(R2, R1), sup(R3, R2), sup(R4, R3), sup(R1, R4)\n\nQUESTION: Is this defeat graph acyclic? If cyclic, identify the cycle.",
+      "reference_answer": "Cyclic. The cycle is R1 > R4 > R3 > R2 > R1. Each rule in the chain defeats the next, and the chain loops back: R2 defeats R1, R3 defeats R2, R4 defeats R3, and R1 defeats R4. The system is inconsistent.",
+      "scoring_method": "exact_match",
+      "rubric": null,
+      "tags": ["legallean_defeat_acyclicity", "tier8", "formal_logic"],
+      "expected_tokens_budget": 300,
+      "benchmark_ref": "legallean_defeat_acyclicity"
+    },
+    {
+      "id": "leg_acyclicity_005",
+      "tier": "tier8",
+      "tier_name": "legal_formal_reasoning",
+      "prompt": "RULES:\nR1: citizen(X) ⇒ [O] pay_tax(X)\nR2: non_profit(X) ⇒ [P] ¬pay_tax(X)\nR3: religious_org(X) ⇒ [P] ¬pay_tax(X)\nR4: commercial_religious_org(X) ⇒ [O] pay_tax(X)\nR5: small_commercial_religious_org(X) ⇒ [P] ¬pay_tax(X)\n\nSUPERIORITY: sup(R2, R1), sup(R3, R1), sup(R4, R3), sup(R5, R4)\n\nQUESTION: Is this defeat graph acyclic? If cyclic, identify the cycle. What is the outcome for a small commercial religious organization?",
+      "reference_answer": "Acyclic. The defeat chain for the relevant path is R5 > R4 > R3 > R1, and R2 > R1. No cycle exists. For a small commercial religious organization, R5 is the strongest applicable rule, granting permission not to pay tax.",
+      "scoring_method": "exact_match",
+      "rubric": null,
+      "tags": ["legallean_defeat_acyclicity", "tier8", "formal_logic"],
+      "expected_tokens_budget": 300,
+      "benchmark_ref": "legallean_defeat_acyclicity"
+    },
+    {
+      "id": "leg_temporal_001",
+      "tier": "tier8",
+      "tier_name": "legal_formal_reasoning",
+      "prompt": "RULE R1: Enacted 2019-01-01, repealed 2022-06-30. Obligation to file quarterly financial reports.\nRULE R2: Enacted 2022-01-01, no sunset. Obligation to file annual financial reports only.\nRULE R3: Enacted 2023-03-01, retroactive to 2021-01-01. Exempts small and medium enterprises (SMEs) from all financial reporting.\n\nIn DDL notation:\nR1: entity(X) ⇒ [O] file_quarterly(X) [valid: 2019-01-01 to 2022-06-30]\nR2: entity(X) ⇒ [O] file_annual(X) [valid: 2022-01-01, no sunset]\nR3: sme(X) ⇒ [P] ¬file_reports(X) [enacted: 2023-03-01, retroactive to: 2021-01-01]\n\nQUESTION: On 2021-07-15, which reporting obligation applied to an SME? Does R3's retroactive scope affect the analysis?",
+      "reference_answer": "On 2021-07-15, R1 was in force (quarterly reports). R2 had not yet been enacted. R3's retroactive scope covers 2021-01-01 onwards, so the SME is retroactively exempt from R1's quarterly reporting obligation under R3. The applicable outcome is: no reporting obligation for the SME as of that date (retroactively).",
+      "scoring_method": "rubric",
+      "rubric": {
+        "criteria": ["R1 in force", "R2 not enacted", "R3 retroactive", "SME exempt"],
+        "max_score": 4
+      },
+      "rubric_criteria": {
+        "full_credit": "Correctly identifies R1 in force, R3 retroactive exemption applies, correct outcome",
+        "partial_credit": "Identifies R1 in force but misses retroactive effect of R3",
+        "no_credit": "Wrong rules identified or wrong outcome"
+      },
+      "tags": ["legallean_temporal_scope", "tier8", "temporal", "retroactivity"],
+      "expected_tokens_budget": 400,
+      "benchmark_ref": "legallean_temporal_scope"
+    },
+    {
+      "id": "leg_temporal_002",
+      "tier": "tier8",
+      "tier_name": "legal_formal_reasoning",
+      "prompt": "RULE R1: Enacted 2015-06-01, no sunset. \"All data processors must encrypt personal data at rest.\"\nRULE R2: Enacted 2020-01-01, sunset 2024-12-31. \"Government agencies are exempt from encryption requirements during the transition period.\"\nRULE R3: Enacted 2024-06-01, no sunset. \"All entities including government agencies must use AES-256 encryption for personal data.\"\n\nIn DDL notation:\nR1: data_processor(X) ⇒ [O] encrypt_at_rest(X) [valid: 2015-06-01, no sunset]\nR2: government_agency(X) ⇒ [P] ¬encrypt_at_rest(X) [valid: 2020-01-01 to 2024-12-31]\nR3: entity(X) ⇒ [O] use_aes256(X) [valid: 2024-06-01, no sunset]\n\nQUESTION: On 2024-08-15, does a government agency need to encrypt personal data? Which rules are in force?",
+      "reference_answer": "On 2024-08-15, all three rules are in force. R1 requires encryption. R2 exempts government agencies (still within its validity window until 2024-12-31). R3 mandates AES-256. R2 and R3 conflict: R3 is lex posterior and more specific about encryption standard. R3 prevails — the government agency must use AES-256 encryption.",
+      "scoring_method": "rubric",
+      "rubric": {
+        "criteria": ["all three rules in force", "R2 still valid", "R3 lex posterior", "AES-256 required"],
+        "max_score": 4
+      },
+      "rubric_criteria": {
+        "full_credit": "Correctly identifies all rules in force and R3 prevailing over R2",
+        "partial_credit": "Identifies rules in force but wrong resolution",
+        "no_credit": "Wrong rules identified"
+      },
+      "tags": ["legallean_temporal_scope", "tier8", "temporal", "encryption"],
+      "expected_tokens_budget": 400,
+      "benchmark_ref": "legallean_temporal_scope"
+    },
+    {
+      "id": "leg_temporal_003",
+      "tier": "tier8",
+      "tier_name": "legal_formal_reasoning",
+      "prompt": "RULE R1: Enacted 2010-01-01, repealed 2018-12-31. \"Companies must submit environmental impact assessments (EIA) for projects exceeding $10M.\"\nRULE R2: Enacted 2019-01-01, no sunset. \"Companies must submit EIA for all projects exceeding $5M.\"\nRULE R3: Enacted 2021-01-01, no sunset, NOT retroactive. \"Mining companies are exempt from EIA requirements for projects under $20M.\"\n\nA mining company began a $15M project in 2017 and completed it in 2020.\n\nIn DDL notation:\nR1: company(X), project_value(X,V), V > 10M ⇒ [O] submit_eia(X) [valid: 2010 to 2018]\nR2: company(X), project_value(X,V), V > 5M ⇒ [O] submit_eia(X) [valid: 2019, no sunset]\nR3: mining_company(X), project_value(X,V), V < 20M ⇒ [P] ¬submit_eia(X) [valid: 2021, not retroactive]\n\nQUESTION: Was the mining company required to submit an EIA for this project? Analyze the temporal applicability of each rule.",
+      "reference_answer": "Yes, the mining company was required to submit an EIA. During 2017-2018, R1 applied ($15M > $10M threshold). During 2019-2020, R2 applied ($15M > $5M threshold). R3 does not apply because it was enacted in 2021 and is not retroactive — it cannot exempt a project that was completed in 2020.",
+      "scoring_method": "rubric",
+      "rubric": {
+        "criteria": ["EIA required", "R1 applies 2017-2018", "R2 applies 2019-2020", "R3 not retroactive"],
+        "max_score": 4
+      },
+      "rubric_criteria": {
+        "full_credit": "Correctly identifies temporal applicability of all three rules and correct outcome",
+        "partial_credit": "Correct outcome but incomplete temporal analysis",
+        "no_credit": "Wrong outcome"
+      },
+      "tags": ["legallean_temporal_scope", "tier8", "temporal", "environmental"],
+      "expected_tokens_budget": 400,
+      "benchmark_ref": "legallean_temporal_scope"
+    },
+    {
+      "id": "leg_temporal_004",
+      "tier": "tier8",
+      "tier_name": "legal_formal_reasoning",
+      "prompt": "RULE R1: Enacted 2016-03-01, no sunset. \"Financial advisors must disclose all conflicts of interest to clients.\"\nRULE R2: Enacted 2020-07-01, sunset 2022-06-30. \"During the COVID-19 emergency period, disclosure requirements are relaxed for remote advisory sessions.\"\nRULE R3: Enacted 2022-01-01, retroactive to 2020-07-01. \"All advisory sessions conducted during the emergency period must have full conflict disclosure retroactively.\"\n\nA financial advisor conducted a remote session on 2021-03-15 without full disclosure.\n\nQUESTION: Was the advisor in compliance on 2021-03-15? How does R3's retroactive application affect liability?",
+      "reference_answer": "On 2021-03-15, R2 was in force (relaxed disclosure during emergency). The advisor was in compliance at the time. However, R3 (enacted 2022-01-01, retroactive to 2020-07-01) retroactively requires full disclosure for that period. Under R3's retroactive application, the advisor is now non-compliant for the 2021-03-15 session and may face liability.",
+      "scoring_method": "rubric",
+      "rubric": {
+        "criteria": ["R2 in force at time", "compliant at time", "R3 retroactive", "non-compliant retroactively"],
+        "max_score": 4
+      },
+      "rubric_criteria": {
+        "full_credit": "Correctly identifies compliance at time and retroactive non-compliance under R3",
+        "partial_credit": "Identifies one temporal layer correctly",
+        "no_credit": "Wrong analysis of both layers"
+      },
+      "tags": ["legallean_temporal_scope", "tier8", "temporal", "financial"],
+      "expected_tokens_budget": 400,
+      "benchmark_ref": "legallean_temporal_scope"
+    },
+    {
+      "id": "leg_temporal_005",
+      "tier": "tier8",
+      "tier_name": "legal_formal_reasoning",
+      "prompt": "RULE R1: Enacted 2013-01-01, sunset 2023-12-31. \"Telecommunications providers must retain metadata for 2 years.\"\nRULE R2: Enacted 2022-04-01, no sunset. \"Metadata retention is prohibited beyond 6 months without a court order.\"\nRULE R3: Enacted 2023-06-01, no sunset, NOT retroactive. \"National security agencies may request metadata retention for up to 5 years.\"\n\nA telecom provider retained metadata for 18 months as of 2023-01-15.\n\nQUESTION: On 2023-01-15, which rules are in force and is the 18-month retention lawful?",
+      "reference_answer": "On 2023-01-15, both R1 (still within validity, sunset is 2023-12-31) and R2 are in force. R3 is not yet enacted (June 2023). R1 mandates 2-year retention. R2 prohibits retention beyond 6 months without court order. These conflict: R2 prevails as lex posterior (2022 > 2013). The 18-month retention is unlawful without a court order.",
+      "scoring_method": "rubric",
+      "rubric": {
+        "criteria": ["R1 and R2 in force", "R3 not enacted", "R2 lex posterior", "unlawful without court order"],
+        "max_score": 4
+      },
+      "rubric_criteria": {
+        "full_credit": "Correctly identifies rules in force, R2 prevails, and retention is unlawful",
+        "partial_credit": "Identifies rules in force but wrong resolution",
+        "no_credit": "Wrong rules identified or wrong outcome"
+      },
+      "tags": ["legallean_temporal_scope", "tier8", "temporal", "telecommunications"],
+      "expected_tokens_budget": 400,
+      "benchmark_ref": "legallean_temporal_scope"
+    },
+    {
+      "id": "leg_modality_001",
+      "tier": "tier8",
+      "tier_name": "legal_formal_reasoning",
+      "prompt": "QUESTION: Express the following obligation in terms of prohibition using standard DDL equivalence:\n\"It is obligatory that taxpayers file tax returns.\"\n\nProvide the DDL formula using the [F] (forbidden) operator.",
+      "reference_answer": "[F](taxpayer does not file tax return) — i.e., it is forbidden for a taxpayer to not file a tax return. Using the equivalence [O]φ ≡ [F]¬φ.",
+      "scoring_method": "exact_match",
+      "rubric": null,
+      "tags": ["legallean_modality", "tier8", "deontic_conversion"],
+      "expected_tokens_budget": 200,
+      "benchmark_ref": "legallean_modality"
+    },
+    {
+      "id": "leg_modality_002",
+      "tier": "tier8",
+      "tier_name": "legal_formal_reasoning",
+      "prompt": "QUESTION: Express the following permission in terms of prohibition using standard DDL equivalence:\n\"It is permitted for citizens to travel freely.\"\n\nProvide the DDL formula using the [F] (forbidden) operator with negation.",
+      "reference_answer": "¬[F](citizens travel freely) — i.e., it is NOT forbidden for citizens to travel freely. Using the equivalence [P]φ ≡ ¬[F]φ.",
+      "scoring_method": "exact_match",
+      "rubric": null,
+      "tags": ["legallean_modality", "tier8", "deontic_conversion"],
+      "expected_tokens_budget": 200,
+      "benchmark_ref": "legallean_modality"
+    },
+    {
+      "id": "leg_modality_003",
+      "tier": "tier8",
+      "tier_name": "legal_formal_reasoning",
+      "prompt": "QUESTION: A regulation states: \"It is forbidden for minors to purchase alcohol.\" Express this as an obligation using the [O] (obligatory) operator.\n\nProvide the DDL formula using the [O] operator.",
+      "reference_answer": "[O](minors do not purchase alcohol) — i.e., it is obligatory that minors do not purchase alcohol. Using the equivalence [F]φ ≡ [O]¬φ.",
+      "scoring_method": "exact_match",
+      "rubric": null,
+      "tags": ["legallean_modality", "tier8", "deontic_conversion"],
+      "expected_tokens_budget": 200,
+      "benchmark_ref": "legallean_modality"
+    },
+    {
+      "id": "leg_modality_004",
+      "tier": "tier8",
+      "tier_name": "legal_formal_reasoning",
+      "prompt": "QUESTION: A contrary-to-duty (CTD) obligation states: \"If a contractor fails to deliver on time (violation of primary obligation), then the contractor is obligated to pay a penalty.\"\n\nExpress this as a CTD structure in DDL notation, showing both the primary obligation and the secondary (reparational) obligation.",
+      "reference_answer": "Primary: [O] deliver_on_time(contractor)\nCTD: ¬deliver_on_time(contractor) ⇒ [O] pay_penalty(contractor)\n\nThe secondary obligation is triggered by the violation of the primary obligation. This is a standard Chisholm-style CTD structure.",
+      "scoring_method": "exact_match",
+      "rubric": null,
+      "tags": ["legallean_modality", "tier8", "deontic_conversion", "ctd"],
+      "expected_tokens_budget": 300,
+      "benchmark_ref": "legallean_modality"
+    },
+    {
+      "id": "leg_modality_005",
+      "tier": "tier8",
+      "tier_name": "legal_formal_reasoning",
+      "prompt": "QUESTION: Given the following DDL statement:\n[O](employee reports safety hazard) AND [P](employee reports anonymously)\n\nIs the following derivation valid? \"Since reporting is obligatory, and anonymous reporting is permitted, anonymous reporting is obligatory.\"\n\nAnswer Yes or No, and explain using DDL equivalences.",
+      "reference_answer": "No. The derivation is invalid. [O]φ (obligation to report) and [P]ψ (permission to report anonymously) do not combine to yield [O]ψ. Permission ([P]) means ¬[F], not [O]. The employee must report but is not obligated to do so anonymously — anonymous reporting is merely permitted, not required.",
+      "scoring_method": "exact_match",
+      "rubric": null,
+      "tags": ["legallean_modality", "tier8", "deontic_conversion", "fallacy"],
+      "expected_tokens_budget": 300,
+      "benchmark_ref": "legallean_modality"
+    },
+    {
+      "id": "leg_compliance_001",
+      "tier": "tier8",
+      "tier_name": "legal_formal_reasoning",
+      "prompt": "SCENARIO: A legal AI system is deployed by an Australian federal government agency to assist lawyers in drafting submissions in Federal Court proceedings. The system processes case files containing personal information of parties. The output is reviewed by a qualified lawyer before filing.\n\nQUESTION: (a) What IRAP security classification applies to the data processed by this system? (b) Under the EU AI Act, what risk tier would this system fall into? (c) Name two mandatory compliance obligations that apply.",
+      "reference_answer": "(a) PROTECTED — personal information in federal legal proceedings requires PROTECTED classification under the Australian Government Information Security Manual (ISM). (b) High-risk — the system falls under Annex III, point 8 of the EU AI Act (administration of justice and democratic processes). (c) Two mandatory obligations: (1) Human oversight requirement (qualified lawyer reviews output); (2) Conformity assessment before deployment.",
+      "scoring_method": "rubric",
+      "rubric": {
+        "criteria": ["PROTECTED", "High-risk", "human oversight", "conformity assessment"],
+        "max_score": 4
+      },
+      "rubric_criteria": {
+        "full_credit": "Correct IRAP classification AND correct EU AI Act tier AND two valid obligations",
+        "partial_credit": "Two of three correct",
+        "no_credit": "Fewer than two correct"
+      },
+      "tags": ["legallean_compliance_mapping", "tier8", "irap", "eu_ai_act"],
+      "expected_tokens_budget": 400,
+      "benchmark_ref": "legallean_compliance_mapping"
+    },
+    {
+      "id": "leg_compliance_002",
+      "tier": "tier8",
+      "tier_name": "legal_formal_reasoning",
+      "prompt": "SCENARIO: An Australian state health department deploys an AI system to triage emergency department patients. The system analyzes patient vitals, symptoms, and medical history to assign urgency scores. Clinicians use the scores as input but make final triage decisions. The system processes Medicare numbers and health records.\n\nQUESTION: (a) What IRAP security classification applies? (b) What EU AI Act risk tier? (c) Name two compliance obligations specific to this deployment.",
+      "reference_answer": "(a) PROTECTED — health records and Medicare numbers are personal and sensitive information requiring PROTECTED classification. (b) High-risk — the system is a safety component in healthcare (Annex III, point 5: access to essential services, healthcare). (c) Two obligations: (1) Data governance and quality requirements (training data must be representative); (2) Record-keeping and logging of system decisions for audit.",
+      "scoring_method": "rubric",
+      "rubric": {
+        "criteria": ["PROTECTED", "High-risk", "data governance", "record-keeping"],
+        "max_score": 4
+      },
+      "rubric_criteria": {
+        "full_credit": "Correct IRAP classification AND correct EU AI Act tier AND two valid obligations",
+        "partial_credit": "Two of three correct",
+        "no_credit": "Fewer than two correct"
+      },
+      "tags": ["legallean_compliance_mapping", "tier8", "irap", "eu_ai_act", "healthcare"],
+      "expected_tokens_budget": 400,
+      "benchmark_ref": "legallean_compliance_mapping"
+    },
+    {
+      "id": "leg_compliance_003",
+      "tier": "tier8",
+      "tier_name": "legal_formal_reasoning",
+      "prompt": "SCENARIO: A private Australian company builds a chatbot for customer service on its public website. The chatbot answers product questions and helps with returns. It does not process any government data, health records, or biometric information. Users interact voluntarily.\n\nQUESTION: (a) What IRAP security classification applies, if any? (b) What EU AI Act risk tier? (c) What is the primary transparency obligation?",
+      "reference_answer": "(a) IRAP does not apply — the system is operated by a private company and does not process government-classified information. If any classification were needed, it would be UNOFFICIAL/UNCLASSIFIED. (b) Limited risk — the system is an AI chatbot interacting with humans, falling under Article 52 transparency obligations. (c) Primary obligation: the system must clearly disclose to users that they are interacting with an AI system, not a human.",
+      "scoring_method": "rubric",
+      "rubric": {
+        "criteria": ["IRAP not applicable", "Limited risk", "transparency", "disclose AI"],
+        "max_score": 4
+      },
+      "rubric_criteria": {
+        "full_credit": "Correct IRAP assessment AND correct EU AI Act tier AND correct transparency obligation",
+        "partial_credit": "Two of three correct",
+        "no_credit": "Fewer than two correct"
+      },
+      "tags": ["legallean_compliance_mapping", "tier8", "irap", "eu_ai_act", "chatbot"],
+      "expected_tokens_budget": 400,
+      "benchmark_ref": "legallean_compliance_mapping"
+    },
+    {
+      "id": "leg_compliance_004",
+      "tier": "tier8",
+      "tier_name": "legal_formal_reasoning",
+      "prompt": "SCENARIO: The Australian Department of Defence deploys an AI-powered facial recognition system at military bases to control access to restricted areas. The system processes biometric data of military personnel and visitors. It is integrated with the Defence security clearance database.\n\nQUESTION: (a) What IRAP security classification applies? (b) What EU AI Act risk tier? (c) Name two compliance obligations and explain why this deployment has the highest regulatory burden.",
+      "reference_answer": "(a) SECRET or higher — defence security clearance databases and military facility access control involve national security information classified at SECRET or above under the ISM. (b) High-risk, potentially bordering on Unacceptable risk — biometric identification in real-time for law enforcement/military access is listed in Annex III, point 1. Real-time biometric identification in publicly accessible spaces is prohibited under Article 5, but military bases are restricted areas so the prohibition may not apply directly. (c) Two obligations: (1) Fundamental rights impact assessment before deployment; (2) Registration in the EU high-risk AI database. Highest burden because it combines biometric processing, national security data, and access control — triggering both IRAP SECRET controls and EU AI Act high-risk requirements simultaneously.",
+      "scoring_method": "rubric",
+      "rubric": {
+        "criteria": ["SECRET", "High-risk", "fundamental rights", "biometric"],
+        "max_score": 4
+      },
+      "rubric_criteria": {
+        "full_credit": "Correct IRAP classification (SECRET+) AND correct EU AI Act tier AND two valid obligations",
+        "partial_credit": "Two of three correct",
+        "no_credit": "Fewer than two correct"
+      },
+      "tags": ["legallean_compliance_mapping", "tier8", "irap", "eu_ai_act", "defence", "biometric"],
+      "expected_tokens_budget": 400,
+      "benchmark_ref": "legallean_compliance_mapping"
+    },
+    {
+      "id": "leg_compliance_005",
+      "tier": "tier8",
+      "tier_name": "legal_formal_reasoning",
+      "prompt": "SCENARIO: An Australian university uses an AI system to grade student essays in undergraduate courses. The system provides scores and written feedback. Professors review borderline cases but accept the AI's grading for clearly passing or failing submissions. The system processes student names, IDs, and academic work.\n\nQUESTION: (a) What IRAP security classification applies? (b) What EU AI Act risk tier? (c) Name two compliance obligations. (d) Does the human oversight model (professor reviews borderline cases only) satisfy EU AI Act requirements?",
+      "reference_answer": "(a) OFFICIAL:Sensitive or PROTECTED if the university receives government funding for research — student records with personal information in an educational institution. For a standard undergraduate course, OFFICIAL:Sensitive is appropriate. (b) High-risk — AI systems used in education for determining access to or outcomes in educational institutions fall under Annex III, point 3. (c) Two obligations: (1) Transparency to students that AI is used in grading; (2) Accuracy and robustness testing of the grading model. (d) The oversight model is likely insufficient — reviewing only borderline cases means clearly passing/failing grades are not reviewed. Article 14 requires human oversight that allows understanding and overriding the system's output. Full delegation without review for non-borderline cases may not meet this standard.",
+      "scoring_method": "rubric",
+      "rubric": {
+        "criteria": ["OFFICIAL:Sensitive", "High-risk", "transparency", "oversight insufficient"],
+        "max_score": 4
+      },
+      "rubric_criteria": {
+        "full_credit": "Correct IRAP classification AND correct EU AI Act tier AND identifies oversight gap",
+        "partial_credit": "Two of three correct",
+        "no_credit": "Fewer than two correct"
+      },
+      "tags": ["legallean_compliance_mapping", "tier8", "irap", "eu_ai_act", "education"],
+      "expected_tokens_budget": 400,
+      "benchmark_ref": "legallean_compliance_mapping"
+    }
+  ]
+}

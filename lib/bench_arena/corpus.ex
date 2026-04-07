@@ -14,6 +14,7 @@ defmodule BenchArena.Corpus do
       :reference_answer,
       :scoring_method,
       :rubric,
+      :rubric_criteria,
       :tags,
       :expected_tokens_budget,
       :benchmark_ref
@@ -21,12 +22,13 @@ defmodule BenchArena.Corpus do
 
     @type t :: %__MODULE__{
             id: String.t(),
-            tier: integer(),
+            tier: integer() | String.t(),
             tier_name: String.t(),
             prompt: String.t(),
             reference_answer: String.t(),
             scoring_method: :exact_match | :semantic | :rubric,
             rubric: map() | nil,
+            rubric_criteria: map() | nil,
             tags: [atom()],
             expected_tokens_budget: integer(),
             benchmark_ref: String.t() | nil
@@ -103,6 +105,44 @@ defmodule BenchArena.Corpus do
   end
 
   @doc """
+  Load Tier 7 hallucination resistance questions (TruthfulQA + SimpleQA + BBH).
+  Returns 45 questions.
+  """
+  @spec load_tier7() :: [Question.t()]
+  def load_tier7 do
+    [
+      load_json("tier7a_truthfulqa.json"),
+      load_json("tier7b_simpleqa.json"),
+      load_json("tier7c_bbh.json")
+    ]
+    |> Enum.flat_map(fn questions -> questions end)
+  end
+
+  @doc """
+  Load Tier 8 LegalLean formal reasoning questions.
+  Returns 25 questions.
+  """
+  @spec load_tier8() :: [Question.t()]
+  def load_tier8 do
+    load_json("tier8_legallean.json")
+  end
+
+  defp load_json(file) do
+    path = corpus_path(file)
+
+    case File.read(path) do
+      {:ok, content} ->
+        content
+        |> Jason.decode!()
+        |> Map.get("questions", [])
+        |> Enum.map(&parse_question/1)
+
+      {:error, _} ->
+        []
+    end
+  end
+
+  @doc """
   List available tiers and question counts.
   """
   @spec tier_info() :: [{integer(), String.t(), integer()}]
@@ -133,6 +173,7 @@ defmodule BenchArena.Corpus do
       reference_answer: map["reference_answer"],
       scoring_method: parse_scoring_method(map["scoring_method"]),
       rubric: map["rubric"],
+      rubric_criteria: map["rubric_criteria"],
       tags: parse_tags(map["tags"]),
       expected_tokens_budget: map["expected_tokens_budget"] || 200,
       benchmark_ref: map["benchmark_ref"]
@@ -141,6 +182,7 @@ defmodule BenchArena.Corpus do
 
   defp parse_scoring_method("exact_match"), do: :exact_match
   defp parse_scoring_method("semantic"), do: :semantic
+  defp parse_scoring_method("semantic_similarity"), do: :semantic
   defp parse_scoring_method("rubric"), do: :rubric
   defp parse_scoring_method(_), do: :exact_match
 

@@ -227,4 +227,211 @@ defmodule BenchArena.CorpusTest do
       assert Enum.all?(questions, &is_nil(&1.benchmark_ref))
     end
   end
+
+  describe "load_tier7/0" do
+    test "returns 45 questions" do
+      questions = Corpus.load_tier7()
+      assert length(questions) == 45
+    end
+
+    test "returns Question structs" do
+      [q | _] = Corpus.load_tier7()
+      assert %Question{} = q
+      assert is_binary(q.id)
+      assert is_binary(q.prompt)
+      assert is_binary(q.reference_answer)
+    end
+
+    test "all questions are tier7" do
+      questions = Corpus.load_tier7()
+      assert Enum.all?(questions, &(&1.tier == "tier7"))
+    end
+
+    test "all questions have tier_name hallucination_resistance" do
+      questions = Corpus.load_tier7()
+      assert Enum.all?(questions, &(&1.tier_name == "hallucination_resistance"))
+    end
+
+    test "has 15 TruthfulQA questions" do
+      questions = Corpus.load_tier7()
+      tqa = Enum.filter(questions, &(&1.benchmark_ref == "truthfulqa"))
+      assert length(tqa) == 15
+    end
+
+    test "has 15 SimpleQA questions" do
+      questions = Corpus.load_tier7()
+      sqa = Enum.filter(questions, &(&1.benchmark_ref == "simpleqa"))
+      assert length(sqa) == 15
+    end
+
+    test "has 15 BBH questions" do
+      questions = Corpus.load_tier7()
+      bbh = Enum.filter(questions, &(&1.benchmark_ref == "bbh"))
+      assert length(bbh) == 15
+    end
+
+    test "all benchmark_refs are valid tier7 types" do
+      questions = Corpus.load_tier7()
+      assert Enum.all?(questions, &(&1.benchmark_ref in ["truthfulqa", "simpleqa", "bbh"]))
+    end
+
+    test "all questions have valid scoring methods" do
+      questions = Corpus.load_tier7()
+      assert Enum.all?(questions, &(&1.scoring_method in [:exact_match, :semantic, :rubric]))
+    end
+
+    test "TruthfulQA questions use exact_match scoring" do
+      questions = Corpus.load_tier7()
+      tqa = Enum.filter(questions, &(&1.benchmark_ref == "truthfulqa"))
+      assert Enum.all?(tqa, &(&1.scoring_method == :exact_match))
+    end
+
+    test "SimpleQA questions use semantic scoring" do
+      questions = Corpus.load_tier7()
+      sqa = Enum.filter(questions, &(&1.benchmark_ref == "simpleqa"))
+      assert Enum.all?(sqa, &(&1.scoring_method == :semantic))
+    end
+
+    test "all IDs follow std_ prefix pattern" do
+      questions = Corpus.load_tier7()
+      assert Enum.all?(questions, &String.starts_with?(&1.id, "std_"))
+    end
+
+    test "all questions have tags" do
+      questions = Corpus.load_tier7()
+      assert Enum.all?(questions, &(is_list(&1.tags) and length(&1.tags) > 0))
+    end
+
+    test "all questions have expected_tokens_budget" do
+      questions = Corpus.load_tier7()
+      assert Enum.all?(questions, &(is_integer(&1.expected_tokens_budget) and &1.expected_tokens_budget > 0))
+    end
+
+    test "TruthfulQA IDs are sequential" do
+      questions = Corpus.load_tier7()
+      tqa = Enum.filter(questions, &(&1.benchmark_ref == "truthfulqa"))
+      ids = Enum.map(tqa, & &1.id)
+      assert Enum.at(ids, 0) == "std_truthfulqa_001"
+      assert Enum.at(ids, 14) == "std_truthfulqa_015"
+    end
+
+    test "BBH IDs are sequential" do
+      questions = Corpus.load_tier7()
+      bbh = Enum.filter(questions, &(&1.benchmark_ref == "bbh"))
+      ids = Enum.map(bbh, & &1.id)
+      assert Enum.at(ids, 0) == "std_bbh_001"
+      assert Enum.at(ids, 14) == "std_bbh_015"
+    end
+  end
+
+  describe "load_tier8/0" do
+    test "returns 25 questions" do
+      questions = Corpus.load_tier8()
+      assert length(questions) == 25
+    end
+
+    test "returns Question structs" do
+      [q | _] = Corpus.load_tier8()
+      assert %Question{} = q
+      assert is_binary(q.id)
+      assert is_binary(q.prompt)
+      assert is_binary(q.reference_answer)
+    end
+
+    test "all questions are tier8" do
+      questions = Corpus.load_tier8()
+      assert Enum.all?(questions, &(&1.tier == "tier8"))
+    end
+
+    test "all questions have tier_name legal_formal_reasoning" do
+      questions = Corpus.load_tier8()
+      assert Enum.all?(questions, &(&1.tier_name == "legal_formal_reasoning"))
+    end
+
+    test "has 5 deontic conflict questions" do
+      questions = Corpus.load_tier8()
+      dc = Enum.filter(questions, &(&1.benchmark_ref == "legallean_deontic_conflict"))
+      assert length(dc) == 5
+    end
+
+    test "has 5 defeat acyclicity questions" do
+      questions = Corpus.load_tier8()
+      da = Enum.filter(questions, &(&1.benchmark_ref == "legallean_defeat_acyclicity"))
+      assert length(da) == 5
+    end
+
+    test "has 5 temporal scope questions" do
+      questions = Corpus.load_tier8()
+      ts = Enum.filter(questions, &(&1.benchmark_ref == "legallean_temporal_scope"))
+      assert length(ts) == 5
+    end
+
+    test "has 5 modality conversion questions" do
+      questions = Corpus.load_tier8()
+      mc = Enum.filter(questions, &(&1.benchmark_ref == "legallean_modality"))
+      assert length(mc) == 5
+    end
+
+    test "has 5 compliance mapping questions" do
+      questions = Corpus.load_tier8()
+      cm = Enum.filter(questions, &(&1.benchmark_ref == "legallean_compliance_mapping"))
+      assert length(cm) == 5
+    end
+
+    test "all benchmark_refs start with legallean_" do
+      questions = Corpus.load_tier8()
+      assert Enum.all?(questions, &String.starts_with?(&1.benchmark_ref, "legallean_"))
+    end
+
+    test "all questions have valid scoring methods" do
+      questions = Corpus.load_tier8()
+      assert Enum.all?(questions, &(&1.scoring_method in [:exact_match, :semantic, :rubric]))
+    end
+
+    test "compliance mapping questions use rubric scoring" do
+      questions = Corpus.load_tier8()
+      cm = Enum.filter(questions, &(&1.benchmark_ref == "legallean_compliance_mapping"))
+      assert Enum.all?(cm, &(&1.scoring_method == :rubric))
+    end
+
+    test "deontic conflict questions use rubric scoring" do
+      questions = Corpus.load_tier8()
+      dc = Enum.filter(questions, &(&1.benchmark_ref == "legallean_deontic_conflict"))
+      assert Enum.all?(dc, &(&1.scoring_method == :rubric))
+    end
+
+    test "defeat acyclicity questions use exact_match scoring" do
+      questions = Corpus.load_tier8()
+      da = Enum.filter(questions, &(&1.benchmark_ref == "legallean_defeat_acyclicity"))
+      assert Enum.all?(da, &(&1.scoring_method == :exact_match))
+    end
+
+    test "modality questions use exact_match scoring" do
+      questions = Corpus.load_tier8()
+      mc = Enum.filter(questions, &(&1.benchmark_ref == "legallean_modality"))
+      assert Enum.all?(mc, &(&1.scoring_method == :exact_match))
+    end
+
+    test "rubric-scored questions have rubric_criteria" do
+      questions = Corpus.load_tier8()
+      rubric_qs = Enum.filter(questions, &(&1.scoring_method == :rubric))
+      assert Enum.all?(rubric_qs, &(not is_nil(&1.rubric_criteria)))
+    end
+
+    test "conflict IDs follow leg_conflict_ pattern" do
+      questions = Corpus.load_tier8()
+      dc = Enum.filter(questions, &(&1.benchmark_ref == "legallean_deontic_conflict"))
+      assert Enum.all?(dc, &String.starts_with?(&1.id, "leg_conflict_"))
+    end
+
+    test "all questions have tags" do
+      questions = Corpus.load_tier8()
+      assert Enum.all?(questions, &(is_list(&1.tags) and length(&1.tags) > 0))
+    end
+
+    test "all questions have expected_tokens_budget" do
+      questions = Corpus.load_tier8()
+      assert Enum.all?(questions, &(is_integer(&1.expected_tokens_budget) and &1.expected_tokens_budget > 0))
+    end
+  end
 end

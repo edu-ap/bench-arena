@@ -1,12 +1,16 @@
 {
   "claude_code": {
     "gpqa_diamond": {"score": 91.3, "unit": "percent_accuracy", "source_url": "https://iternal.ai/llm-selection-guide", "accessed": "2026-04-06"},
-    "swe_bench_verified": {"score": 80.8, "unit": "percent_resolved", "source_url": "https://www.nxcode.io/resources/news/claude-sonnet-4-6-complete-guide-benchmarks-pricing-2026", "accessed": "2026-04-06"}
+    "swe_bench_verified": {"score": 80.8, "unit": "percent_resolved", "source_url": "https://www.nxcode.io/resources/news/claude-sonnet-4-6-complete-guide-benchmarks-pricing-2026", "accessed": "2026-04-06"},
+    "truthfulqa": {"score": 88.0, "unit": "percent_mc1_accuracy", "source_url": "https://iternal.ai/llm-selection-guide", "accessed": "2026-04-07"},
+    "bbh": {"score": 92.2, "unit": "percent_accuracy", "source_url": "https://iternal.ai/llm-selection-guide", "accessed": "2026-04-07"}
   },
   "gemini_cli": {
     "gpqa_diamond": {"score": 94.3, "unit": "percent_accuracy", "source_url": "https://deepmind.google/models/gemini/pro/", "accessed": "2026-04-06"},
     "swe_bench_verified": {"score": 80.6, "unit": "percent_resolved", "source_url": "https://deepmind.google/models/gemini/pro/", "accessed": "2026-04-06"},
-    "mmlu_pro": {"score": 92.6, "unit": "percent_accuracy", "source_url": "https://deepmind.google/models/gemini/pro/", "accessed": "2026-04-06"}
+    "mmlu_pro": {"score": 92.6, "unit": "percent_accuracy", "source_url": "https://deepmind.google/models/gemini/pro/", "accessed": "2026-04-06"},
+    "truthfulqa": {"score": 90.0, "unit": "percent_mc1_accuracy", "source_url": "https://deepmind.google/models/gemini/pro/", "accessed": "2026-04-07"},
+    "bbh": {"score": 92.1, "unit": "percent_accuracy", "source_url": "https://deepmind.google/models/gemini/pro/", "accessed": "2026-04-07"}
   },
   "codex": {
     "swe_bench_verified": {"score": 80.0, "unit": "percent_resolved", "source_url": "https://www.nxcode.io/resources/news/claude-sonnet-4-6-complete-guide-benchmarks-pricing-2026", "accessed": "2026-04-06"}
