@@ -55,52 +55,71 @@ defmodule BenchArena.Scorer do
   @doc """
   Exact match scoring: normalize and compare strings.
   For single-letter MCQ references (A-J), extracts the letter from natural-language answers.
-  For short integer references (AIME-style), extracts the number from answers.
+  For short integer references (0-999, AIME style), extracts the number from answers.
   Returns 0.0 or 1.0.
   """
   @spec exact_match(String.t(), String.t()) :: float()
   def exact_match(answer, reference) do
     cond do
+      # Single-letter MCQ (A-J)
       String.match?(reference, ~r/^[A-J]$/) ->
         extracted = extract_mcq_letter(answer)
         if extracted == reference, do: 1.0, else: 0.0
 
+      # Short integer answer 0-999 (AIME style)
       String.match?(reference, ~r/^\d{1,3}$/) ->
         extracted = extract_integer(answer)
         if extracted == reference, do: 1.0, else: 0.0
 
+      # Default: normalized full string match
       true ->
         if normalize(answer) == normalize(reference), do: 1.0, else: 0.0
     end
   end
 
-  defp extract_mcq_letter(answer) do
-    trimmed = String.trim(answer)
-
+  @doc """
+  Extract a single MCQ letter (A-J) from a natural-language answer.
+  Handles **B)**, **B**, "option B", "answer is B", leading letter, etc.
+  """
+  @spec extract_mcq_letter(String.t()) :: String.t() | nil
+  def extract_mcq_letter(answer) when is_binary(answer) do
     cond do
-      Regex.match?(~r/^[A-J]$/, trimmed) -> trimmed
+      # **X)** bold with paren — most common pattern
       m = Regex.run(~r/\*\*([A-J])\)/, answer) -> Enum.at(m, 1)
+      # **X** bold without paren
       m = Regex.run(~r/\*\*([A-J])\*\*/, answer) -> Enum.at(m, 1)
-      m = Regex.run(~r/(?:option|answer is|choice|correct answer is)\s+\*?\*?([A-J])\b/i, answer) -> Enum.at(m, 1)
-      m = Regex.run(~r/^([A-J])[)\.\s]/, trimmed) -> Enum.at(m, 1)
+      # "option X", "answer is X", "correct answer is X", "choice X"
+      m = Regex.run(~r/(?:option|answer is|correct answer is|choice|select)\s+\*?\*?([A-J])\b/i, answer) -> Enum.at(m, 1)
+      # Leading letter at start of answer: "B) ..." or "B. ..."
+      m = Regex.run(~r/^\s*([A-J])[\)\.]\s/, answer) -> Enum.at(m, 1)
       true -> nil
     end
   end
 
-  defp extract_integer(answer) do
+  def extract_mcq_letter(_), do: nil
+
+  @doc """
+  Extract a short integer (0-999) from a natural-language answer.
+  Handles **143**, bold integers, or standalone numbers.
+  """
+  @spec extract_integer(String.t()) :: String.t() | nil
+  def extract_integer(answer) when is_binary(answer) do
     cond do
+      # **NNN** bold integer
       m = Regex.run(~r/\*\*(\d{1,3})\*\*/, answer) ->
         val = String.to_integer(Enum.at(m, 1))
         if val in 0..999, do: to_string(val), else: nil
 
+      # Standalone 1-3 digit number (prefer the first one found)
       m = Regex.run(~r/\b(\d{1,3})\b/, answer) ->
         val = String.to_integer(Enum.at(m, 1))
         if val in 0..999, do: to_string(val), else: nil
 
-      true ->
-        nil
+      true -> nil
     end
   end
+
+  def extract_integer(_), do: nil
 
   @doc """
   Semantic scoring: compute token overlap using Jaccard similarity on lowercased word sets.

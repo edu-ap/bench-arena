@@ -33,10 +33,7 @@ defmodule BenchArena.MixProject do
       {:req, "~> 0.5"},
       {:telemetry, "~> 1.2"},
       {:ex_doc, "~> 0.34", only: :dev, runtime: false},
-      {:mox, "~> 1.1", only: :test},
-      {:elan, path: "../elan-build", optional: true},
-      {:csc, path: "../composable-skill-compiler/elixir/csc", optional: true},
-      {:token_gov, path: "../tokengov/elixir/token_gov", optional: true}
+      {:mox, "~> 1.1", only: :test}
     ]
   end
 

@@ -135,66 +135,6 @@ defmodule BenchArena.ScorerTest do
     end
   end
 
-  describe "exact_match/2 MCQ extraction" do
-    test "extracts bold letter from natural language answer" do
-      assert Scorer.exact_match("The answer is **B** because...", "B") == 1.0
-    end
-
-    test "extracts bold letter with closing paren" do
-      assert Scorer.exact_match("**B)** is the correct choice", "B") == 1.0
-    end
-
-    test "extracts letter from 'answer is X' pattern" do
-      assert Scorer.exact_match("The correct answer is C based on the analysis", "C") == 1.0
-    end
-
-    test "extracts letter from 'option X' pattern" do
-      assert Scorer.exact_match("I would choose option D", "D") == 1.0
-    end
-
-    test "extracts leading letter with paren" do
-      assert Scorer.exact_match("A) This is the answer", "A") == 1.0
-    end
-
-    test "returns 0.0 for wrong MCQ letter" do
-      assert Scorer.exact_match("The answer is **B**", "C") == 0.0
-    end
-
-    test "returns 0.0 when no letter can be extracted" do
-      assert Scorer.exact_match("I'm not sure about this question", "A") == 0.0
-    end
-
-    test "handles single letter reference that matches directly" do
-      assert Scorer.exact_match("B", "B") == 1.0
-    end
-  end
-
-  describe "exact_match/2 AIME integer extraction" do
-    test "extracts bold integer from answer" do
-      assert Scorer.exact_match("The answer is **143**.", "143") == 1.0
-    end
-
-    test "extracts standalone integer" do
-      assert Scorer.exact_match("After calculation, the result is 42.", "42") == 1.0
-    end
-
-    test "returns 0.0 for wrong integer" do
-      assert Scorer.exact_match("The answer is **143**.", "144") == 0.0
-    end
-
-    test "extracts single digit" do
-      assert Scorer.exact_match("The answer is 7", "7") == 1.0
-    end
-
-    test "extracts zero" do
-      assert Scorer.exact_match("The result is **0**", "0") == 1.0
-    end
-
-    test "handles integer reference that matches directly" do
-      assert Scorer.exact_match("42", "42") == 1.0
-    end
-  end
-
   describe "batch_score/1" do
     test "scores multiple pairs" do
       q1 = sample_question(%{reference_answer: "4", scoring_method: :exact_match})

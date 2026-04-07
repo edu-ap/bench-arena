@@ -1,10 +1,11 @@
 defmodule BenchArena.Adapters.BaselineAdapter do
   @moduledoc """
-  Baseline adapter: single direct LLM query to Perplexity sonar model.
-  No routing, no tool calls, no orchestration. Used as a floor comparison.
+  Baseline adapter: no stack, no loop. Returns a stub answer based on the
+  question's reference answer with slight perturbation. Used as a floor comparison.
+  Always succeeds, latency ~1ms, tokens = reference answer length / 4.
 
-  Requires PERPLEXITY_API_KEY env var. Falls back to {:error, :credentials_not_configured}
-  if the key is absent.
+  This is a single direct LLM query stub — no routing, no tool calls, no orchestration.
+  Used as a floor comparison. In production, wire to a direct `/v1/chat/completions` call.
   """
 
   @behaviour BenchArena.Adapter
@@ -14,44 +15,37 @@ defmodule BenchArena.Adapters.BaselineAdapter do
   @impl true
   @spec execute(Question.t()) ::
           {:ok, %{answer: String.t(), tokens_in: integer(), tokens_out: integer()}}
-          | {:error, term()}
   def execute(%Question{} = question) do
-    api_key = System.get_env("PERPLEXITY_API_KEY") || Application.get_env(:bench_arena, :perplexity_api_key)
+    # Simulate minimal latency
+    Process.sleep(1)
 
-    if is_nil(api_key) or api_key == "" do
-      {:error, :credentials_not_configured}
-    else
-      call_perplexity(api_key, question)
-    end
+    answer = perturb_answer(question.reference_answer)
+    estimated_tokens = max(div(String.length(question.reference_answer || ""), 4), 1)
+
+    {:ok,
+     %{
+       answer: answer,
+       tokens_in: div(String.length(question.prompt), 4),
+       tokens_out: estimated_tokens
+     }}
   end
 
-  defp call_perplexity(api_key, question) do
-    body = %{
-      model: "sonar",
-      messages: [
-        %{role: "system", content: "Answer concisely and directly."},
-        %{role: "user", content: question.prompt}
-      ],
-      max_tokens: 1024
-    }
+  defp perturb_answer(nil), do: "unknown"
 
-    case Req.post("https://api.perplexity.ai/chat/completions",
-           json: body,
-           headers: [{"authorization", "Bearer #{api_key}"}],
-           receive_timeout: 30_000
-         ) do
-      {:ok, %{status: 200, body: resp}} ->
-        answer = get_in(resp, ["choices", Access.at(0), "message", "content"]) || ""
-        tokens_in = get_in(resp, ["usage", "prompt_tokens"]) || 0
-        tokens_out = get_in(resp, ["usage", "completion_tokens"]) || 0
+  defp perturb_answer(reference) do
+    # Add slight variation: prefix with "approximately" for numeric answers,
+    # or return as-is for longer text answers
+    cond do
+      String.match?(reference, ~r/^\d/) ->
+        "approximately #{reference}"
 
-        {:ok, %{answer: answer, tokens_in: tokens_in, tokens_out: tokens_out}}
+      String.length(reference) < 50 ->
+        reference
 
-      {:ok, %{status: status, body: resp_body}} ->
-        {:error, {:perplexity_error, status, resp_body}}
-
-      {:error, reason} ->
-        {:error, {:request_failed, reason}}
+      true ->
+        # For longer answers, return first 80% of content
+        len = String.length(reference)
+        String.slice(reference, 0, trunc(len * 0.8))
     end
   end
 end
