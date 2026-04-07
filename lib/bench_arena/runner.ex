@@ -75,6 +75,20 @@ defmodule BenchArena.Runner do
       %{adapter: adapter, tier: question.tier, question_id: question.id}
     )
 
+    # Emit groundtrace record for tamper-evident audit trail (Phase 2)
+    BenchArena.GroundtraceTelemetry.emit(
+      question.id,
+      %{
+        score: 0.0,
+        answer: answer,
+        latency_ms: latency_ms,
+        tokens_in: tokens_in,
+        tokens_out: tokens_out,
+        adapter: adapter
+      },
+      %{run_id: "bench-#{question.tier}", question: question}
+    )
+
     %__MODULE__{
       question_id: question.id,
       tier: question.tier,

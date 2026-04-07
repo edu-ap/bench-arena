@@ -7,7 +7,7 @@ defmodule BenchArena.TelemetryTest do
     test "returns list of event names" do
       events = Telemetry.events()
       assert is_list(events)
-      assert length(events) == 2
+      assert length(events) == 3
     end
 
     test "includes run complete event" do

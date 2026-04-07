@@ -22,7 +22,8 @@ defmodule BenchArena.Telemetry do
 
   @events [
     [:bench_arena, :run, :complete],
-    [:bench_arena, :comparison, :complete]
+    [:bench_arena, :comparison, :complete],
+    [:bench_arena, :groundtrace, :emitted]
   ]
 
   @doc """
@@ -67,6 +68,14 @@ defmodule BenchArena.Telemetry do
         "latency_delta=#{Float.round(measurements.latency_delta_ms, 1)}ms " <>
         "token_delta=#{measurements.token_delta} " <>
         "accuracy_delta=#{Float.round(measurements.accuracy_delta, 4)}"
+    )
+  end
+
+  def handle_event([:bench_arena, :groundtrace, :emitted], measurements, metadata, _config) do
+    Logger.debug(
+      "[BenchArena] Groundtrace ##{measurements.record_count} " <>
+        "run=#{metadata.run_id} subtask=#{metadata.subtask_id} " <>
+        "adapter=#{metadata.adapter}"
     )
   end
 end
