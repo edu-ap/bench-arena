@@ -8,7 +8,10 @@ defmodule BenchArena.Adapters.StackAdapter do
 
   If CSC is unavailable, falls back to a single structured Perplexity call
   that explicitly applies the stack's reasoning protocol (decompose → verify →
-  synthesise) without the compiled DAG.
+  synthesise) with RAG retrieval augmentation between decompose and verify.
+
+  The ConfabulumRate gate is applied after each step. If a step's output
+  triggers a confabulum halt, the pipeline stops and returns a structured error.
 
   Returns {:error, :credentials_not_configured} if PERPLEXITY_API_KEY absent.
   """
@@ -16,6 +19,7 @@ defmodule BenchArena.Adapters.StackAdapter do
   @behaviour BenchArena.Adapter
 
   alias BenchArena.Corpus.Question
+  alias BenchArena.ConfabulumRate
 
   @impl true
   @spec execute(Question.t()) ::
@@ -129,8 +133,10 @@ defmodule BenchArena.Adapters.StackAdapter do
   end
 
   # ---------------------------------------------------------------------------
-  # Path B: Stack protocol without CSC (decompose → verify → synthesise)
+  # Path B: Stack protocol without CSC (decompose → retrieve → verify → synthesise)
   # Faithfully models the stack's reasoning pattern via explicit prompting.
+  # RAG retrieval augments the verify step with grounded context.
+  # ConfabulumRate gates each step.
   # ---------------------------------------------------------------------------
 
   defp run_via_stack_protocol(question, api_key) do
@@ -140,45 +146,175 @@ defmodule BenchArena.Adapters.StackAdapter do
     # Step 1: Decompose (mirrors CSC stage_4_decomposition)
     decompose_prompt = """
     You are the Composable Skill Compiler (CSC). Decompose the following task into
-    atomic sub-tasks, identify which skills are needed, and flag any compliance constraints.
+    atomic sub-questions that can be independently verified.
 
     TASK: #{question.prompt}
 
-    Output:
-    - Sub-tasks: (list)
-    - Skills required: (list)
-    - Compliance flags: (IRAP / EU AI Act / GDPR / none)
+    Output a numbered list of sub-questions. Each sub-question should be a single
+    factual claim or verification target. Keep them short and precise.
     """
 
     with {:ok, decomposition, d_in, d_out} <-
            call_perplexity(decompose_prompt, model, api_key, timeout),
-         # Step 2: Verify (mirrors TokenGov policy check + wind tunnel)
+         :ok <- confabulum_check(decomposition, question.prompt, :decompose),
+         # Step 2: RAG retrieval for each sub-question
+         {:ok, retrieved_context, r_in, r_out} <-
+           retrieve_for_subquestions(decomposition, question.prompt, api_key, timeout),
+         # Step 3: Verify with retrieved context (mirrors TokenGov policy check + wind tunnel)
          verify_prompt = """
-         [TokenGov Policy Check]
-         DECOMPOSITION: #{decomposition}
+         [TokenGov Policy Check — RAG-Augmented Verification]
+
          ORIGINAL TASK: #{question.prompt}
 
-         Verify: Are there any policy violations, budget concerns, or risk factors?
-         Then provide the verified execution plan.
+         DECOMPOSITION:
+         #{decomposition}
+
+         RETRIEVED CONTEXT (grounded sources):
+         #{retrieved_context}
+
+         Using the retrieved context above as your primary source of truth,
+         verify each sub-question. If the retrieved sources contradict the
+         decomposition, prefer the retrieved sources.
+
+         Provide the verified answer, citing sources where applicable.
          """,
          {:ok, verified, v_in, v_out} <- call_perplexity(verify_prompt, model, api_key, timeout),
-         # Step 3: Synthesise (mirrors Elan.AgentLoop final answer)
+         :ok <- confabulum_check(verified, question.prompt, :verify),
+         # Step 4: Synthesise (mirrors Elan.AgentLoop final answer)
          synth_prompt = """
          [Elan Agent — Final Synthesis]
-         VERIFIED PLAN: #{verified}
+
          TASK: #{question.prompt}
 
-         Execute the plan and provide the final answer.
+         VERIFIED ANALYSIS:
+         #{verified}
+
+         Based on the verified analysis above, provide the final answer.
+         Be direct and concise. For multiple-choice questions, state the correct
+         letter option clearly.
          """,
-         {:ok, answer, s_in, s_out} <- call_perplexity(synth_prompt, model, api_key, timeout) do
+         {:ok, answer, s_in, s_out} <- call_perplexity(synth_prompt, model, api_key, timeout),
+         :ok <- confabulum_check(answer, question.prompt, :synthesise) do
       {:ok,
        %{
          answer: answer,
-         tokens_in: d_in + v_in + s_in,
-         tokens_out: d_out + v_out + s_out
+         tokens_in: d_in + r_in + v_in + s_in,
+         tokens_out: d_out + r_out + v_out + s_out
        }}
     end
   end
+
+  # ---------------------------------------------------------------------------
+  # RAG retrieval: call Perplexity for each sub-question to ground context
+  # ---------------------------------------------------------------------------
+
+  defp retrieve_for_subquestions(decomposition, original_question, api_key, timeout) do
+    # Parse sub-questions from decomposition (numbered list)
+    sub_questions = parse_subquestions(decomposition, original_question)
+
+    # Retrieve grounded context for each sub-question
+    results =
+      sub_questions
+      |> Enum.with_index(1)
+      |> Enum.reduce_while({[], 0, 0}, fn {sq, idx}, {contexts, total_in, total_out} ->
+        case retrieve_single(sq, api_key, timeout) do
+          {:ok, passage, citations, t_in, t_out} ->
+            citation_text =
+              if citations != [] do
+                "Sources: " <> Enum.join(citations, ", ")
+              else
+                "Sources: Perplexity search"
+              end
+
+            context_block = """
+            [Retrieved context for sub-question #{idx}:]
+            #{passage}
+            #{citation_text}
+            """
+
+            {:cont, {[context_block | contexts], total_in + t_in, total_out + t_out}}
+
+          {:error, _reason} ->
+            # If retrieval fails for a sub-question, continue without it
+            {:cont, {contexts, total_in, total_out}}
+        end
+      end)
+
+    {contexts, tokens_in, tokens_out} = results
+    combined = contexts |> Enum.reverse() |> Enum.join("\n")
+    {:ok, combined, tokens_in, tokens_out}
+  end
+
+  defp parse_subquestions(decomposition, original_question) do
+    # Extract numbered items from the decomposition
+    lines =
+      decomposition
+      |> String.split(~r/\n/, trim: true)
+      |> Enum.filter(&Regex.match?(~r/^\s*\d+[\.\)]\s/, &1))
+      |> Enum.map(&Regex.replace(~r/^\s*\d+[\.\)]\s*/, &1, ""))
+      |> Enum.map(&String.trim/1)
+      |> Enum.filter(&(String.length(&1) > 5))
+
+    # If parsing fails, use the original question as a single retrieval query
+    if lines == [] do
+      [original_question]
+    else
+      Enum.take(lines, 5)
+    end
+  end
+
+  defp retrieve_single(query, api_key, timeout) do
+    body = %{
+      model: "sonar",
+      messages: [
+        %{
+          role: "system",
+          content:
+            "You are a factual research assistant. Provide a brief, accurate answer with citations. Focus on verifiable facts."
+        },
+        %{role: "user", content: query}
+      ],
+      max_tokens: 256
+    }
+
+    case Req.post("https://api.perplexity.ai/chat/completions",
+           json: body,
+           headers: [{"Authorization", "Bearer #{api_key}"}],
+           receive_timeout: timeout,
+           retry: false
+         ) do
+      {:ok, %{status: status, body: resp}} when status in 200..299 ->
+        content = get_in(resp, ["choices", Access.at(0), "message", "content"]) || ""
+        citations = Map.get(resp, "citations", [])
+        tokens_in = get_in(resp, ["usage", "prompt_tokens"]) || 0
+        tokens_out = get_in(resp, ["usage", "completion_tokens"]) || 0
+        {:ok, content, citations, tokens_in, tokens_out}
+
+      {:ok, %{status: status, body: body}} ->
+        {:error, {:perplexity_error, status, body}}
+
+      {:error, reason} ->
+        {:error, {:request_failed, reason}}
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # ConfabulumRate gate
+  # ---------------------------------------------------------------------------
+
+  defp confabulum_check(text, question, step) do
+    case ConfabulumRate.gate(text, question) do
+      {:pass, _score} ->
+        :ok
+
+      {:halt, type, score} ->
+        {:error, {:confabulum_halt, %{type: type, score: score, step: step}}}
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # Perplexity API helpers
+  # ---------------------------------------------------------------------------
 
   defp call_perplexity_single(prompt, model, api_key, timeout) do
     case call_perplexity(prompt, model, api_key, timeout) do
